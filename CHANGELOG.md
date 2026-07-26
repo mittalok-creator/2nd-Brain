@@ -26,8 +26,10 @@ Versioning is applied to the **specification**, not to any single tool:
   `discussion`.
 - Corrected two stale descriptions of what `make validate` and CI cover in `CONTRIBUTING.md` —
   both predated the `hierarchy` and `schema` checks.
-- Tagged `v0.1.0`, `v0.2.0`, and `v0.3.0` so the compare and release links below resolve. They
-  were written before the tags existed and had been returning 404.
+- Rewrote the compare links at the bottom of this file to point at commit SHAs. They
+  previously referenced `v0.1.0`-`v0.3.0` tags that were never created, and returned 404. The
+  tags still need creating from a machine with direct push access — this environment's git
+  proxy refuses tag pushes.
 
 ### Planned
 - Phase 4 — Relations (the relational graph, rollups, referential integrity)
@@ -187,7 +189,13 @@ Versioning is applied to the **specification**, not to any single tool:
   `core/schema/` and `workspace/templates/` respectively, to keep one concept in one place.
   See ADR-0001.
 
-[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/mittalok-creator/2nd-Brain/releases/tag/v0.1.0
+<!-- Compare links point at commit SHAs rather than tags. The v0.1.0-v0.3.0 tags
+     do not exist yet: this environment's git proxy refuses tag pushes, so they
+     have to be created from a machine with direct push access. Once they exist,
+     these can be rewritten as v0.2.0...v0.3.0 and so on. SHA links resolve today,
+     which tag links did not. -->
+
+[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/0ad6f80...main
+[0.3.0]: https://github.com/mittalok-creator/2nd-Brain/compare/d6e87fb...0ad6f80
+[0.2.0]: https://github.com/mittalok-creator/2nd-Brain/compare/688b8a4...d6e87fb
+[0.1.0]: https://github.com/mittalok-creator/2nd-Brain/commit/688b8a4
