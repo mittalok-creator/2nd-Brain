@@ -1,8 +1,9 @@
 blank_issues_enabled: false
+
+# Discussions is deliberately not linked here: the feature is disabled on this
+# repository, and a contact link pointing at a disabled feature is a 404. Ideas
+# and open questions go to a feature request labelled `discussion` instead.
 contact_links:
-  - name: 💬 Discussion
-    url: https://github.com/mittalok-creator/2nd-Brain/discussions
-    about: Ideas, questions, and design conversations that aren't yet a concrete change.
   - name: 📖 Documentation
     url: https://github.com/mittalok-creator/2nd-Brain/tree/main/docs
     about: Guides, architecture, and decision records.

@@ -15,6 +15,20 @@ Versioning is applied to the **specification**, not to any single tool:
 
 ## [Unreleased]
 
+### Changed
+- `actions/checkout` bumped to v7 and `actions/setup-python` to v7 across both workflows
+  (Dependabot #1).
+- PyYAML floor raised to `>=6.0.3` (Dependabot #2).
+
+### Fixed
+- Removed the Discussions contact link from the issue-template config. Discussions is disabled
+  on this repository, so the link was a 404. Ideas now go to a feature request labelled
+  `discussion`.
+- Corrected two stale descriptions of what `make validate` and CI cover in `CONTRIBUTING.md` —
+  both predated the `hierarchy` and `schema` checks.
+- Tagged `v0.1.0`, `v0.2.0`, and `v0.3.0` so the compare and release links below resolve. They
+  were written before the tags existed and had been returning 404.
+
 ### Planned
 - Phase 4 — Relations (the relational graph, rollups, referential integrity)
 

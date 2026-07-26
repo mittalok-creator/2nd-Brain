@@ -67,7 +67,8 @@ BREAKING CHANGE: existing task relations must be re-pointed. See docs/migrations
 
 - One phase or one concern per PR.
 - Fill in the PR template completely.
-- CI must be green: structure, YAML, and internal links are all validated.
+- CI must be green: structure, YAML, internal links, page hierarchy, and entity schemas are
+  all validated.
 - Update `CHANGELOG.md` under `[Unreleased]` in the same PR.
 - If the change alters architecture, include or reference an ADR.
 
@@ -131,9 +132,11 @@ ADRs are append-only history: supersede them, never rewrite them.
 ## Local Checks
 
 ```bash
-make validate   # structure, YAML syntax, internal links
+make validate   # structure, YAML, links, page hierarchy, entity schemas
 make tree       # print the repository map
 ```
+
+Individual checks: `make structure`, `make yaml`, `make links`, `make hierarchy`, `make schema`.
 
 Run `make validate` before every push. CI runs exactly the same command.
 
