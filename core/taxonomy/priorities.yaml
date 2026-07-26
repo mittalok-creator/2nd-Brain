@@ -1,0 +1,43 @@
+id: priorities
+name: Priorities
+version: 1.0.0
+status: active
+owner: core
+description: >
+  A four-level priority scale. Every level has a definition so that priority is assigned by
+  rule rather than by mood, and so an agent assigning it has the same criteria a human does.
+
+# Four levels, not ten. A finer scale is never applied consistently, and an
+# inconsistently applied scale is worse than none — it looks like signal.
+
+values:
+  - id: critical
+    name: Critical
+    color: danger
+    order: 1
+    description: >
+      Blocks something time-bound with an external consequence. Work on this before anything
+      else. If more than two things are critical, none of them is.
+
+  - id: high
+    name: High
+    color: warning
+    order: 2
+    description: >
+      Directly advances a live goal this week. The default for committed work.
+
+  - id: medium
+    name: Medium
+    color: info
+    order: 3
+    description: >
+      Matters, but not this week. Revisited at the weekly review rather than carried forward
+      daily.
+
+  - id: low
+    name: Low
+    color: neutral
+    order: 4
+    description: >
+      Would be nice. Explicitly acceptable to never do — recording that honestly is the point
+      of having this level at all.

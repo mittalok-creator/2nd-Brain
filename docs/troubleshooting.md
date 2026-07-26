@@ -32,8 +32,8 @@ Every specification file under `core/`, `workspace/`, `agents/`, and `automation
 the header contract:
 
 ```yaml
-id: decision_journal
-name: Decision Journal
+id: decisions
+name: Decisions
 version: 1.0.0
 status: active
 owner: core

@@ -1,0 +1,76 @@
+id: life_areas
+name: Life Areas
+version: 1.0.0
+status: active
+owner: core
+description: >
+  The top-level domains every record belongs to. Applied as a tag rather than as hierarchy,
+  which is what allows a single surface like Today to draw from every area at once.
+
+# Seven areas. Deliberately few: an area taxonomy with fifteen values stops being a
+# balance check and becomes a second, competing category system.
+#
+# `growth` was considered and dropped as indistinguishable from `learning` in practice.
+
+values:
+  - id: health
+    name: Health
+    icon: "🏋"
+    color: success
+    order: 1
+    description: >
+      Body and mind — movement, sleep, nutrition, medical, mental health.
+
+  - id: finance
+    name: Finance
+    icon: "💰"
+    color: warning
+    order: 2
+    description: >
+      Money in every direction — earning, spending, saving, investing, obligations.
+
+  - id: career
+    name: Career
+    icon: "💼"
+    color: accent
+    order: 3
+    description: >
+      Professional trajectory: the current role, the next one, and the evidence between them.
+      Distinct from `learning` — this is where skills are aimed, not where they are acquired.
+
+  - id: learning
+    name: Learning
+    icon: "📚"
+    color: highlight
+    order: 4
+    description: >
+      Deliberate acquisition of skill and understanding. Covers reading, courses, practice,
+      and the knowledge base that results.
+
+  - id: relationships
+    name: Relationships
+    icon: "🤝"
+    color: info
+    order: 5
+    description: >
+      The people who matter — family, friends, mentors, professional contacts. Family is the
+      most heavily weighted group within this area, not a separate area.
+
+  - id: admin
+    name: Admin
+    icon: "🗄"
+    color: neutral
+    order: 6
+    description: >
+      Life logistics that must happen and produce nothing — taxes, renewals, paperwork,
+      insurance. Named explicitly so this work is visible in capacity planning rather than
+      invisibly consuming it.
+
+  - id: meta
+    name: Meta
+    icon: "⚙️"
+    color: neutral
+    order: 7
+    description: >
+      The system itself — its structure, agents, automations, and reviews. Kept as an area so
+      that time spent maintaining the system is measured against time spent using it.

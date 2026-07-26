@@ -1,0 +1,52 @@
+id: horizons
+name: Horizons
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Time horizons for goals and commitments. Used to check that ambition is distributed across
+  timescales rather than concentrated entirely in the next month or entirely in "someday".
+
+values:
+  - id: today
+    name: Today
+    color: accent
+    order: 1
+    days: 1
+    description: Due or intended today. Used by tasks and habits, not by goals.
+
+  - id: week
+    name: This week
+    color: accent
+    order: 2
+    days: 7
+
+  - id: month
+    name: This month
+    color: info
+    order: 3
+    days: 30
+
+  - id: quarter
+    name: This quarter
+    color: info
+    order: 4
+    days: 90
+    description: >
+      The primary planning horizon for goals. Long enough to deliver something real, short
+      enough that a mistake is caught while it is still cheap.
+
+  - id: year
+    name: This year
+    color: highlight
+    order: 5
+    days: 365
+
+  - id: long_term
+    name: Long term
+    color: neutral
+    order: 6
+    days: null
+    description: >
+      Beyond a year, with no committed date. A holding horizon that keeps genuine long-range
+      intent visible without forcing false precision onto it.

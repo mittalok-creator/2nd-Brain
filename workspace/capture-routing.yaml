@@ -113,19 +113,12 @@ rules:
     requires: [title, source_type]
 
   - id: reference_material
-    when: Material to keep but not read end to end
+    when: Material to keep but not read end to end — reference, a bookmark, a document, a tool
     destination: resources
-    requires: [title, topic]
-
-  - id: link_only
-    when: A URL worth keeping with no reading intent
-    destination: bookmarks
-    requires: [url, topic]
-
-  - id: file
-    when: A document or attachment
-    destination: documents
-    requires: [title, area]
+    requires: [title, resource_type, topic, area]
+    note: >
+      One destination for what were three. `resource_type` distinguishes bookmark, document,
+      file, tool, and reference. See ADR-0007.
 
   - id: meeting_record
     when: Notes or a transcript from a conversation
@@ -141,21 +134,33 @@ rules:
     requires: [amount, date, category]
 
   - id: body_measurement
-    when: A health metric, workout, or symptom
+    when: A health measurement
     destination: health_metrics
-    requires: [metric, value, date]
+    requires: [metric, value, measured_on]
+
+  - id: training_session
+    when: A workout or training session performed
+    destination: workouts
+    requires: [title, workout_date, workout_type]
+
+  - id: career_evidence
+    when: Delivered work, a role change, recognition, or a setback worth recording
+    destination: career_events
+    requires: [title, event_type, event_date, description]
 
   - id: person_context
     when: Information about a person, or a promise made to one
     destination: people
     requires: [person]
     extracts:
-      - to: people_commitments
-        what: Anything promised, with a due date.
+      - to: tasks
+        what: >
+          Anything promised, with a due date, created as a task with `is_promise` set. A promise
+          is a task with a person attached, not a separate entity — see ADR-0007.
 
   - id: significant_choice
     when: A decision being made whose reasoning is worth preserving
-    destination: decision_journal
+    destination: decisions
     requires: [title, expected_outcome, reversibility]
     note: >
       Captured before the outcome is known. Recorded after the fact, the reasoning is already

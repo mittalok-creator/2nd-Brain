@@ -1,0 +1,80 @@
+id: accounts
+name: Accounts
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Where money sits, and its balance. Deliberately shallow: this is a register of positions,
+  not a ledger — the bank is authoritative for balances, and duplicating that here would
+  guarantee disagreement.
+
+icon: "🏦"
+group: finance
+
+fields:
+  - id: name
+    name: Account
+    type: text
+    required: true
+    description: >
+      A label, not an identifier. Never record account numbers or credentials here — see
+      SECURITY.md.
+
+  - id: account_type
+    name: Type
+    type: select
+    options: [current, savings, credit, investment, retirement, cash, receivable, liability]
+    required: true
+
+  - id: currency
+    name: Currency
+    type: text
+    required: true
+    default: INR
+    validation:
+      pattern: "^[A-Z]{3}$"
+    description: ISO 4217 code.
+
+  - id: balance
+    name: Balance
+    type: number
+    format: currency
+    description: >
+      Point-in-time, updated manually or by automation. Negative for liabilities. Treated as
+      approximate by design; the trend matters and the exact figure does not.
+
+  - id: balance_as_of
+    name: Balance as of
+    type: date
+    description: >
+      When the balance was last confirmed. Shown alongside every balance, because a figure
+      without a date invites decisions based on stale information.
+
+  - id: include_in_net
+    name: Include in net position
+    type: checkbox
+    default: true
+    description: >
+      Excluded for accounts held on someone else's behalf, or for restricted funds that are not
+      genuinely available.
+
+  - id: institution
+    name: Institution
+    type: text
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+  - id: archived
+    name: Archived
+    type: checkbox
+    default: false
+
+identity:
+  primary: name
+  slug_from: [account_type, name]
+
+defaults:
+  sort:
+    - { field: account_type, direction: ascending }

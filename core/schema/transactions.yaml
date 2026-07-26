@@ -1,0 +1,128 @@
+id: transactions
+name: Transactions
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Money movements, categorised, and where possible connected to what they were for. The point
+  is not bookkeeping — it is answering whether spending matched stated intentions.
+
+icon: "💸"
+group: finance
+
+fields:
+  - id: description
+    name: Description
+    type: text
+    required: true
+
+  - id: amount
+    name: Amount
+    type: number
+    format: currency
+    required: true
+    description: >
+      Always positive. Direction is carried by `direction` rather than by sign, because signed
+      amounts invert inconsistently across import sources and silently corrupt totals.
+
+  - id: direction
+    name: Direction
+    type: select
+    options: [expense, income, transfer]
+    required: true
+    description: >
+      `transfer` is excluded from both spend and income totals. Without this value, moving money
+      between your own accounts appears as spending, which makes every category figure wrong.
+
+  - id: transaction_date
+    name: Date
+    type: date
+    required: true
+
+  - id: category
+    name: Category
+    type: select
+    options:
+      - housing
+      - utilities
+      - groceries
+      - dining
+      - transport
+      - health
+      - insurance
+      - education
+      - subscriptions
+      - shopping
+      - travel
+      - gifts
+      - family
+      - taxes
+      - investment
+      - salary
+      - side_income
+      - other
+    required: true
+    description: >
+      Required by the routing gate. A closed list rather than free text: uncategorised spend is
+      the single most common reason a finance system stops producing usable answers.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    description: Maps spending onto life areas, so cost per area is answerable.
+
+  - id: currency
+    name: Currency
+    type: text
+    default: INR
+    validation:
+      pattern: "^[A-Z]{3}$"
+
+  - id: recurring
+    name: Recurring
+    type: checkbox
+    default: false
+    description: >
+      Marks subscriptions and standing commitments, which are reported annualised — monthly
+      framing is how recurring spend escapes notice.
+
+  - id: recurrence_period
+    name: Recurs every
+    type: select
+    options: [weekly, monthly, quarterly, annually]
+
+  - id: necessity
+    name: Necessity
+    type: select
+    options: [essential, worthwhile, discretionary, regretted]
+    description: >
+      Judged at logging time. `regretted` is the useful value and the reason this field exists:
+      a pattern of regretted spending in one category is far more actionable than a total.
+
+  - id: external_id
+    name: Source id
+    type: text
+    description: >
+      Id from the importing source. The idempotency key for expense import — keying on it means
+      re-running an import updates rather than duplicates.
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+  - id: created_at
+    name: Logged
+    type: created_time
+
+identity:
+  primary: description
+  slug_from: [transaction_date, description, amount]
+  description: >
+    Descriptions and amounts both repeat legitimately, so the slug combines all three. Where an
+    `external_id` exists it takes precedence as the uniqueness key.
+
+defaults:
+  direction: expense
+  sort:
+    - { field: transaction_date, direction: descending }

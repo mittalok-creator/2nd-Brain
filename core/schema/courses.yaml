@@ -1,0 +1,106 @@
+id: courses
+name: Courses
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Structured learning programmes with modules and completion. Distinct from `reading` in
+  having a platform, an instructor, discrete modules, and usually a cost.
+
+icon: "🎓"
+group: knowledge
+
+fields:
+  - id: title
+    name: Course
+    type: text
+    required: true
+
+  - id: provider
+    name: Provider
+    type: text
+    description: Platform or institution.
+
+  - id: instructor
+    name: Instructor
+    type: text
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: consumption
+    required: true
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: total_modules
+    name: Modules
+    type: number
+    format: integer
+
+  - id: completed_modules
+    name: Completed
+    type: number
+    format: integer
+    default: 0
+    description: Completion percentage is derived from this and `total_modules`, never stored.
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: finished_on
+    name: Finished
+    type: date
+
+  - id: last_activity
+    name: Last activity
+    type: date
+    description: Drives the 30-day abandonment rule.
+
+  - id: cost
+    name: Cost
+    type: number
+    format: currency
+    description: >
+      Recorded because sunk cost is the main reason unfinished courses are neither completed
+      nor abandoned. Naming the amount makes the decision explicit rather than avoidant.
+
+  - id: deadline
+    name: Deadline
+    type: date
+    description: Cohort or certification deadline, where one exists.
+
+  - id: certificate
+    name: Certificate
+    type: file
+
+  - id: produced_notes
+    name: Produced notes
+    type: checkbox
+    default: false
+
+  - id: applied_to
+    name: Applied to
+    type: text
+    description: >
+      Where this was actually used. A finished course with nothing here is completed
+      consumption, not acquired capability.
+
+  - id: created_at
+    name: Added
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [provider, title]
+
+defaults:
+  status: queued
+  sort:
+    - { field: last_activity, direction: descending }

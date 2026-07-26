@@ -1,0 +1,241 @@
+id: statuses
+name: Statuses
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Lifecycle states, one ordered set per entity class. Each value carries entry and exit
+  criteria so that status is assigned by rule rather than by feel.
+
+# Status sets are separate rather than universal. A single shared lifecycle would force
+# `at_risk` onto tasks and `blocked` onto goals, and a status that does not apply is a
+# status that gets used inconsistently.
+#
+# Every set includes an explicit terminal state for abandonment. A lifecycle whose only
+# exit is success is one where nothing is ever closed, and stale records make every
+# derived metric wrong.
+
+sets:
+  # ── Tasks ──────────────────────────────────────────────────────────────────
+  task:
+    default: todo
+    values:
+      - id: todo
+        name: To do
+        color: neutral
+        order: 1
+        description: Captured and specified. Not committed to a date.
+
+      - id: next
+        name: Next
+        color: info
+        order: 2
+        description: >
+          Committed to this week. The pool the daily plan is drawn from.
+
+      - id: in_progress
+        name: In progress
+        color: accent
+        order: 3
+        description: >
+          Actively being worked on. More than two or three at once means none of them is.
+
+      - id: blocked
+        name: Blocked
+        color: danger
+        order: 4
+        description: >
+          Cannot proceed for an external reason, which must be recorded. "Blocked" with no
+          stated blocker means "avoiding".
+
+      - id: done
+        name: Done
+        color: success
+        order: 5
+        terminal: true
+
+      - id: cancelled
+        name: Cancelled
+        color: neutral
+        order: 6
+        terminal: true
+        description: No longer worth doing. Preferred over silent deletion — the decision is data.
+
+  # ── Projects ───────────────────────────────────────────────────────────────
+  project:
+    default: planning
+    values:
+      - id: planning
+        name: Planning
+        color: neutral
+        order: 1
+        description: Scope and definition of done still being established.
+
+      - id: active
+        name: Active
+        color: accent
+        order: 2
+        description: At least one task completed in the last 14 days.
+
+      - id: blocked
+        name: Blocked
+        color: danger
+        order: 3
+        description: Waiting on an external dependency, which must be named.
+
+      - id: on_hold
+        name: On hold
+        color: warning
+        order: 4
+        description: >
+          Deliberately paused with an intent to resume. Distinct from `blocked`: this is a
+          choice, not an obstacle.
+
+      - id: done
+        name: Done
+        color: success
+        order: 5
+        terminal: true
+        description: Definition of done met.
+
+      - id: abandoned
+        name: Abandoned
+        color: neutral
+        order: 6
+        terminal: true
+        description: >
+          Stopped without completing. Recorded honestly, because an abandoned project that
+          still reads as active corrupts every goal-progress rollup above it.
+
+  # ── Goals ──────────────────────────────────────────────────────────────────
+  goal:
+    default: draft
+    values:
+      - id: draft
+        name: Draft
+        color: neutral
+        order: 1
+        description: Stated but not yet scoped or committed to a horizon.
+
+      - id: active
+        name: Active
+        color: accent
+        order: 2
+        description: Committed, with at least one project or habit serving it.
+
+      - id: at_risk
+        name: At risk
+        color: warning
+        order: 3
+        description: >
+          No project movement in 14 days, or a target date the remaining work no longer
+          supports. Set by automation, not by hand.
+
+      - id: achieved
+        name: Achieved
+        color: success
+        order: 4
+        terminal: true
+
+      - id: dormant
+        name: Dormant
+        color: neutral
+        order: 5
+        description: >
+          No activity in 60 days. Not terminal — a holding state that forces a decision to
+          revive, rescope, or abandon.
+
+      - id: abandoned
+        name: Abandoned
+        color: neutral
+        order: 6
+        terminal: true
+        description: >
+          Deliberately dropped. Abandoning a goal is a legitimate and underused outcome; the
+          record of what was dropped and why is among the most useful data in the system.
+
+  # ── Habits ─────────────────────────────────────────────────────────────────
+  habit:
+    default: active
+    values:
+      - id: active
+        name: Active
+        color: accent
+        order: 1
+
+      - id: paused
+        name: Paused
+        color: warning
+        order: 2
+        description: >
+          Temporarily suspended — travel, illness, a busy period. Pausing preserves the
+          history without recording false misses, which is what stops a broken streak from
+          ending the habit outright.
+
+      - id: retired
+        name: Retired
+        color: neutral
+        order: 3
+        terminal: true
+        description: >
+          Either fully automatic and no longer worth tracking, or no longer wanted. Both are
+          successful exits.
+
+  # ── Consumption: reading and courses ───────────────────────────────────────
+  consumption:
+    default: queued
+    values:
+      - id: queued
+        name: Queued
+        color: neutral
+        order: 1
+
+      - id: active
+        name: In progress
+        color: accent
+        order: 2
+
+      - id: paused
+        name: Paused
+        color: warning
+        order: 3
+
+      - id: finished
+        name: Finished
+        color: success
+        order: 4
+        terminal: true
+
+      - id: abandoned
+        name: Abandoned
+        color: neutral
+        order: 5
+        terminal: true
+        description: >
+          Stopped deliberately, or untouched for 30 days. Recording abandonment honestly is
+          more useful than maintaining an aspirational list that is mostly fiction.
+
+  # ── Inbox ──────────────────────────────────────────────────────────────────
+  inbox:
+    default: captured
+    values:
+      - id: captured
+        name: Captured
+        color: info
+        order: 1
+        description: Received, not yet routed.
+
+      - id: routed
+        name: Routed
+        color: success
+        order: 2
+        terminal: true
+        description: Assigned to an owning entity, with the routing gate satisfied.
+
+      - id: discarded
+        name: Discarded
+        color: neutral
+        order: 3
+        terminal: true
+        description: >
+          Explicitly dropped, or stale beyond 14 days. A first-class outcome, not a failure.

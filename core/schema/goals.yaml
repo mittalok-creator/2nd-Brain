@@ -1,0 +1,121 @@
+id: goals
+name: Goals
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Outcomes being pursued, each at a stated horizon with a definition of success. The top of
+  the direction chain: goals are delivered by projects and reinforced by habits.
+
+icon: "🎯"
+group: direction
+
+fields:
+  - id: title
+    name: Goal
+    type: text
+    required: true
+    validation:
+      max_length: 120
+    description: >
+      Stated as an outcome, not an activity. "Run a half marathon" rather than "run more" —
+      an activity has no completion condition, so it can never be achieved or abandoned.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: horizon
+    name: Horizon
+    type: select
+    taxonomy: horizons
+    required: true
+    description: >
+      Quarter is the primary planning horizon. Anything at `long_term` is deliberately
+      undated and excluded from progress pressure.
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: goal
+    required: true
+
+  - id: success_criteria
+    name: Success criteria
+    type: rich_text
+    required: true
+    description: >
+      The observable condition that makes this achieved. Required because a goal whose
+      completion is a matter of opinion is never completed.
+
+  - id: why
+    name: Why
+    type: rich_text
+    description: >
+      What makes this worth the cost. Read at review time when deciding whether to continue —
+      most goals worth abandoning are abandoned by re-reading this, not by missing a metric.
+
+  - id: target_date
+    name: Target date
+    type: date
+    description: Empty for `long_term` goals. Required for every other horizon.
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: closed_on
+    name: Closed
+    type: date
+    description: Set when the goal reaches a terminal status, whether achieved or abandoned.
+
+  - id: priority
+    name: Priority
+    type: select
+    taxonomy: priorities
+    default: high
+
+  - id: measure
+    name: Measure
+    type: text
+    description: >
+      What is counted, if anything is. Optional: not every worthwhile goal is quantifiable,
+      and forcing a number onto one that is not produces a metric nobody trusts.
+
+  - id: target_value
+    name: Target
+    type: number
+    format: decimal
+
+  - id: current_value
+    name: Current
+    type: number
+    format: decimal
+    description: >
+      Only for goals with a direct measure that no project rolls up. Where projects exist,
+      progress is derived from them — see core/relations/.
+
+  - id: abandoned_reason
+    name: Why abandoned
+    type: rich_text
+    description: >
+      Required when status is `abandoned`. The most valuable field on this entity over time:
+      a record of what stopped mattering, and why, is what stops the same goal being set
+      again next year.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [area, title]
+
+defaults:
+  status: draft
+  sort:
+    - { field: priority, direction: ascending }
+    - { field: target_date, direction: ascending }

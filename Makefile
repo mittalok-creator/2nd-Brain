@@ -1,13 +1,13 @@
 .DEFAULT_GOAL := help
 PYTHON ?= python3
 
-.PHONY: help validate structure yaml links hierarchy tree phase
+.PHONY: help validate structure yaml links hierarchy schema tree phase
 
 help: ## Show available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
-validate: ## Run every specification check (structure, YAML, links, hierarchy)
+validate: ## Run every specification check (structure, YAML, links, hierarchy, schema)
 	@$(PYTHON) scripts/validate_repository.py
 
 structure: ## Verify the repository layout only
@@ -21,6 +21,9 @@ links: ## Verify internal documentation links only
 
 hierarchy: ## Verify the workspace page tree and navigation constraints
 	@$(PYTHON) scripts/validate_repository.py --only hierarchy
+
+schema: ## Verify entity field contracts, taxonomy references, and ownership
+	@$(PYTHON) scripts/validate_repository.py --only schema
 
 tree: ## Print the repository map
 	@git ls-files \

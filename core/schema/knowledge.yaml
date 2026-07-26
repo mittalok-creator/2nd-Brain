@@ -1,0 +1,98 @@
+id: knowledge
+name: Knowledge
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Understanding written down in a form that can be retrieved and reused. Notes here are
+  processed, not clipped — raw source material belongs in `resources`.
+
+icon: "🧠"
+group: knowledge
+
+fields:
+  - id: title
+    name: Title
+    type: text
+    required: true
+    validation:
+      max_length: 160
+    description: >
+      Stated as a claim rather than a topic where possible — "spaced repetition beats reread"
+      rather than "spaced repetition". A claim is findable by what it says; a topic is not.
+
+  - id: topic
+    name: Topic
+    type: multi_select
+    options: []
+    required: true
+    description: >
+      Open vocabulary, grown as used rather than pre-defined. Required by the routing gate:
+      an untagged note is not retrievable, and an unretrievable note has no value.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: summary
+    name: Summary
+    type: rich_text
+    required: true
+    description: >
+      The point, in your own words, in a few sentences. Required because rewriting is what
+      turns something read into something known — a verbatim excerpt proves only that it was
+      seen.
+
+  - id: body
+    name: Body
+    type: rich_text
+
+  - id: source_type
+    name: Source
+    type: select
+    options: [book, article, video, course, conversation, experience, own_thinking]
+    description: >
+      Where this came from. `own_thinking` and `experience` are the two highest-value
+      categories and the ones most often left uncaptured.
+
+  - id: source_reference
+    name: Source reference
+    type: text
+
+  - id: confidence
+    name: Confidence
+    type: select
+    options: [speculative, plausible, well_supported, verified]
+    default: plausible
+    description: >
+      How much weight this deserves. Recorded because an unmarked knowledge base flattens a
+      half-remembered claim and a verified fact into the same apparent authority.
+
+  - id: last_reviewed
+    name: Last reviewed
+    type: date
+    description: >
+      Drives staleness detection on fast-moving topics. A year-old note presented as current
+      is worse than no note.
+
+  - id: superseded_by
+    name: Superseded by
+    type: text
+    description: >
+      Where understanding has since changed. Notes are superseded rather than overwritten, so
+      that a change of mind remains visible.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [title]
+
+defaults:
+  confidence: plausible
+  sort:
+    - { field: created_at, direction: descending }

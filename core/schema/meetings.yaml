@@ -1,0 +1,92 @@
+id: meetings
+name: Meetings
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Records of conversations and what they produced. Valued for the actions and decisions
+  extracted from them, not for the transcript.
+
+icon: "🗣"
+group: reflection
+
+fields:
+  - id: title
+    name: Meeting
+    type: text
+    required: true
+
+  - id: meeting_date
+    name: Date
+    type: date
+    required: true
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    default: career
+
+  - id: external_event_id
+    name: Calendar event id
+    type: text
+    description: >
+      The source calendar event id. This is the idempotency key for the Meeting Notes
+      automation: keying on it means a calendar sync running twice updates one record instead
+      of producing two.
+
+  - id: attendees
+    name: Attendees
+    type: text
+    description: >
+      Names as text at capture time. Linked to `people` records during routing, where a match
+      exists — a meeting with someone not yet in the system should not be blocked on adding
+      them first.
+
+  - id: purpose
+    name: Purpose
+    type: text
+    description: >
+      Why this meeting happened. Recorded because a recurring meeting whose purpose cannot be
+      stated is a recurring meeting worth cancelling.
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+  - id: decisions_made
+    name: Decisions
+    type: rich_text
+    description: >
+      What was actually settled. Significant ones are promoted to `decisions` records; this
+      field is the summary that stays with the meeting.
+
+  - id: duration_minutes
+    name: Duration
+    type: number
+    format: integer
+    unit: minutes
+    description: >
+      Aggregated at monthly review against output. The total is usually larger than expected,
+      which is the useful finding.
+
+  - id: follow_up_needed
+    name: Follow-up needed
+    type: checkbox
+    default: false
+
+  - id: transcript
+    name: Transcript
+    type: file
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [meeting_date, title]
+
+defaults:
+  sort:
+    - { field: meeting_date, direction: descending }

@@ -55,12 +55,13 @@ blocks:
   - type: divider
 
   - type: view
-    view: people_commitments_open
+    view: promises_open
     title: Promises made
     description: >
-      Things committed to someone and not yet done. Tracked here rather than in Tasks
-      because a broken promise to a person costs more than a missed task, and should not
-      compete for attention in the same list.
+      Things committed to someone and not yet done. These are `tasks` with `is_promise` set —
+      a promise is a task with a person attached, so it needs its own view rather than its own
+      entity. Surfaced separately because a broken promise costs more than a missed task and
+      should not compete for attention in the same list. See ADR-0007.
 
   - type: view
     view: people_recent_interactions

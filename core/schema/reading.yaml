@@ -1,0 +1,105 @@
+id: reading
+name: Reading
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Books and long-form material being worked through. Kept separate from `courses` because the
+  field sets genuinely differ — merging them would produce a sparse table where half the
+  columns are always empty. See ADR-0007.
+
+icon: "📖"
+group: knowledge
+
+fields:
+  - id: title
+    name: Title
+    type: text
+    required: true
+
+  - id: author
+    name: Author
+    type: text
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: consumption
+    required: true
+
+  - id: source_type
+    name: Format
+    type: select
+    options: [book, ebook, audiobook, paper, long_article]
+    required: true
+    default: book
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: total_pages
+    name: Pages
+    type: number
+    format: integer
+    description: Or total minutes for an audiobook.
+
+  - id: current_page
+    name: Position
+    type: number
+    format: integer
+    description: >
+      Progress percentage is derived from this and `total_pages` rather than stored, so the
+      two can never disagree.
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: finished_on
+    name: Finished
+    type: date
+
+  - id: last_read
+    name: Last read
+    type: date
+    description: >
+      Drives the 30-day abandonment rule. Marking a book abandoned is more useful than leaving
+      it "in progress" forever — an aspirational reading list that is mostly fiction stops
+      being consulted.
+
+  - id: rating
+    name: Rating
+    type: select
+    options: [poor, fair, good, excellent, exceptional]
+
+  - id: produced_notes
+    name: Produced notes
+    type: checkbox
+    default: false
+    description: >
+      Whether this generated at least one knowledge note. Feeds the "consumed but not applied"
+      view — the most honest measure in the system of whether reading changed anything.
+
+  - id: key_takeaway
+    name: Key takeaway
+    type: rich_text
+    description: >
+      One thing worth keeping, written at finish. If nothing comes to mind, that is the
+      finding, and it should be recorded as such.
+
+  - id: created_at
+    name: Added
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [author, title]
+
+defaults:
+  status: queued
+  sort:
+    - { field: last_read, direction: descending }

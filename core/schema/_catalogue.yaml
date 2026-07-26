@@ -1,0 +1,235 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Entity catalogue
+#
+# The index of every entity in the system: its owning page, its purpose, and the
+# file that defines it. Every schema file in this directory appears here exactly
+# once, and every entity named in a page's `owns_entities` resolves to a row here.
+#
+# Relations are NOT listed here or in the schema files. They live in
+# core/relations/ so that cardinality is stated once rather than twice, and they
+# are declared in Phase 4. Until then the entities exist but are not yet
+# connected — schemas carry no `relation` or `rollup` fields by design.
+#
+# Normalisation decisions and the merges applied to the original list are
+# recorded in ADR-0007.
+# ─────────────────────────────────────────────────────────────────────────────
+
+catalogue_version: 1.0.0
+updated: 2026-07-26
+entity_count: 23
+
+groups:
+  direction: What is pursued and delivered
+  reflection: Capture and periodic review
+  knowledge: What is known and being consumed
+  growth: Skills and professional trajectory
+  people: The people who matter
+  finance: Money
+  health: Body and training
+  system: The system operating on itself
+
+entities:
+  # ── Direction ──────────────────────────────────────────────────────────────
+  - id: goals
+    name: Goals
+    group: direction
+    owned_by: goals
+    file: goals.yaml
+    purpose: Outcomes being pursued, at a stated horizon.
+
+  - id: projects
+    name: Projects
+    group: direction
+    owned_by: projects
+    file: projects.yaml
+    purpose: Bounded work with a definition of done, serving one goal.
+
+  - id: tasks
+    name: Tasks
+    group: direction
+    owned_by: projects
+    file: tasks.yaml
+    purpose: Single actions. Also carries promises made to people.
+
+  - id: habits
+    name: Habits
+    group: direction
+    owned_by: habits
+    file: habits.yaml
+    purpose: Recurring commitments reinforcing a goal.
+
+  - id: habit_logs
+    name: Habit Log
+    group: direction
+    owned_by: habits
+    file: habit-logs.yaml
+    purpose: >
+      One record per habit per period. Separate from `habits` because a tick is an event and
+      a habit is a definition — storing ticks on the habit would need a schema change every
+      time the calendar advanced.
+
+  # ── Reflection ─────────────────────────────────────────────────────────────
+  - id: inbox
+    name: Inbox
+    group: reflection
+    owned_by: inbox
+    file: inbox.yaml
+    purpose: The single capture destination, before routing.
+
+  - id: journal
+    name: Journal
+    group: reflection
+    owned_by: journal
+    file: journal.yaml
+    purpose: Daily freeform reflection and the day's log.
+
+  - id: reviews
+    name: Reviews
+    group: reflection
+    owned_by: reviews
+    file: reviews.yaml
+    purpose: Structured periodic review with metric snapshots and actions.
+
+  - id: decisions
+    name: Decisions
+    group: reflection
+    owned_by: decisions
+    file: decisions.yaml
+    purpose: Significant decisions, their reasoning, and their outcomes.
+
+  - id: meetings
+    name: Meetings
+    group: reflection
+    owned_by: meetings
+    file: meetings.yaml
+    purpose: Conversation records and what they produced.
+
+  # ── Knowledge ──────────────────────────────────────────────────────────────
+  - id: knowledge
+    name: Knowledge
+    group: knowledge
+    owned_by: knowledge
+    file: knowledge.yaml
+    purpose: Understanding written down in retrievable form.
+
+  - id: resources
+    name: Resources
+    group: knowledge
+    owned_by: resources
+    file: resources.yaml
+    purpose: >
+      Reference material — bookmarks, documents, and files. One entity with a
+      `resource_type` discriminator, replacing three near-identical ones. See ADR-0007.
+
+  - id: reading
+    name: Reading
+    group: knowledge
+    owned_by: reading
+    file: reading.yaml
+    purpose: Books and long-form material being worked through.
+
+  - id: courses
+    name: Courses
+    group: knowledge
+    owned_by: courses
+    file: courses.yaml
+    purpose: Structured programmes with modules and completion.
+
+  # ── Growth ─────────────────────────────────────────────────────────────────
+  - id: skills
+    name: Skills
+    group: growth
+    owned_by: learning
+    file: skills.yaml
+    purpose: Capabilities being deliberately developed, with practice logged.
+
+  - id: career_events
+    name: Career Events
+    group: growth
+    owned_by: career
+    file: career-events.yaml
+    purpose: >
+      Trajectory and evidence — role changes and accomplishments in one dated log,
+      discriminated by `event_type`. See ADR-0007.
+
+  # ── People ─────────────────────────────────────────────────────────────────
+  - id: people
+    name: People
+    group: people
+    owned_by: relationships
+    file: people.yaml
+    purpose: The people who matter, with contact cadence and context.
+
+  # ── Finance ────────────────────────────────────────────────────────────────
+  - id: accounts
+    name: Accounts
+    group: finance
+    owned_by: finance
+    file: accounts.yaml
+    purpose: Where money sits, and its current balance.
+
+  - id: transactions
+    name: Transactions
+    group: finance
+    owned_by: finance
+    file: transactions.yaml
+    purpose: Money movements, categorised.
+
+  - id: budgets
+    name: Budgets
+    group: finance
+    owned_by: finance
+    file: budgets.yaml
+    purpose: Intended spend per category per period.
+
+  # ── Health ─────────────────────────────────────────────────────────────────
+  - id: health_metrics
+    name: Health Metrics
+    group: health
+    owned_by: health
+    file: health-metrics.yaml
+    purpose: Time-series measurements against targets.
+
+  - id: workouts
+    name: Workouts
+    group: health
+    owned_by: health
+    file: workouts.yaml
+    purpose: Training sessions performed.
+
+  # ── System ─────────────────────────────────────────────────────────────────
+  - id: agent_runs
+    name: Agent Runs
+    group: system
+    owned_by: command_center
+    file: agent-runs.yaml
+    purpose: Agent invocations, their output, and the review decision.
+
+# ── Entities considered and deliberately not created ─────────────────────────
+# Recorded so the same proposals are not re-litigated. See ADR-0007.
+rejected:
+  - id: bookmarks
+    reason: >
+      Merged into `resources`, distinguished by a bookmark resource_type. Identical field set.
+
+  - id: documents
+    reason: >
+      Merged into `resources`, distinguished by a document resource_type. Identical field set.
+
+  - id: achievements
+    reason: >
+      Merged into `career_events`, distinguished by an achievement event_type. Identical
+      field set.
+
+  - id: commitments
+    reason: >
+      A promise made to someone is a task with a person attached. Merged into `tasks`.
+      The separate attention it deserves is a view concern, not an entity concern.
+
+  - id: prompt_library
+    reason: >
+      Prompts live in prompts/ in the repository, which is their source of truth. The
+      Prompt Library page is a read-only projection, not a Notion database. See ADR-0003.
+
+  - id: areas
+    reason: A life area is a taxonomy value, not an entity. See core/taxonomy/life-areas.yaml.

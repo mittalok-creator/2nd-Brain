@@ -1,0 +1,94 @@
+id: career_events
+name: Career Events
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Professional trajectory and evidence in one dated log — role changes, promotions, and
+  accomplishments — discriminated by `event_type`. Merged from two proposed entities whose
+  field sets were identical. See ADR-0007.
+
+icon: "💼"
+group: growth
+
+fields:
+  - id: title
+    name: Event
+    type: text
+    required: true
+
+  - id: event_type
+    name: Type
+    type: select
+    options: [milestone, achievement, recognition, setback]
+    required: true
+    description: >
+      `milestone` is a trajectory change — a role, a promotion, a move. `achievement` is
+      delivered work. `setback` is included deliberately: a career log containing only wins is
+      a document written for someone else, and it is useless for judging your own pattern.
+
+  - id: event_date
+    name: Date
+    type: date
+    required: true
+
+  - id: description
+    name: What happened
+    type: rich_text
+    required: true
+
+  - id: impact
+    name: Impact
+    type: rich_text
+    description: >
+      The outcome, with numbers where they exist. Written now, while the numbers are still at
+      hand — reconstructing impact a year later reliably loses the strongest material.
+
+  - id: role
+    name: Role at the time
+    type: text
+
+  - id: organisation
+    name: Organisation
+    type: text
+
+  - id: skills_demonstrated
+    name: Skills demonstrated
+    type: text
+    description: Linked to `skills` records during routing where a match exists.
+
+  - id: visibility
+    name: Visibility
+    type: select
+    options: [private, internal, public]
+    default: internal
+    description: >
+      Who knows about this. Work nobody senior saw counts differently from work that was
+      visible, and the distinction is worth tracking honestly rather than discovering at
+      promotion time.
+
+  - id: use_in
+    name: Reusable for
+    type: multi_select
+    options: [resume, performance_review, interview, portfolio, promotion_case]
+    description: >
+      Where this evidence is worth deploying. Tagging at capture time is what makes assembling
+      a review or application a filtering exercise rather than an act of recall.
+
+  - id: lesson
+    name: Lesson
+    type: rich_text
+    description: Most valuable on `setback` records.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [event_date, title]
+
+defaults:
+  visibility: internal
+  sort:
+    - { field: event_date, direction: descending }

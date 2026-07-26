@@ -1,0 +1,66 @@
+id: prompt_library
+name: Prompt Library
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Every reusable prompt in the system, with its output contract, model tier, and version
+  history. A read-only projection of the repository — prompts are defined in prompts/, which is
+  their source of truth.
+
+icon: "💬"
+class: system
+parent: command_center
+order: 1
+question: Which prompt do I use for this, and what does it expect?
+
+owns_entities: []
+
+source:
+  from: repository
+  paths:
+    - prompts/library/*.md
+    - prompts/patterns/*.md
+    - agents/*/prompt.md
+  description: >
+    Generated at sync time. Deliberately not a Notion database: a prompt table in Notion would
+    be a second definition capable of drifting from the one actually executed, and the executed
+    one would win silently. See ADR-0003.
+
+blocks:
+  - type: callout
+    content: static
+    text: >
+      Generated from prompts/ and read-only. To change a prompt, edit it in the repository,
+      bump its version, and re-sync.
+
+  - type: view
+    view: prompts_by_task
+    title: By task
+    description: >
+      Named in verb-object form, so the library reads as a list of things the system can do
+      rather than a list of files.
+
+  - type: view
+    view: prompts_patterns
+    title: Patterns
+    description: >
+      The reusable structures library prompts are built from, each with its known failure modes.
+      Read this before writing a new prompt — the failure has usually been met already.
+
+  - type: divider
+
+  - type: view
+    view: prompts_recently_changed
+    title: Recently revised
+    description: >
+      With the version and the reason. Useful when output quality changes unexpectedly: the
+      cause is usually a prompt revision, and this is where to look first.
+
+  - type: view
+    view: prompts_correction_rate
+    title: Correction rate
+    description: >
+      How often each prompt's output is corrected or rejected, drawn from agent_runs. The
+      queue for prompt improvement, ordered by where the pain actually is rather than by
+      intuition.

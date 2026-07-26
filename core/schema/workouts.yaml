@@ -1,0 +1,85 @@
+id: workouts
+name: Workouts
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Training sessions performed. Records what was actually done, at a level of detail that can be
+  sustained — a log too detailed to maintain stops being kept, which is worse than a coarse one.
+
+icon: "🏋"
+group: health
+
+fields:
+  - id: title
+    name: Session
+    type: text
+    required: true
+
+  - id: workout_date
+    name: Date
+    type: date
+    required: true
+
+  - id: workout_type
+    name: Type
+    type: select
+    options: [strength, cardio, mobility, sport, walk, mixed, rest]
+    required: true
+    description: >
+      `rest` is a recorded type, not an absence of record. A planned rest day and a skipped
+      session look identical in a log that only stores what happened.
+
+  - id: duration_minutes
+    name: Duration
+    type: number
+    format: integer
+    unit: minutes
+
+  - id: intensity
+    name: Intensity
+    type: select
+    options: [easy, moderate, hard, maximal]
+    description: >
+      Perceived effort. Subjective and adequate — a heart-rate zone breakdown is more precise
+      and gets logged for two weeks.
+
+  - id: felt
+    name: How it felt
+    type: select
+    options: [strong, normal, flat, struggled]
+    description: >
+      Correlated against sleep and workload at monthly review. Consistently `flat` alongside
+      good sleep usually indicates accumulated load rather than a bad session.
+
+  - id: detail
+    name: Detail
+    type: rich_text
+    description: Exercises, sets, distances. Optional — the summary fields carry the trend.
+
+  - id: completed_as_planned
+    name: As planned
+    type: checkbox
+    default: true
+    description: >
+      Whether this matched the intended session. Repeated deviation means the plan is wrong, not
+      that the training is failing.
+
+  - id: source
+    name: Source
+    type: select
+    options: [manual, wearable, app]
+    default: manual
+
+  - id: logged_at
+    name: Logged
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [workout_date, workout_type]
+
+defaults:
+  source: manual
+  sort:
+    - { field: workout_date, direction: descending }

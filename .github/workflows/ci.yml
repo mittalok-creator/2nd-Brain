@@ -42,6 +42,9 @@ jobs:
       - name: Workspace page hierarchy
         run: python scripts/validate_repository.py --only hierarchy
 
+      - name: Entity schemas and ownership
+        run: python scripts/validate_repository.py --only schema
+
   hygiene:
     name: Repository hygiene
     runs-on: ubuntu-latest

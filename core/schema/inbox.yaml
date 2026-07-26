@@ -1,0 +1,99 @@
+id: inbox
+name: Inbox
+version: 1.0.0
+status: active
+owner: core
+description: >
+  The single capture destination. Everything entering the system lands here first, with one
+  required field, and is routed later. The only entity where incompleteness is the normal
+  state.
+
+icon: "📥"
+group: reflection
+
+# Deliberately permissive: `content` is the only required field. Every other field is
+# filled during routing, and the completeness requirements of the destination are
+# enforced at the boundary out of this entity rather than on the way in.
+# See ADR-0006 and workspace/capture-routing.yaml.
+
+fields:
+  - id: content
+    name: Content
+    type: rich_text
+    required: true
+    description: The captured thought, link, or text. The only thing capture asks for.
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: inbox
+    required: true
+
+  - id: source
+    name: Source
+    type: select
+    options: [manual, mobile, voice, email, web_clip, calendar, file_drop]
+    required: true
+    default: manual
+    description: >
+      Which entry point produced this. Sources other than `manual`, `mobile`, and `voice`
+      carry content authored by someone else and are treated as untrusted by the
+      classification agent — see SECURITY.md.
+
+  - id: captured_at
+    name: Captured
+    type: created_time
+    description: >
+      Drives the 14-day staleness rule. An item unrouted past that point is not a backlog
+      item; it is evidence that something was captured which did not matter.
+
+  - id: proposed_destination
+    name: Proposed destination
+    type: text
+    description: >
+      The entity the routing agent suggests. A proposal, never applied automatically.
+
+  - id: proposed_rule
+    name: Matched rule
+    type: text
+    description: >
+      Which rule in capture-routing.yaml matched. Recorded so that a systematically wrong
+      rule is identifiable, rather than appearing as a series of unrelated mistakes.
+
+  - id: routed_to
+    name: Routed to
+    type: text
+    description: >
+      The entity actually created from this item, once accepted. Differing from
+      `proposed_destination` is the correction signal used to improve the routing prompt.
+
+  - id: routed_at
+    name: Routed
+    type: date
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    description: Assigned during routing, not at capture.
+
+  - id: url
+    name: URL
+    type: url
+
+  - id: attachment
+    name: Attachment
+    type: file
+
+identity:
+  primary: content
+  slug_from: [captured_at]
+  description: >
+    Captured content has no reliable title, so the timestamp alone identifies the item. Items
+    here are short-lived by design and never referenced from elsewhere.
+
+defaults:
+  status: captured
+  sort:
+    - { field: captured_at, direction: ascending }

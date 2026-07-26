@@ -33,15 +33,16 @@ Design the human-facing surface before designing the data.
 
 ---
 
-## Phase 3 — Databases ⬜ `v0.3.0`
+## Phase 3 — Databases ✅ `v0.3.0`
 
 The normalised data model, declared platform-neutrally.
 
-- [ ] Entity catalogue and canonical naming
-- [ ] Field-level schemas in `core/schema/` (types, defaults, validation, required-ness)
-- [ ] Shared taxonomies in `core/taxonomy/`: life areas, statuses, priorities, energy, horizons
-- [ ] Identity and slug strategy for stable cross-tool references
-- [ ] Schema validator extended to enforce field contracts
+- [x] Entity catalogue: 23 entities in `core/schema/_catalogue.yaml`, with rejected proposals recorded
+- [x] Field-level schemas for all 23 (types, defaults, validation, required-ness, identity)
+- [x] Five shared taxonomies: life areas, statuses, priorities, horizons, energy
+- [x] Normalisation rule — merge when field sets match, separate when they diverge (ADR-0007)
+- [x] Three-layer identity: type id, derived slug, provider id; plus per-entity uniqueness keys (ADR-0008)
+- [x] Validator extended: field contracts, taxonomy resolution, and entity ownership
 
 ---
 

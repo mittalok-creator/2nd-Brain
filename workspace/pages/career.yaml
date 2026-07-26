@@ -14,7 +14,7 @@ parent: home
 order: 10
 question: Am I building toward the next step, or just doing the current job?
 
-owns_entities: [career_milestones, achievements]
+owns_entities: [career_events]
 
 blocks:
   - type: callout
@@ -38,7 +38,7 @@ blocks:
   - type: divider
 
   - type: view
-    view: achievements_recent
+    view: career_achievements
     title: Evidence
     description: >
       Shipped work, outcomes, and numbers, captured as they happen. Written contemporaneously
@@ -49,6 +49,15 @@ blocks:
     view: career_milestones
     title: Trajectory
     layout_hint: timeline
+    description: >
+      Role changes and promotions — `career_events` filtered to milestone events.
+
+  - type: view
+    view: career_setbacks
+    title: Setbacks
+    description: >
+      Recorded deliberately. A career log containing only wins is a document written for someone
+      else, and it is useless for judging your own pattern.
 
   - type: divider
 

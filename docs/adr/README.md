@@ -19,6 +19,8 @@ rewrite an accepted ADR.
 | [0004](0004-yaml-specification-format.md) | YAML as the specification format | Accepted | 1 |
 | [0005](0005-workspace-information-architecture.md) | Workspace information architecture | Accepted | 2 |
 | [0006](0006-single-inbox-capture.md) | Single-inbox capture with deferred routing | Accepted | 2 |
+| [0007](0007-entity-catalogue-and-normalisation.md) | Entity catalogue and normalisation | Accepted | 3 |
+| [0008](0008-identity-and-slugs.md) | Stable identity and slugs | Accepted | 3 |
 
 ---
 
@@ -36,7 +38,7 @@ Do **not** write one for routine implementation choices with a conventional answ
 ## How to write one
 
 ```bash
-cp docs/adr/_template.md docs/adr/0007-short-title.md
+cp docs/adr/_template.md docs/adr/0009-short-title.md
 ```
 
 - Number sequentially, zero-padded to four digits. Numbers are never reused.

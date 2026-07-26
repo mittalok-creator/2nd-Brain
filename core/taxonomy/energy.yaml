@@ -1,0 +1,45 @@
+id: energy
+name: Energy
+version: 1.0.0
+status: active
+owner: core
+description: >
+  The kind of capacity a piece of work requires. Used to match work to actual available
+  capacity rather than to available hours — the distinction that makes daily planning
+  survive contact with a real day.
+
+# A calendar shows free hours. It does not show whether those hours can hold deep work.
+# Planning against hours alone is why plans that look reasonable at 7am are abandoned by 3pm.
+
+values:
+  - id: deep
+    name: Deep
+    color: accent
+    order: 1
+    description: >
+      Sustained concentration, no interruption, a warm-up cost to resume. Realistically
+      three to four hours a day at most, and the first thing a busy calendar destroys.
+
+  - id: shallow
+    name: Shallow
+    color: info
+    order: 2
+    description: >
+      Real work that tolerates interruption — reviewing, replying, planning, light editing.
+
+  - id: admin
+    name: Admin
+    color: neutral
+    order: 3
+    description: >
+      Mechanical and low-judgement: forms, filing, booking, data entry. Best batched, and
+      the correct choice for depleted hours.
+
+  - id: recovery
+    name: Recovery
+    color: success
+    order: 4
+    description: >
+      Deliberately restorative. Tracked as work because capacity that is never restored is
+      capacity that stops existing, and because scheduling recovery is the only reliable way
+      to get it.

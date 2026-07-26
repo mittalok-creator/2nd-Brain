@@ -1,0 +1,97 @@
+id: reviews
+name: Reviews
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Structured periodic review — weekly, monthly, quarterly. Carries a metric snapshot and
+  committed actions, which is what distinguishes it from the freeform daily `journal`.
+
+icon: "📊"
+group: reflection
+
+fields:
+  - id: title
+    name: Review
+    type: text
+    required: true
+    description: Generated as period and type, e.g. "2026-W31 Weekly".
+
+  - id: review_type
+    name: Type
+    type: select
+    options: [weekly, monthly, quarterly]
+    required: true
+
+  - id: period_start
+    name: Period start
+    type: date
+    required: true
+
+  - id: period_end
+    name: Period end
+    type: date
+    required: true
+    description: >
+      (`review_type`, `period_start`) is the upsert key. Re-running a review for the same
+      period updates it rather than producing a second one.
+
+  - id: metrics_snapshot
+    name: Metrics
+    type: rich_text
+    description: >
+      The figures as they stood at review time, captured rather than recomputed. A review read
+      six months later must show what was actually known then, not what the current data would
+      now produce.
+
+  - id: what_moved
+    name: What moved
+    type: rich_text
+
+  - id: what_slipped
+    name: What slipped
+    type: rich_text
+    description: >
+      Aggregated from task slip reasons across the period. The most useful section, because it
+      is the only one derived from evidence rather than recollection.
+
+  - id: honest_assessment
+    name: Honest assessment
+    type: rich_text
+    required: true
+    description: >
+      Was the period's work aimed at the right thing? Required, and deliberately the one
+      section with no supporting data — a review that only reports metrics does not change
+      direction.
+
+  - id: actions
+    name: Actions
+    type: rich_text
+    description: >
+      Commitments made in this review. Tracked to closure, because a review whose conclusions
+      are never revisited is theatre.
+
+  - id: actions_closed
+    name: Actions closed
+    type: checkbox
+    default: false
+    description: Set when every action from this review has been resolved.
+
+  - id: agent_analysis
+    name: Agent analysis
+    type: rich_text
+    description: >
+      Output from the Personal CEO agent, stored alongside the human assessment rather than
+      replacing it. Divergence between the two is itself worth noticing.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [review_type, period_start]
+
+defaults:
+  sort:
+    - { field: period_start, direction: descending }

@@ -61,11 +61,12 @@ blocks:
 
   - type: divider
 
-  - type: columns
-    columns:
-      - blocks: [{ type: link, page: resources }]
-      - blocks: [{ type: link, page: bookmarks }]
-      - blocks: [{ type: link, page: documents }]
+  - type: link
+    page: resources
+    title: Resources
+    description: >
+      Bookmarks, documents, files, and tools. One entity presented as views by
+      `resource_type` — see ADR-0007.
 
 design:
   notes: >

@@ -1,0 +1,113 @@
+id: people
+name: People
+version: 1.0.0
+status: active
+owner: core
+description: >
+  The people who matter — family, friends, mentors, and professional contacts — with the
+  cadence and context needed to maintain the relationship rather than merely remember it.
+
+icon: "🤝"
+group: people
+
+# This entity holds notes about real people. Record what helps you show up well, and
+# nothing you would not want them to read. See workspace/pages/relationships.yaml.
+
+fields:
+  - id: name
+    name: Name
+    type: text
+    required: true
+
+  - id: relationship
+    name: Relationship
+    type: select
+    options: [family, partner, close_friend, friend, mentor, mentee, colleague, professional, acquaintance]
+    required: true
+    description: >
+      Drives the default contact interval. `family` and `partner` are weighted most heavily —
+      the area taxonomy calls this area `relationships` precisely so that family is a group
+      within it rather than a separate domain.
+
+  - id: contact_interval_days
+    name: Contact every
+    type: number
+    format: integer
+    unit: days
+    description: >
+      Set deliberately per person — weekly for some, yearly for others. A single reminder
+      cadence applied to everyone produces noise, and noise gets muted, which ends the
+      usefulness of the whole feature.
+
+  - id: last_contact
+    name: Last contact
+    type: date
+    description: Compared against `contact_interval_days` to produce the overdue view.
+
+  - id: how_we_met
+    name: How we met
+    type: text
+
+  - id: context
+    name: Context
+    type: rich_text
+    description: >
+      What they care about, what they are working on, what was discussed last. The field that
+      lets a conversation resume where it stopped instead of restarting.
+
+  - id: important_dates
+    name: Important dates
+    type: rich_text
+    description: >
+      Birthdays and anniversaries. Surfaced 30 days ahead — the one thing a system genuinely
+      does better than memory.
+
+  - id: birthday
+    name: Birthday
+    type: date
+
+  - id: location
+    name: Location
+    type: text
+    description: Useful for timezone-aware contact and for noticing when travel overlaps.
+
+  - id: email
+    name: Email
+    type: email
+
+  - id: phone
+    name: Phone
+    type: phone
+
+  - id: reciprocity
+    name: Reciprocity
+    type: select
+    options: [i_owe_them, balanced, they_owe_me]
+    default: balanced
+    description: >
+      Recorded to catch one-sided relationships in both directions — those consistently
+      leaned on, and those consistently giving. Reviewed rather than acted on automatically.
+
+  - id: archived
+    name: Archived
+    type: checkbox
+    default: false
+    description: >
+      Relationships end, and that is normal. Archiving removes someone from overdue prompts
+      without deleting the shared history.
+
+  - id: created_at
+    name: Added
+    type: created_time
+
+identity:
+  primary: name
+  slug_from: [name]
+  description: >
+    Names repeat. Where two people share one, the slug is disambiguated at creation and the
+    id remains permanent thereafter.
+
+defaults:
+  reciprocity: balanced
+  sort:
+    - { field: last_contact, direction: ascending }

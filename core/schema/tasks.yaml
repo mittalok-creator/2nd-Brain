@@ -1,0 +1,137 @@
+id: tasks
+name: Tasks
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Single actions. The atomic unit of work, and the only entity touched many times a day —
+  so its field set is deliberately small and its capture cost deliberately low.
+
+icon: "✅"
+group: direction
+
+# Tasks also carry promises made to people: a commitment is a task with a person
+# attached, not a separate entity. The distinct attention a promise deserves is
+# handled by a view, not by duplicating the schema. See ADR-0007.
+
+fields:
+  - id: title
+    name: Task
+    type: text
+    required: true
+    validation:
+      max_length: 200
+    description: Starts with a verb. If it does not, it is probably not an action.
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: task
+    required: true
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    description: >
+      Inherited from the parent project where one exists. Set directly only for standalone
+      tasks.
+
+  - id: priority
+    name: Priority
+    type: select
+    taxonomy: priorities
+    default: medium
+
+  - id: energy
+    name: Energy
+    type: select
+    taxonomy: energy
+    description: >
+      What kind of capacity this needs. Used to match work to the hours actually available —
+      planning against clock time alone is why plans fail by mid-afternoon.
+
+  - id: context
+    name: Context
+    type: select
+    options: [desk, phone, errand, offline, anywhere]
+    default: anywhere
+    description: >
+      Where or how this can be done. Kept as a local enum rather than a shared taxonomy
+      because nothing else in the system uses it — see ADR-0007 on not over-abstracting.
+
+  - id: due_date
+    name: Due
+    type: date
+    description: >
+      A real deadline only. A task given an invented date to force attention teaches you to
+      ignore dates.
+
+  - id: scheduled_for
+    name: Scheduled
+    type: date
+    description: >
+      When work is intended, as distinct from when it is due. Separating the two is what makes
+      "committed but unscheduled" a detectable state rather than an unpleasant surprise.
+
+  - id: estimate
+    name: Estimate
+    type: number
+    format: decimal
+    unit: minutes
+
+  - id: completed_at
+    name: Completed
+    type: date
+
+  - id: blocked_by
+    name: Blocked by
+    type: text
+    description: Required when status is `blocked`.
+
+  - id: slipped_count
+    name: Times slipped
+    type: number
+    format: integer
+    default: 0
+    description: >
+      Incremented when a due or scheduled date passes with the task still open. A task at
+      four is not a scheduling problem — it is a task that should be cancelled or broken up,
+      and the count is what makes that visible.
+
+  - id: slip_reason
+    name: Why it slipped
+    type: text
+    description: >
+      Captured during the evening review. This is the raw material the weekly review reads;
+      a slip with no reason recorded teaches nothing.
+
+  - id: is_promise
+    name: Promise
+    type: checkbox
+    default: false
+    description: >
+      Committed to another person. Surfaced separately because a broken promise costs more
+      than a missed task and should not compete for attention in the same list.
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [created_at, title]
+  description: >
+    Task titles repeat legitimately ("draft the summary"), so the slug includes the creation
+    timestamp rather than pretending the title is unique.
+
+defaults:
+  status: todo
+  sort:
+    - { field: priority, direction: ascending }
+    - { field: due_date, direction: ascending }

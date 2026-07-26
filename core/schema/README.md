@@ -3,13 +3,22 @@
 One file per entity, named `kebab-case.yaml` after the entity's display concept. The
 permanent identity is the `id` inside the file.
 
+The index of every entity — its group, purpose, owning page, and defining file — is
+[`_catalogue.yaml`](_catalogue.yaml). It also records every entity **considered and rejected**,
+with the reason, so the same proposals are not re-litigated.
+
+Before adding an entity, apply the normalisation rule from
+[ADR-0007](../../docs/adr/0007-entity-catalogue-and-normalisation.md):
+
+> **Merge when the field sets are the same. Separate when they diverge.**
+
 ---
 
 ## File format
 
 ```yaml
-id: decision_journal
-name: Decision Journal
+id: decisions
+name: Decisions
 version: 1.0.0
 status: active
 owner: core
@@ -107,7 +116,15 @@ stated once rather than twice.
 
 ---
 
+## Enforcement
+
+`make schema` checks that every field uses an abstract type, that enum fields resolve to a
+taxonomy or declare a local option list, that defaults are allowed values, that
+`identity.primary` and `slug_from` name real fields, that no `relation` or `rollup` appears
+here, and that every entity is catalogued and owned by exactly one page.
+
+---
+
 ## Status
 
-⬜ Populated in **Phase 3**. The entity catalogue is drafted there; the format above is
-settled.
+✅ **Phase 3** — 23 entities defined. Relations arrive in **Phase 4**.

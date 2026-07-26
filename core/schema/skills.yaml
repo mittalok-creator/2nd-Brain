@@ -1,0 +1,99 @@
+id: skills
+name: Skills
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Capabilities being deliberately developed. Tracks practice rather than consumption, because
+  practice is what predicts whether a skill is actually acquired.
+
+icon: "🛠"
+group: growth
+
+fields:
+  - id: title
+    name: Skill
+    type: text
+    required: true
+    description: >
+      Specific enough to practise. "Public speaking" is a category; "delivering a 10-minute
+      technical talk without notes" is a skill.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+    default: learning
+
+  - id: status
+    name: Status
+    type: select
+    options: [wanted, learning, maintaining, retired]
+    required: true
+    default: wanted
+    description: >
+      `maintaining` matters: an acquired skill left entirely alone decays, and the maintenance
+      cost is real capacity that should be visible.
+
+  - id: current_level
+    name: Current level
+    type: select
+    options: [none, novice, competent, proficient, expert]
+    required: true
+    default: none
+
+  - id: target_level
+    name: Target level
+    type: select
+    options: [novice, competent, proficient, expert]
+    description: >
+      Deliberately chosen. Most skills should stop at `competent`; pursuing `expert` in
+      everything is how nothing reaches it.
+
+  - id: evidence_of_level
+    name: Evidence
+    type: rich_text
+    description: >
+      What demonstrates the current level. Required in practice before claiming an increase —
+      self-assessed skill level with no evidence drifts upward on its own.
+
+  - id: practice_method
+    name: How I practise
+    type: rich_text
+    description: >
+      The specific activity, not the material consumed. A skill with no stated practice method
+      is a skill being read about.
+
+  - id: practice_minutes_total
+    name: Practice logged
+    type: number
+    format: integer
+    unit: minutes
+    default: 0
+    description: Cumulative. Maintained by automation from practice records.
+
+  - id: last_practised
+    name: Last practised
+    type: date
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: reached_target_on
+    name: Reached target
+    type: date
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [title]
+
+defaults:
+  status: wanted
+  sort:
+    - { field: last_practised, direction: descending }

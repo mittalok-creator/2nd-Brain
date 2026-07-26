@@ -7,7 +7,7 @@
 *Think. Organize. Remember. Plan. Automate. Improve.*
 
 [![Status](https://img.shields.io/badge/status-active%20development-0A84FF?style=flat-square)](ROADMAP.md)
-[![Version](https://img.shields.io/badge/version-0.2.0-5E5CE6?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.3.0-5E5CE6?style=flat-square)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-30D158?style=flat-square)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-read-FF9F0A?style=flat-square)](docs/README.md)
 
@@ -85,9 +85,9 @@ New providers are added by dropping a definition into `config/providers/` — se
 ```
 2nd-Brain/
 ├── core/            # Platform-neutral specification (the actual system)
-│   ├── schema/      #   Database/entity definitions
+│   ├── schema/      #   23 entity definitions + _catalogue.yaml
 │   ├── relations/   #   The relational graph between entities
-│   ├── taxonomy/    #   Shared vocabularies: life areas, statuses, priorities
+│   ├── taxonomy/    #   Shared vocabularies: areas, statuses, priorities, horizons, energy
 │   └── design/      #   Design tokens: colour, type, spacing, iconography
 ├── workspace/       # Human-facing surface (Notion reference implementation)
 │   ├── pages/       #   Page hierarchy and content blueprints
@@ -131,7 +131,7 @@ independently useful.
 |---|---|---|
 | 1 | Repository Architecture | ✅ Complete |
 | 2 | Workspace Architecture | ✅ Complete |
-| 3 | Databases | ⬜ Planned |
+| 3 | Databases | ✅ Complete |
 | 4 | Relations | ⬜ Planned |
 | 5 | Dashboards | ⬜ Planned |
 | 6 | AI Agents | ⬜ Planned |

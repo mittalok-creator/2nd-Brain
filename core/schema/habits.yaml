@@ -1,0 +1,111 @@
+id: habits
+name: Habits
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Recurring commitments that reinforce a goal. A habit serving no goal is a preference, and
+  the routing gate enforces the distinction.
+
+icon: "🔁"
+group: direction
+
+# Completion records are not stored here. This entity defines the habit; each day's
+# tick is a separate record related to it, declared in core/relations/ in Phase 4.
+# Storing a checkbox per day on the habit itself would require a schema change every
+# time the calendar advanced.
+
+fields:
+  - id: title
+    name: Habit
+    type: text
+    required: true
+    validation:
+      max_length: 120
+    description: >
+      Small enough to be done on a bad day. A habit calibrated for good days is a habit with
+      a broken streak.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: habit
+    required: true
+
+  - id: cadence
+    name: Cadence
+    type: select
+    options: [daily, weekdays, weekly, twice_weekly, thrice_weekly, monthly]
+    required: true
+    description: >
+      Required by the routing gate. Without a stated cadence there is no definition of a miss,
+      so consistency cannot be measured.
+
+  - id: target_per_period
+    name: Target
+    type: number
+    format: integer
+    default: 1
+    description: How many times per cadence period counts as met.
+
+  - id: trigger
+    name: Trigger
+    type: text
+    description: >
+      The existing cue this attaches to — "after morning coffee", "before closing the laptop".
+      Habits anchored to an existing routine survive; habits anchored to intention do not.
+
+  - id: minimum_version
+    name: Minimum version
+    type: text
+    description: >
+      The smallest action that still counts on a bad day. Having one defined is what turns a
+      hard day into a maintained streak instead of a break.
+
+  - id: energy
+    name: Energy
+    type: select
+    taxonomy: energy
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: paused_until
+    name: Paused until
+    type: date
+    description: >
+      Set when status is `paused`. Pausing records no misses, which is what stops a legitimate
+      interruption — travel, illness — from ending the habit outright.
+
+  - id: retired_on
+    name: Retired
+    type: date
+
+  - id: retired_reason
+    name: Why retired
+    type: rich_text
+    description: >
+      Either it became automatic, or it stopped being wanted. Both are successful exits and
+      worth distinguishing.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [area, title]
+
+defaults:
+  status: active
+  sort:
+    - { field: area, direction: ascending }
+    - { field: title, direction: ascending }

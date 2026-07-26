@@ -2,8 +2,8 @@
 
 Extending and maintaining 2nd Brain.
 
-> **Status** — Phase 1. Conventions, tooling, and extension points below are live. Sync
-> adapter internals and the test harness are documented in Phases 3 and 9.
+> **Status** — current through Phase 3. Conventions, tooling, and extension points below are
+> live. Sync adapter internals are documented in a later phase; the test harness in Phase 9.
 
 ---
 
@@ -32,11 +32,12 @@ make validate
 | Command | Does |
 |---|---|
 | `make help` | List available targets |
-| `make validate` | Structure, YAML, links, and hierarchy — the full CI check |
+| `make validate` | Structure, YAML, links, hierarchy, and schema — the full CI check |
 | `make structure` | Repository layout only |
 | `make yaml` | YAML syntax and spec headers only |
 | `make links` | Internal documentation links only |
 | `make hierarchy` | Workspace page tree and navigation constraints only |
+| `make schema` | Entity field contracts, taxonomy references, and ownership only |
 | `make tree` | Print the repository map |
 
 Run `make validate` before every push. CI runs exactly the same script, so a green local
@@ -49,7 +50,7 @@ run means a green pipeline.
 `scripts/validate_repository.py` is deliberately dependency-light — standard library plus
 PyYAML — so it runs anywhere without a build step.
 
-It enforces four things:
+It enforces five things:
 
 1. **Structure.** Required files and directories exist; every top-level directory has a
    `README.md`; ADR numbers are unique and sequential.
@@ -62,6 +63,11 @@ It enforces four things:
    [ADR-0005](../adr/0005-workspace-information-architecture.md): exactly one root, depth ≤ 3,
    explicit and unique sibling order, composed pages have blueprints while generated pages do
    not, and each blueprint's `class`, `parent`, and `order` agree with `_hierarchy.yaml`.
+5. **Schema.** Every field uses an abstract type; enum fields resolve to a taxonomy or declare a
+   local option list; defaults are allowed values; `identity.primary` and `slug_from` name real
+   fields; `relation` and `rollup` are rejected (they belong in `core/relations/`); every entity
+   is catalogued and owned by exactly one page. See
+   [ADR-0007](../adr/0007-entity-catalogue-and-normalisation.md).
 
 Adding a check: add a function, register it in `CHECKS`, add a `make` target, and add a CI
 step. Keep checks offline and deterministic.
@@ -72,11 +78,19 @@ step. Keep checks offline and deterministic.
 
 ### A new entity
 
-1. Create `core/schema/<entity>.yaml` with the header contract and field definitions.
-2. Declare its relations in `core/relations/`.
-3. Add views that expose it in `workspace/views/`.
-4. Place it in the page hierarchy in `workspace/pages/`.
-5. `make validate`, then commit as `feat(schema): add <entity>`.
+1. Create `core/schema/<entity>.yaml` with the header contract, field definitions, and an
+   `identity` block. Use abstract types only, and reference a shared taxonomy for any value set
+   used by more than one entity.
+2. Add it to `core/schema/_catalogue.yaml` with its group, file, purpose, and owning page.
+3. Give it an owner: add it to a composed page's `owns_entities`, or to a generated page's
+   `entity` in `_hierarchy.yaml`. Exactly one page must own it.
+4. Declare its relations in `core/relations/`.
+5. Add views that expose it in `workspace/views/`.
+6. `make validate`, then commit as `feat(schema): add <entity>`.
+
+Before adding one, check the `rejected:` block in `_catalogue.yaml` — and apply the
+normalisation rule from [ADR-0007](../adr/0007-entity-catalogue-and-normalisation.md): merge
+when field sets are the same, separate when they diverge.
 
 ### A new agent
 
@@ -122,8 +136,8 @@ Ids are permanent. Display names are free to change. See
 Every spec file starts with:
 
 ```yaml
-id: decision_journal
-name: Decision Journal
+id: decisions
+name: Decisions
 version: 1.0.0
 status: active        # draft | active | deprecated
 owner: core
@@ -142,7 +156,7 @@ exports under `automation/n8n/` and `automation/actions/`.
 
 | Job | Checks |
 |---|---|
-| `validate` | Structure, YAML specs, internal links |
+| `validate` | Structure, YAML specs, internal links, page hierarchy, entity schemas |
 | `hygiene` | No tracked `.env` or credential-shaped files; trailing newlines |
 | `commits` | Conventional Commit subjects on pull requests |
 

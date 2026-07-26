@@ -48,7 +48,7 @@ Slugs are lowercase kebab-case: `feat/agent-personal-ceo`.
 **Subject** — imperative mood, lowercase, no trailing period, ≤ 72 characters.
 
 ```
-feat(schema): add decision journal entity with outcome scoring
+feat(schema): add decisions entity with confidence calibration
 docs(adr): record why notion is a projection, not the source of truth
 refactor(workspace): flatten review pages into a single review hub
 ```
@@ -82,10 +82,10 @@ BREAKING CHANGE: existing task relations must be re-pointed. See docs/migrations
 | Thing | Convention | Example |
 |---|---|---|
 | Directory | `kebab-case` | `core/schema/` |
-| Spec file | `kebab-case.yaml` | `decision-journal.yaml` |
-| Entity / database id | `snake_case` | `decision_journal` |
+| Spec file | `kebab-case.yaml` | `career-events.yaml` |
+| Entity / database id | `snake_case` | `career_events` |
 | Field id | `snake_case` | `expected_outcome` |
-| Display name | Title Case | `Decision Journal` |
+| Display name | Title Case | `Career Events` |
 | Agent id | `kebab-case` | `personal-ceo` |
 | Enum value | `snake_case` | `in_progress` |
 | Documentation file | `kebab-case.md` | `system-architecture.md` |
@@ -93,8 +93,8 @@ BREAKING CHANGE: existing task relations must be re-pointed. See docs/migrations
 **Every spec file carries a header block:**
 
 ```yaml
-id: decision_journal
-name: Decision Journal
+id: decisions
+name: Decisions
 version: 1.0.0
 status: active        # draft | active | deprecated
 owner: core

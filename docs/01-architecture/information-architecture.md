@@ -27,9 +27,7 @@ Authoritative tree: [`workspace/pages/_hierarchy.yaml`](../../workspace/pages/_h
 ├── 🚀 Projects                What is moving, and what is stuck?
 │
 ├── 🧠 Knowledge               What do I know, and where did I put it?
-│   ├── 🗂 Resources
-│   ├── 🔗 Bookmarks
-│   └── 📄 Documents
+│   └── 🗂 Resources           bookmarks · documents · files · tools
 ├── 📚 Learning                Am I getting measurably better?
 │   ├── 📖 Reading
 │   └── 🎓 Courses
@@ -93,28 +91,37 @@ the test applied before any new page is added.
 | **Composed** | Yes — `workspace/pages/<id>.yaml` | Views, agent output, and navigation arranged into a purpose-built surface |
 | **Generated** | No | Entirely the views of a single entity, generated from that entity's view set |
 
-Sixteen pages are composed; the rest are generated. A blueprint that would only restate "show
+Eighteen pages are composed; the rest are generated. A blueprint that would only restate "show
 this entity's views" adds no information and gives the structure somewhere to drift from
 reality.
 
-Three composed pages — Command Center, Agents, and Taxonomy — are **read-only projections from
-the repository** rather than from Notion databases. Their content comes from
-`agents/_registry.yaml` and `core/taxonomy/`, because the repository is the source of truth for
-what agents and taxonomies exist. Editing them in Notion would produce a definition that no
-longer matches the one being executed.
+Four composed pages — Command Center, Agents, Taxonomy, and Prompt Library — are **read-only
+projections from the repository** rather than from Notion databases. Their content comes from
+`agents/`, `prompts/`, and `core/taxonomy/`, because the repository is the source of truth for
+what agents, prompts, and taxonomies exist. Editing them in Notion would produce a definition
+that no longer matches the one being executed.
 
 ---
 
 ## Ownership versus projection
 
-Every entity is **owned** by exactly one page, declared in that blueprint's `owns_entities`.
-Other pages may display the same data, but only the owner defines it.
+Each of the 23 entities is **owned** by exactly one page — declared either in a composed
+blueprint's `owns_entities`, or by a generated page's `entity`. Other pages may display the
+same data, but only the owner defines it. `make schema` enforces that ownership is complete and
+unique.
 
 ```
-Goals        owns  goals
-Projects     owns  projects, tasks
-Knowledge    owns  knowledge
-Relationships owns people
+Goals          owns  goals
+Habits         owns  habits, habit_logs
+Projects       owns  projects, tasks
+Knowledge      owns  knowledge
+Resources      owns  resources
+Learning       owns  skills
+Career         owns  career_events
+Relationships  owns  people
+Finance        owns  accounts, transactions, budgets
+Health         owns  health_metrics, workouts
+Command Center owns  agent_runs
 ```
 
 Career shows professional contacts; Health shows health habits. Both are **projections** of
@@ -129,7 +136,7 @@ One inbox, many destinations. Capture is instant and unstructured; routing is de
 batched, and agent-assisted.
 
 ```
-   Seven entry points                One inbox            Fifteen destinations
+   Seven entry points                One inbox            Sixteen destinations
    ─────────────────                 ─────────            ────────────────────
    Manual  ─┐
    Mobile  ─┤
@@ -145,7 +152,7 @@ Full routing table: [`workspace/capture-routing.yaml`](../../workspace/capture-r
 
 ### Why routing is deferred
 
-Choosing among fifteen destinations at the moment of capture is what stops capture happening.
+Choosing among sixteen destinations at the moment of capture is what stops capture happening.
 Worse, classification is frequently impossible at that moment — whether "look into vector
 databases" is a task, a knowledge topic, or a project seed is often not yet knowable.
 
@@ -164,7 +171,7 @@ graph, an unlinked knowledge note is unretrievable. So required fields are enfor
 | `projects` | `goal` | A project serving no goal is unowned work |
 | `knowledge` | `related_to` | An unconnected note is never found again |
 | `habits` | `goal`, `cadence` | A habit serving no goal is a preference |
-| `decision_journal` | `expected_outcome` | Recorded later, reasoning is contaminated by hindsight |
+| `decisions` | `expected_outcome` | Recorded later, reasoning is contaminated by hindsight |
 
 This is the only boundary-enforced constraint in the system, and it is what lets capture stay
 free while destinations stay clean.

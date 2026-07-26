@@ -43,8 +43,8 @@ it belongs in `workspace/` or in a provider adapter.
 Every YAML file in `core/` begins with:
 
 ```yaml
-id: decision_journal        # snake_case, permanent
-name: Decision Journal      # Title Case, freely renamable
+id: decisions               # snake_case, permanent
+name: Decisions             # Title Case, freely renamable
 version: 1.0.0              # semantic
 status: active              # draft | active | deprecated
 owner: core
@@ -91,5 +91,8 @@ list may be used.
 
 ## Status
 
-⬜ Populated in **Phase 3** (schema, taxonomy), **Phase 4** (relations), and **Phase 5**
-(design tokens). Conventions above are live from Phase 1.
+✅ **Phase 3** — 23 entities in `schema/`, 5 shared taxonomies in `taxonomy/`. Field contracts,
+taxonomy references, and entity ownership are enforced by `make schema`.
+
+⬜ `relations/` in **Phase 4**, `design/` in **Phase 5**. Schemas carry no `relation` or
+`rollup` fields until then, by design — see [ADR-0007](../docs/adr/0007-entity-catalogue-and-normalisation.md).

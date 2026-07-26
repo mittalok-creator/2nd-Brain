@@ -1,0 +1,126 @@
+id: agent_runs
+name: Agent Runs
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Agent invocations, their output, and the human review decision. The audit trail that makes
+  "agents propose, humans decide" verifiable rather than aspirational, and the record from which
+  prompt quality is measured.
+
+icon: "🤖"
+group: system
+
+fields:
+  - id: agent_id
+    name: Agent
+    type: text
+    required: true
+    description: >
+      The agent's id from agents/_registry.yaml. Text rather than a relation because agents are
+      defined in the repository, not as a Notion database — see ADR-0003.
+
+  - id: prompt_version
+    name: Prompt version
+    type: text
+    required: true
+    description: >
+      Which prompt revision produced this. Without it, a regression cannot be traced to the
+      change that caused it, and prompt improvement becomes guesswork.
+
+  - id: invoked_at
+    name: Invoked
+    type: date
+    required: true
+
+  - id: trigger
+    name: Trigger
+    type: select
+    options: [manual, schedule, automation, chained]
+    required: true
+
+  - id: model_tier
+    name: Tier
+    type: select
+    options: [reasoning, balanced, fast]
+    required: true
+    description: Resolved to a concrete model by config/models.yaml at invocation time.
+
+  - id: model_id
+    name: Model
+    type: text
+    description: >
+      The concrete model actually used. Recorded because a tier's resolution changes over time,
+      and comparing output quality across a model change requires knowing which one ran.
+
+  - id: outcome
+    name: Outcome
+    type: select
+    options: [success, partial, failure, refused]
+    required: true
+
+  - id: output
+    name: Output
+    type: rich_text
+
+  - id: review_status
+    name: Review
+    type: select
+    options: [pending, accepted, corrected, rejected]
+    required: true
+    default: pending
+    description: >
+      `corrected` is the most valuable value: it means the output was usable but wrong in a
+      specific way, and the correction is the strongest available signal for improving the prompt.
+
+  - id: correction
+    name: Correction
+    type: rich_text
+    description: What was changed, and why. Read when revising the prompt.
+
+  - id: rejection_reason
+    name: Why rejected
+    type: select
+    options:
+      - wrong_format
+      - invented_data
+      - too_generic
+      - wrong_scope
+      - followed_injected_instruction
+      - stale_inputs
+      - other
+    description: >
+      A closed list so failure patterns aggregate. `followed_injected_instruction` is tracked
+      separately because it is a safety failure, not a quality one, and needs a different response.
+
+  - id: input_tokens
+    name: Input tokens
+    type: number
+    format: integer
+
+  - id: output_tokens
+    name: Output tokens
+    type: number
+    format: integer
+
+  - id: duration_ms
+    name: Duration
+    type: number
+    format: integer
+    unit: milliseconds
+
+  - id: correlation_id
+    name: Correlation id
+    type: text
+    description: >
+      Ties this run to the ritual that triggered it and the records it produced. Matches the
+      envelope field emitted to Axiom — see automation/axiom/README.md.
+
+identity:
+  primary: agent_id
+  slug_from: [invoked_at, agent_id]
+
+defaults:
+  review_status: pending
+  sort:
+    - { field: invoked_at, direction: descending }

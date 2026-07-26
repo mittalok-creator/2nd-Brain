@@ -10,9 +10,11 @@ Three independent checks, all offline and deterministic:
   links      every relative Markdown link resolves to a real path
   hierarchy  the workspace page tree satisfies its navigation constraints, and
              composed pages have blueprints while generated pages do not
+  schema     entity field contracts hold, taxonomy references resolve, and every
+             entity is owned by exactly one page
 
 Usage:
-    python3 scripts/validate_repository.py [--only structure|yaml|links|hierarchy] [--quiet]
+    python3 scripts/validate_repository.py [--only CHECK] [--quiet]
 
 Exit code 0 when clean, 1 when any check fails.
 """
@@ -31,6 +33,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_FILES = [
     "workspace/pages/_hierarchy.yaml",
     "workspace/capture-routing.yaml",
+    "core/schema/_catalogue.yaml",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",
@@ -94,6 +97,38 @@ HEADER_EXEMPT = re.compile(r"(^|/)(_|\.)|/n8n/|/actions/")
 
 LINK_PATTERN = re.compile(r"(?<!\!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
+SNAKE_CASE = re.compile(r"^[a-z][a-z0-9_]*$")
+
+# The complete set of abstract field types (core/README.md). A provider adapter maps
+# each to its vendor equivalent; nothing outside this list may be used.
+ABSTRACT_TYPES = {
+    "text",
+    "rich_text",
+    "number",
+    "select",
+    "multi_select",
+    "status",
+    "date",
+    "checkbox",
+    "url",
+    "email",
+    "phone",
+    "relation",
+    "rollup",
+    "formula",
+    "person",
+    "file",
+    "created_time",
+    "last_edited_time",
+}
+
+# Relations and rollups are declared in core/relations/, never in an entity schema,
+# so that cardinality is stated once rather than twice. See core/schema/README.md.
+TYPES_FORBIDDEN_IN_SCHEMA = {"relation", "rollup"}
+
+ENUM_TYPES = {"select", "multi_select", "status"}
+NUMBER_FORMATS = {"integer", "decimal", "currency", "percent"}
+VALIDATION_KEYS = {"min", "max", "pattern", "max_length"}
 
 
 # ── Reporting ────────────────────────────────────────────────────────────────
@@ -130,6 +165,21 @@ def walk(root: Path):
 
 def rel(path: Path) -> str:
     return path.relative_to(REPO_ROOT).as_posix()
+
+
+def load_yaml(report: Report, path: Path):
+    """Parse a YAML file, reporting rather than raising on malformed input.
+
+    The `yaml` check reports syntax errors in detail; downstream checks only need to
+    skip the file without taking the whole run down with a traceback.
+    """
+    import yaml  # local import: callers have already confirmed it is available
+
+    try:
+        return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as exc:
+        report.error(f"{rel(path)} could not be parsed — {str(exc).splitlines()[0]}")
+        return None
 
 
 # ── Checks ───────────────────────────────────────────────────────────────────
@@ -258,7 +308,9 @@ def check_hierarchy(report: Report) -> None:
         report.error("hierarchy: workspace/pages/_hierarchy.yaml is missing")
         return
 
-    document = yaml.safe_load(hierarchy_path.read_text(encoding="utf-8")) or {}
+    document = load_yaml(report, hierarchy_path)
+    if document is None:
+        return
     pages = document.get("pages") or []
     constraints = document.get("constraints") or {}
     max_depth = constraints.get("max_depth", 3)
@@ -327,7 +379,9 @@ def check_hierarchy(report: Report) -> None:
     for path in sorted((REPO_ROOT / "workspace/pages").glob("*.yaml")):
         if path.name.startswith("_"):
             continue
-        blueprint = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        blueprint = load_yaml(report, path)
+        if blueprint is None:
+            continue
         blueprint_id = blueprint.get("id")
         if not blueprint_id:
             report.error(f"hierarchy: {rel(path)} has no id")
@@ -370,6 +424,279 @@ def check_hierarchy(report: Report) -> None:
             report.error(f"hierarchy: '{page['id']}' has invalid kind '{kind}'")
 
 
+def _load_taxonomies(report: Report, yaml) -> dict[str, dict]:
+    """Index core/taxonomy/ by id so schema references can be resolved."""
+    taxonomies: dict[str, dict] = {}
+    for path in sorted((REPO_ROOT / "core/taxonomy").glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        document = load_yaml(report, path)
+        if document is None:
+            continue
+        taxonomy_id = document.get("id")
+        if not taxonomy_id:
+            report.error(f"schema: {rel(path)} has no id")
+            continue
+        taxonomies[taxonomy_id] = document
+    return taxonomies
+
+
+def _taxonomy_values(taxonomy: dict, set_name: str | None) -> set[str] | None:
+    """Allowed value ids for a taxonomy, or for one named set within it."""
+    if set_name is not None:
+        sets = taxonomy.get("sets") or {}
+        if set_name not in sets:
+            return None
+        entries = (sets[set_name] or {}).get("values") or []
+    else:
+        entries = taxonomy.get("values") or []
+    return {entry["id"] for entry in entries if isinstance(entry, dict) and "id" in entry}
+
+
+def _check_field(report: Report, where: str, field: dict, taxonomies: dict) -> None:
+    field_id = field.get("id")
+    if not field_id:
+        report.error(f"schema: {where} has a field with no id")
+        return
+    label = f"{where}.{field_id}"
+
+    if not SNAKE_CASE.match(str(field_id)):
+        report.error(f"schema: {label} field id is not snake_case")
+    if "name" not in field:
+        report.error(f"schema: {label} has no display name")
+
+    field_type = field.get("type")
+    if field_type not in ABSTRACT_TYPES:
+        report.error(
+            f"schema: {label} type '{field_type}' is not an abstract field type "
+            f"(see core/README.md)"
+        )
+        return
+    if field_type in TYPES_FORBIDDEN_IN_SCHEMA:
+        report.error(
+            f"schema: {label} declares type '{field_type}' — relations and rollups belong in "
+            f"core/relations/, not in an entity schema"
+        )
+        return
+
+    # Enum fields draw from a shared taxonomy or an explicit local option list.
+    allowed: set[str] | None = None
+    if field_type in ENUM_TYPES:
+        taxonomy_id = field.get("taxonomy")
+        if taxonomy_id:
+            taxonomy = taxonomies.get(taxonomy_id)
+            if taxonomy is None:
+                report.error(f"schema: {label} references unknown taxonomy '{taxonomy_id}'")
+            else:
+                set_name = field.get("set")
+                if field_type == "status" and not set_name:
+                    report.error(f"schema: {label} is a status field but names no taxonomy set")
+                allowed = _taxonomy_values(taxonomy, set_name)
+                if allowed is None:
+                    report.error(
+                        f"schema: {label} references set '{set_name}', absent from "
+                        f"taxonomy '{taxonomy_id}'"
+                    )
+        elif "options" in field:
+            options = field.get("options") or []
+            allowed = set(options)
+            for option in options:
+                if not SNAKE_CASE.match(str(option)):
+                    report.error(f"schema: {label} option '{option}' is not snake_case")
+        else:
+            report.error(
+                f"schema: {label} is a {field_type} field with neither 'taxonomy' nor 'options'"
+            )
+    elif "options" in field:
+        report.error(f"schema: {label} declares options but is type '{field_type}'")
+
+    default = field.get("default")
+    if default is not None and allowed and field_type in ENUM_TYPES:
+        values = default if isinstance(default, list) else [default]
+        for value in values:
+            if value not in allowed:
+                report.error(f"schema: {label} default '{value}' is not an allowed value")
+
+    if field_type == "number":
+        number_format = field.get("format")
+        if number_format is not None and number_format not in NUMBER_FORMATS:
+            report.error(
+                f"schema: {label} format '{number_format}' must be one of "
+                f"{sorted(NUMBER_FORMATS)}"
+            )
+    elif "format" in field:
+        report.error(f"schema: {label} declares format but is type '{field_type}'")
+
+    for key in field.get("validation") or {}:
+        if key not in VALIDATION_KEYS:
+            report.error(
+                f"schema: {label} validation key '{key}' must be one of {sorted(VALIDATION_KEYS)}"
+            )
+
+
+def check_schema(report: Report) -> None:
+    """Validate entity field contracts, taxonomy references, and entity ownership."""
+    report.info("→ schema")
+
+    try:
+        import yaml  # type: ignore
+    except ImportError:
+        report.warn("schema: PyYAML not installed — check skipped")
+        return
+
+    catalogue_path = REPO_ROOT / "core/schema/_catalogue.yaml"
+    if not catalogue_path.is_file():
+        report.error("schema: core/schema/_catalogue.yaml is missing")
+        return
+
+    catalogue = load_yaml(report, catalogue_path)
+    if catalogue is None:
+        return
+    listed = {
+        entry["id"]: entry
+        for entry in (catalogue.get("entities") or [])
+        if isinstance(entry, dict) and "id" in entry
+    }
+    rejected = {
+        entry["id"]
+        for entry in (catalogue.get("rejected") or [])
+        if isinstance(entry, dict) and "id" in entry
+    }
+
+    declared_count = catalogue.get("entity_count")
+    if declared_count is not None and declared_count != len(listed):
+        report.error(
+            f"schema: _catalogue.yaml declares entity_count {declared_count} but lists "
+            f"{len(listed)} entities"
+        )
+
+    taxonomies = _load_taxonomies(report, yaml)
+
+    # ── Entity schemas ─────────────────────────────────────────────────────────
+    defined: dict[str, str] = {}
+    for path in sorted((REPO_ROOT / "core/schema").glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        document = load_yaml(report, path)
+        if document is None:
+            continue
+        entity_id = document.get("id")
+        if not entity_id:
+            report.error(f"schema: {rel(path)} has no id")
+            continue
+
+        if not SNAKE_CASE.match(str(entity_id)):
+            report.error(f"schema: {rel(path)} entity id '{entity_id}' is not snake_case")
+        if entity_id in defined:
+            report.error(f"schema: entity id '{entity_id}' defined twice")
+        defined[entity_id] = path.name
+
+        if entity_id not in listed:
+            report.error(f"schema: '{entity_id}' is not listed in _catalogue.yaml")
+        elif listed[entity_id].get("file") != path.name:
+            report.error(
+                f"schema: _catalogue.yaml points '{entity_id}' at "
+                f"'{listed[entity_id].get('file')}', but it is defined in {path.name}"
+            )
+
+        fields = document.get("fields")
+        if not fields:
+            report.error(f"schema: {rel(path)} declares no fields")
+            continue
+
+        seen: set[str] = set()
+        for field in fields:
+            if not isinstance(field, dict):
+                report.error(f"schema: {rel(path)} has a field that is not a mapping")
+                continue
+            field_id = field.get("id")
+            if field_id in seen:
+                report.error(f"schema: {entity_id}.{field_id} is declared twice")
+            seen.add(field_id)
+            _check_field(report, entity_id, field, taxonomies)
+
+        identity = document.get("identity") or {}
+        primary = identity.get("primary")
+        if not primary:
+            report.error(f"schema: {rel(path)} declares no identity.primary")
+        elif primary not in seen:
+            report.error(f"schema: {entity_id} identity.primary '{primary}' is not a field")
+        for source in identity.get("slug_from") or []:
+            if source not in seen:
+                report.error(f"schema: {entity_id} identity.slug_from '{source}' is not a field")
+
+        for rule in (document.get("defaults") or {}).get("sort") or []:
+            if isinstance(rule, dict) and rule.get("field") not in seen:
+                report.error(
+                    f"schema: {entity_id} default sort field '{rule.get('field')}' is not a field"
+                )
+
+    for entity_id, entry in listed.items():
+        if entity_id not in defined:
+            report.error(
+                f"schema: _catalogue.yaml lists '{entity_id}' ({entry.get('file')}), "
+                f"but no schema defines it"
+            )
+        if entity_id in rejected:
+            report.error(f"schema: '{entity_id}' is both listed and rejected in _catalogue.yaml")
+
+    # ── Ownership: every entity owned by exactly one page ──────────────────────
+    hierarchy_path = REPO_ROOT / "workspace/pages/_hierarchy.yaml"
+    if not hierarchy_path.is_file():
+        return
+
+    hierarchy = load_yaml(report, hierarchy_path)
+    if hierarchy is None:
+        return
+    owners: dict[str, list[str]] = {}
+
+    for page in hierarchy.get("pages") or []:
+        entity_id = page.get("entity")
+        if entity_id:
+            owners.setdefault(entity_id, []).append(f"{page['id']} (generated)")
+            if entity_id not in defined:
+                report.error(
+                    f"schema: generated page '{page['id']}' names entity '{entity_id}', "
+                    f"which no schema defines"
+                )
+
+    for path in sorted((REPO_ROOT / "workspace/pages").glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        document = load_yaml(report, path)
+        if document is None:
+            continue
+        page_id = document.get("id", path.name)
+        for entity_id in document.get("owns_entities") or []:
+            owners.setdefault(entity_id, []).append(str(page_id))
+            if entity_id not in defined:
+                report.error(
+                    f"schema: page '{page_id}' claims to own '{entity_id}', "
+                    f"which no schema defines"
+                )
+
+    for entity_id in defined:
+        claims = owners.get(entity_id, [])
+        if not claims:
+            report.error(
+                f"schema: entity '{entity_id}' is owned by no page — add it to a composed "
+                f"page's owns_entities, or to a generated page's entity"
+            )
+            continue
+        if len(claims) > 1:
+            report.error(f"schema: entity '{entity_id}' is owned by {len(claims)} pages {claims}")
+            continue
+
+        # The catalogue's `owned_by` is documentation, so it must agree with reality.
+        actual = claims[0].split(" ")[0]
+        recorded = (listed.get(entity_id) or {}).get("owned_by")
+        if recorded and recorded != actual:
+            report.error(
+                f"schema: _catalogue.yaml records '{entity_id}' as owned by '{recorded}', "
+                f"but page '{actual}' owns it"
+            )
+
+
 # ── Entrypoint ───────────────────────────────────────────────────────────────
 
 
@@ -378,6 +705,7 @@ CHECKS = {
     "yaml": check_yaml,
     "links": check_links,
     "hierarchy": check_hierarchy,
+    "schema": check_schema,
 }
 
 
@@ -388,7 +716,9 @@ def main() -> int:
     args = parser.parse_args()
 
     report = Report(quiet=args.quiet)
-    selected = [args.only] if args.only else ["structure", "yaml", "links", "hierarchy"]
+    selected = (
+        [args.only] if args.only else ["structure", "yaml", "links", "hierarchy", "schema"]
+    )
 
     report.info("2nd Brain — specification validation")
     for name in selected:

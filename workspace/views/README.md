@@ -71,5 +71,9 @@ empty_state: Nothing due. Pull forward from This Week, or stop.
 
 ## Status
 
-⬜ Populated in **Phase 3**, once entities exist to query, and extended in **Phase 5** for
-the dashboards.
+⬜ Populated in **Phase 5**, alongside the dashboards that compose them. The entities they
+query exist as of Phase 3, so the ~60 view ids currently referenced by page blueprints are
+forward references until then.
+
+The `workspace/views/` line in the Phase 5 roadmap entry is the plan of record; an earlier note
+here said Phase 3, which was wrong.

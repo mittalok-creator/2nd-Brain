@@ -1,0 +1,84 @@
+id: habits
+name: Habits
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Recurring commitments and their consistency over time. Sits under Goals because a habit is a
+  recurring commitment to a goal — one serving no goal is a preference.
+
+icon: "🔁"
+class: direction
+parent: goals
+order: 1
+question: Am I doing the things I said I would do repeatedly?
+
+owns_entities: [habits, habit_logs]
+
+blocks:
+  - type: view
+    view: habits_today
+    title: Today
+    description: Checked off in place. Also embedded on the Today page.
+
+  - type: view
+    view: habits_consistency
+    title: Consistency
+    description: >
+      Completion rate over 30 days, alongside the current streak. Rate is placed before streak
+      deliberately: a streak rewards perfection and collapses on one miss, while a rate
+      tolerates a bad week and still tells the truth.
+
+  - type: divider
+
+  - type: view
+    view: habits_at_risk
+    title: Slipping
+    description: >
+      Completion rate below target over the last two weeks. Surfaced before the streak breaks,
+      while correcting it is still easy.
+
+  - type: view
+    view: habits_paused
+    title: Paused
+    description: >
+      Deliberately suspended, with a resume date. Pausing records no misses — which is what
+      stops travel or illness from ending a habit outright.
+    empty_state: Nothing paused.
+
+  - type: divider
+
+  - type: view
+    view: habits_by_area
+    title: By area
+    layout_hint: board
+    description: >
+      Balance check. Habits concentrated entirely in one area is a legitimate choice, but worth
+      making knowingly.
+
+  - type: view
+    view: habits_no_minimum
+    title: Missing a minimum version
+    description: >
+      Habits with no defined bad-day version. These are the ones that break first, because
+      there is no smaller action that still counts.
+    empty_state: Every habit has a minimum version.
+
+  - type: divider
+
+  - type: template_button
+    template: habit-definition
+    title: New habit
+
+  - type: view
+    view: habits_retired
+    title: Retired
+    description: >
+      Either fully automatic or no longer wanted. Both are successful exits, and keeping the
+      record prevents re-adopting something already deliberately dropped.
+
+design:
+  notes: >
+    The design bias here is against perfectionism. Rate over streak, minimum versions surfaced,
+    pausing made easy, retirement framed as success — a habit tracker that only punishes is one
+    that gets abandoned in week three.

@@ -1,0 +1,97 @@
+id: health_metrics
+name: Health Metrics
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Time-series measurements against targets. A long, narrow table — one row per metric per day —
+  rather than one column per metric, so adding a tracked metric never requires a schema change.
+
+icon: "📈"
+group: health
+
+# Four to six actively tracked metrics is the working limit. An unused metric is not
+# neutral: it dilutes attention on the ones being acted upon.
+
+fields:
+  - id: metric
+    name: Metric
+    type: select
+    options:
+      - weight
+      - sleep_hours
+      - sleep_quality
+      - resting_heart_rate
+      - steps
+      - active_minutes
+      - blood_pressure_systolic
+      - blood_pressure_diastolic
+      - mood
+      - stress
+      - water_litres
+      - other
+    required: true
+    description: >
+      A closed list so that the same measurement is never recorded under two names, which would
+      split its trend line in half.
+
+  - id: value
+    name: Value
+    type: number
+    format: decimal
+    required: true
+
+  - id: unit
+    name: Unit
+    type: text
+    description: Stored explicitly so a unit change is visible rather than silently rescaling a trend.
+
+  - id: measured_on
+    name: Date
+    type: date
+    required: true
+    description: >
+      (`metric`, `measured_on`) is the upsert key — one reading per metric per day, which makes
+      health import idempotent.
+
+  - id: measured_at
+    name: Time
+    type: text
+    description: >
+      Time of day where it affects interpretation, as for weight or blood pressure. Text rather
+      than a datetime because precision beyond the hour is noise here.
+
+  - id: source
+    name: Source
+    type: select
+    options: [manual, wearable, scale, clinic, app]
+    default: manual
+    description: >
+      Device-sourced and manually entered readings are not interchangeable, and mixing them
+      without distinction produces step changes in a trend that look like real events.
+
+  - id: target_value
+    name: Target
+    type: number
+    format: decimal
+    description: >
+      The target in force when this was recorded, captured rather than referenced. A trend read
+      later must show the target that actually applied at the time.
+
+  - id: note
+    name: Note
+    type: text
+    description: Context that explains an outlier — illness, travel, a hard training week.
+
+  - id: logged_at
+    name: Logged
+    type: created_time
+
+identity:
+  primary: metric
+  slug_from: [measured_on, metric]
+
+defaults:
+  source: manual
+  sort:
+    - { field: measured_on, direction: descending }

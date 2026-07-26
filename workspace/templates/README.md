@@ -17,7 +17,7 @@ description: >
   Captures a significant decision at the moment it is made, before the outcome is known and
   hindsight distorts the reasoning.
 
-entity: decision_journal
+entity: decisions
 
 prefill:
   decided_on: today
@@ -68,7 +68,7 @@ blocks:
 | `meeting-note` | Meetings | Meeting Notes automation |
 | `knowledge-note` | Knowledge | Knowledge capture |
 | `book-note` | Reading | Reading Assistant |
-| `decision-entry` | Decision Journal | Decision Assistant |
+| `decision-entry` | Decisions | Decision Assistant |
 | `goal-definition` | Goals | Goal setting |
 | `habit-definition` | Habits | Habit design |
 

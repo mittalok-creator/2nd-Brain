@@ -1,0 +1,106 @@
+id: projects
+name: Projects
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Bounded work with a definition of done, serving exactly one goal. The unit between
+  intention and action: goals say what is wanted, projects say what will be built.
+
+icon: "🚀"
+group: direction
+
+fields:
+  - id: title
+    name: Project
+    type: text
+    required: true
+    validation:
+      max_length: 120
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: status
+    name: Status
+    type: status
+    taxonomy: statuses
+    set: project
+    required: true
+
+  - id: definition_of_done
+    name: Definition of done
+    type: rich_text
+    required: true
+    description: >
+      The condition that closes this project, written before work starts. Required by the
+      capture routing gate: a project without one expands indefinitely, because there is
+      nothing that could end it.
+
+  - id: outcome
+    name: Intended outcome
+    type: rich_text
+    description: What changes once this is delivered.
+
+  - id: priority
+    name: Priority
+    type: select
+    taxonomy: priorities
+    default: high
+
+  - id: started_on
+    name: Started
+    type: date
+
+  - id: due_date
+    name: Due
+    type: date
+
+  - id: closed_on
+    name: Closed
+    type: date
+
+  - id: blocked_by
+    name: Blocked by
+    type: text
+    description: >
+      Required when status is `blocked`. A named external dependency — "blocked" with nothing
+      recorded here means "avoiding", and the two need different responses.
+
+  - id: last_activity
+    name: Last activity
+    type: date
+    description: >
+      Most recent task completion. Maintained by automation and used to detect stalling at
+      14 days. Recorded as a field rather than derived at read time so that a project with no
+      tasks at all is still detectable as stalled.
+
+  - id: effort_estimate
+    name: Estimated effort
+    type: number
+    format: decimal
+    unit: hours
+    description: >
+      Order of magnitude, not a commitment. Its value is in comparison against actual effort
+      at review time, which is the only way estimation improves.
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [area, title]
+
+defaults:
+  status: planning
+  sort:
+    - { field: priority, direction: ascending }
+    - { field: due_date, direction: ascending }

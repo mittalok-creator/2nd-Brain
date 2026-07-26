@@ -24,9 +24,9 @@ python3 scripts/validate_repository.py --only yaml
 python3 scripts/validate_repository.py --quiet
 ```
 
-Or via `make`: `make validate`, `make structure`, `make yaml`, `make links`, `make hierarchy`.
+Or via `make`: `make validate`, `make structure`, `make yaml`, `make links`, `make hierarchy`, `make schema`.
 
-Four checks:
+Five checks:
 
 | Check | Enforces |
 |---|---|
@@ -34,6 +34,7 @@ Four checks:
 | `yaml` | Every YAML file parses; spec files carry the header contract with semantic `version` and valid `status` |
 | `links` | Every relative Markdown link resolves |
 | `hierarchy` | One root page; depth ≤ 3; unique sibling order; composed pages have blueprints and generated pages do not; blueprints agree with `_hierarchy.yaml` |
+| `schema` | Field types are abstract; enum values resolve to a taxonomy or a local option list; defaults are allowed values; `identity` fields exist; relations are absent; every entity is catalogued and owned by exactly one page |
 
 Exits `0` when clean, `1` on any error. Warnings do not fail the build.
 

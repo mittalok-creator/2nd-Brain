@@ -1,0 +1,96 @@
+id: budgets
+name: Budgets
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Intended spend per category per period. Actual spend is aggregated from transactions rather
+  than stored here, so the two can never disagree.
+
+icon: "📋"
+group: finance
+
+fields:
+  - id: category
+    name: Category
+    type: select
+    options:
+      - housing
+      - utilities
+      - groceries
+      - dining
+      - transport
+      - health
+      - insurance
+      - education
+      - subscriptions
+      - shopping
+      - travel
+      - gifts
+      - family
+      - taxes
+      - investment
+      - other
+    required: true
+    description: >
+      Mirrors the expense categories in `transactions`. Kept as a parallel local enum rather
+      than a shared taxonomy because the two lists diverge deliberately — income categories are
+      not budgeted.
+
+  - id: period_type
+    name: Period
+    type: select
+    options: [monthly, quarterly, annual]
+    required: true
+    default: monthly
+
+  - id: period_start
+    name: Period start
+    type: date
+    required: true
+    description: >
+      (`category`, `period_type`, `period_start`) is the uniqueness key — one budget per
+      category per period.
+
+  - id: planned_amount
+    name: Planned
+    type: number
+    format: currency
+    required: true
+
+  - id: currency
+    name: Currency
+    type: text
+    default: INR
+    validation:
+      pattern: "^[A-Z]{3}$"
+
+  - id: flexible
+    name: Flexible
+    type: checkbox
+    default: true
+    description: >
+      Whether exceeding this matters. Rent is fixed and exceeding it is impossible; dining is
+      flexible and exceeding it is a choice. Marking the difference stops fixed costs generating
+      meaningless variance alerts.
+
+  - id: rollover
+    name: Rolls over
+    type: checkbox
+    default: false
+    description: >
+      Whether an underspend carries into the next period. Useful for irregular categories like
+      travel and gifts, where a monthly figure is arbitrary.
+
+  - id: notes
+    name: Notes
+    type: rich_text
+
+identity:
+  primary: category
+  slug_from: [period_type, period_start, category]
+
+defaults:
+  period_type: monthly
+  sort:
+    - { field: period_start, direction: descending }

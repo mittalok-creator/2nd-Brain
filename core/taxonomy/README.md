@@ -9,17 +9,18 @@ here.
 
 ---
 
-## Planned vocabularies
+## Vocabularies
 
 | File | Defines |
 |---|---|
-| `life-areas.yaml` | The top-level domains: health, finance, career, learning, family, growth, meta |
-| `statuses.yaml` | Lifecycle states per entity class — task, project, goal, habit |
-| `priorities.yaml` | Priority scale with explicit meaning per level |
-| `horizons.yaml` | Time horizons: today, week, month, quarter, year, decade |
-| `energy.yaml` | Energy cost of work: deep, shallow, admin, recovery |
-| `contexts.yaml` | Where or how work happens: desk, phone, errand, offline |
-| `sources.yaml` | Where captured information came from: book, article, video, conversation, course |
+| `life-areas.yaml` | The seven top-level domains: health, finance, career, learning, relationships, admin, meta |
+| `statuses.yaml` | Lifecycle states per entity class — task, project, goal, habit, consumption, inbox |
+| `priorities.yaml` | Four priority levels, each with a definition |
+| `horizons.yaml` | Time horizons: today, week, month, quarter, year, long_term |
+| `energy.yaml` | The kind of capacity work needs: deep, shallow, admin, recovery |
+
+Two planned taxonomies were deliberately not created: `contexts` (used only by `tasks`) and
+`sources` (used only by `inbox`). Both are local enums instead.
 
 ---
 
@@ -79,4 +80,10 @@ values:
 
 ## Status
 
-⬜ Populated in **Phase 3**, before the entity schemas that reference it.
+✅ **Phase 3** — five taxonomies live: `life-areas`, `statuses`, `priorities`, `horizons`,
+`energy`.
+
+`contexts` and `sources` were planned here and are instead **local enums** on `tasks` and
+`inbox`, because each has exactly one consumer. A shared taxonomy with one consumer is
+indirection with no benefit — see
+[ADR-0007](../../docs/adr/0007-entity-catalogue-and-normalisation.md).

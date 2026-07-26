@@ -1,0 +1,118 @@
+id: decisions
+name: Decisions
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Significant decisions, the reasoning behind them, and their eventual outcomes. Exists to
+  calibrate judgement: without a contemporaneous record, hindsight rewrites every past
+  decision as either obvious or unlucky.
+
+icon: "⚖️"
+group: reflection
+
+fields:
+  - id: title
+    name: Decision
+    type: text
+    required: true
+    validation:
+      max_length: 200
+    description: Stated as a decision, not a question. "Move to X", not "should I move to X?"
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: decided_on
+    name: Decided
+    type: date
+    required: true
+
+  - id: reversibility
+    name: Reversibility
+    type: select
+    options: [reversible, costly_to_reverse, irreversible]
+    required: true
+    default: reversible
+    description: >
+      Determines how much deliberation is warranted. Reversible decisions made slowly cost
+      more than irreversible decisions made carefully.
+
+  - id: confidence
+    name: Confidence
+    type: number
+    format: percent
+    validation:
+      min: 0
+      max: 100
+    description: >
+      Recorded at the time of deciding, before the outcome is known. Comparing stated
+      confidence against actual outcomes over dozens of decisions is the only reliable way to
+      discover whether you are systematically over- or under-confident.
+
+  - id: expected_outcome
+    name: Expected outcome
+    type: rich_text
+    required: true
+    description: >
+      Specific enough to be shown wrong. Required by the routing gate, and required *before*
+      the result is known — recorded afterwards, the reasoning is already contaminated.
+
+  - id: reasoning
+    name: Reasoning
+    type: rich_text
+    description: What you believed at the time that made this the right call.
+
+  - id: alternatives
+    name: Alternatives rejected
+    type: rich_text
+    description: >
+      What else was on the table. Reviewing a bad outcome is far more informative when the
+      options actually available at the time are recorded.
+
+  - id: would_change_mind
+    name: What would change my mind
+    type: rich_text
+    description: >
+      The evidence that would reverse this. Written in advance, it turns a later reversal from
+      an admission of error into the execution of a stated plan.
+
+  - id: review_on
+    name: Review on
+    type: date
+    description: >
+      When to compare expectation against reality. Without a date the review never happens,
+      and the record produces no learning.
+
+  - id: actual_outcome
+    name: Actual outcome
+    type: rich_text
+    description: Filled in at review time, not before.
+
+  - id: verdict
+    name: Verdict
+    type: select
+    options: [better_than_expected, as_expected, worse_than_expected, too_early]
+    description: >
+      Judged on the decision's quality given what was knowable at the time, not on whether it
+      happened to work out. A good decision with a bad outcome is still a good decision.
+
+  - id: lesson
+    name: Lesson
+    type: rich_text
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [decided_on, title]
+
+defaults:
+  reversibility: reversible
+  sort:
+    - { field: decided_on, direction: descending }

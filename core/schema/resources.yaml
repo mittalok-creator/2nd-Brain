@@ -1,0 +1,88 @@
+id: resources
+name: Resources
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Reference material kept but not necessarily read end to end — bookmarks, documents, and
+  files. One entity discriminated by `resource_type`, replacing three separate ones whose
+  field sets were identical. See ADR-0007.
+
+icon: "🗂"
+group: knowledge
+
+fields:
+  - id: title
+    name: Title
+    type: text
+    required: true
+
+  - id: resource_type
+    name: Type
+    type: select
+    options: [bookmark, document, file, tool, reference]
+    required: true
+    description: >
+      The discriminator. `bookmark` is a URL with no reading intent, `document` is written
+      material, `file` is a stored artefact, `tool` is software or a service, `reference` is
+      material consulted rather than read.
+
+  - id: topic
+    name: Topic
+    type: multi_select
+    options: []
+    required: true
+    description: Required by the routing gate — an untagged resource is unfindable.
+
+  - id: area
+    name: Area
+    type: select
+    taxonomy: life_areas
+    required: true
+
+  - id: url
+    name: URL
+    type: url
+    description: Required when `resource_type` is `bookmark` or `tool`.
+
+  - id: attachment
+    name: File
+    type: file
+    description: Required when `resource_type` is `file`.
+
+  - id: why_kept
+    name: Why kept
+    type: text
+    description: >
+      One line on what this is for. The field that determines whether a resource collection
+      stays useful: without it, a two-year-old bookmark is indistinguishable from noise and
+      the whole set becomes unusable.
+
+  - id: summary
+    name: Summary
+    type: rich_text
+
+  - id: storage_location
+    name: Stored in
+    type: select
+    options: [notion, google_drive, onedrive, local, external]
+    description: Where the artefact actually lives, for items not stored inline.
+
+  - id: last_accessed
+    name: Last accessed
+    type: date
+    description: >
+      Drives the unused-resource view. Something never opened in two years is a candidate for
+      deletion, and deleting it is a contribution.
+
+  - id: created_at
+    name: Added
+    type: created_time
+
+identity:
+  primary: title
+  slug_from: [resource_type, title]
+
+defaults:
+  sort:
+    - { field: created_at, direction: descending }

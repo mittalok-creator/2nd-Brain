@@ -1,0 +1,75 @@
+id: journal
+name: Journal
+version: 1.0.0
+status: active
+owner: core
+description: >
+  Daily reflection and the day's log. Freeform by design — the structured counterpart is
+  `reviews`, which carries metrics and actions. One entry per day.
+
+icon: "✍️"
+group: reflection
+
+fields:
+  - id: entry_date
+    name: Date
+    type: date
+    required: true
+    description: >
+      One entry per date. This is the upsert key that makes the Evening Review automation
+      idempotent: a second run updates the day's entry rather than creating another.
+
+  - id: reflection
+    name: Reflection
+    type: rich_text
+    description: Freeform. No prompt, no structure, no minimum.
+
+  - id: went_well
+    name: What went well
+    type: rich_text
+    description: >
+      Asked explicitly because it is the part that gets skipped, and its absence is what turns
+      a journal into a record of only problems.
+
+  - id: did_not
+    name: What did not
+    type: rich_text
+
+  - id: mood
+    name: Mood
+    type: select
+    options: [very_low, low, neutral, good, very_good]
+    description: >
+      Coarse on purpose. A five-point scale is answered honestly in two seconds; a ten-point
+      scale is answered arbitrarily, and its trend line means nothing.
+
+  - id: energy_level
+    name: Energy
+    type: select
+    options: [depleted, low, normal, high]
+    description: >
+      Correlated against workload and sleep at monthly review. This is the field that reveals
+      an unsustainable pattern before it becomes obvious.
+
+  - id: gratitude
+    name: Grateful for
+    type: text
+
+  - id: tomorrow_focus
+    name: Tomorrow's focus
+    type: text
+    description: >
+      One thing. Written tonight, read by the Morning Planning automation, so the next day
+      starts from a decision made with today's context rather than tomorrow's grogginess.
+
+  - id: created_at
+    name: Created
+    type: created_time
+
+identity:
+  primary: entry_date
+  slug_from: [entry_date]
+
+defaults:
+  sort:
+    - { field: entry_date, direction: descending }

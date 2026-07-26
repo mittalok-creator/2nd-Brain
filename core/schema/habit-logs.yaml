@@ -1,0 +1,61 @@
+id: habit_logs
+name: Habit Log
+version: 1.0.0
+status: active
+owner: core
+description: >
+  One record per habit per period, marking whether the commitment was met. The event store
+  behind streaks and consistency rates.
+
+icon: "☑️"
+group: direction
+
+fields:
+  - id: period_date
+    name: Date
+    type: date
+    required: true
+    description: >
+      The period this record covers — the day for a daily habit, the week-start date for a
+      weekly one. Normalising to a period start is what keeps one record per period regardless
+      of cadence.
+
+  - id: outcome
+    name: Outcome
+    type: select
+    options: [met, partial, missed, paused]
+    required: true
+    description: >
+      `partial` means the minimum version was done but not the full target — recorded
+      distinctly because a partial day is a maintained habit, not a break.
+      `paused` records no miss and does not interrupt a streak.
+
+  - id: count
+    name: Count
+    type: number
+    format: integer
+    default: 1
+    description: Times completed in the period, for habits with a target above one.
+
+  - id: note
+    name: Note
+    type: text
+    description: >
+      Only worth writing on a miss. Accumulated miss reasons are what reveal whether a habit
+      is badly designed or simply hard.
+
+  - id: logged_at
+    name: Logged
+    type: created_time
+
+identity:
+  primary: period_date
+  slug_from: [period_date]
+  description: >
+    Uniqueness is (habit, period_date) — the habit comes from the relation declared in Phase 4.
+    This pair is the upsert key that makes habit tracking idempotent: a second run for the
+    same period updates the record rather than adding one.
+
+defaults:
+  sort:
+    - { field: period_date, direction: descending }

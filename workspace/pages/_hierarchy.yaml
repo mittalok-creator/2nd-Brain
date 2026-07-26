@@ -112,7 +112,7 @@ pages:
     parent: reviews
     order: 2
     kind: generated
-    entity: decision_journal
+    entity: decisions
 
   # ── Direction ──────────────────────────────────────────────────────────────
   - id: goals
@@ -129,11 +129,12 @@ pages:
     class: direction
     parent: goals
     order: 1
-    kind: generated
-    entity: habits
+    kind: composed
     note: >
       Habits sit under Goals because a habit is a recurring commitment to a goal.
       A habit serving no goal is a preference, not a commitment.
+      Composed rather than generated because it owns two entities — the habit
+      definitions and the per-period log behind streaks.
 
   - id: projects
     name: Projects
@@ -160,24 +161,10 @@ pages:
     order: 1
     kind: generated
     entity: resources
-
-  - id: bookmarks
-    name: Bookmarks
-    icon: "🔗"
-    class: domain
-    parent: knowledge
-    order: 2
-    kind: generated
-    entity: bookmarks
-
-  - id: documents
-    name: Documents
-    icon: "📄"
-    class: domain
-    parent: knowledge
-    order: 3
-    kind: generated
-    entity: documents
+    note: >
+      Replaces the separate Bookmarks and Documents pages. Those were three
+      entities with identical field sets, now one entity discriminated by
+      `resource_type` and presented as three views. See ADR-0007.
 
   - id: learning
     name: Learning
@@ -256,8 +243,12 @@ pages:
     class: system
     parent: command_center
     order: 1
-    kind: generated
-    entity: prompt_library
+    kind: composed
+    note: >
+      A read-only projection of prompts/ in the repository, not a Notion database.
+      The repository is the source of truth for prompts, so a Notion-side prompt
+      table would be a second definition able to drift from the one executed.
+      See ADR-0003 and ADR-0007.
 
   - id: agent_directory
     name: Agents

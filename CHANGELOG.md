@@ -16,7 +16,78 @@ Versioning is applied to the **specification**, not to any single tool:
 ## [Unreleased]
 
 ### Planned
-- Phase 3 — Databases (entity catalogue, field schemas, taxonomies)
+- Phase 4 — Relations (the relational graph, rollups, referential integrity)
+
+---
+
+## [0.3.0] — 2026-07-26
+
+**Phase 3 — Databases**
+
+### Added
+- `core/schema/_catalogue.yaml` — the entity index: 23 entities with group, purpose, owning
+  page, and defining file, plus a `rejected:` block recording every entity considered and not
+  created, with the reason.
+- Field-level schemas for all 23 entities: `goals`, `projects`, `tasks`, `habits`,
+  `habit_logs`, `inbox`, `journal`, `reviews`, `decisions`, `meetings`, `knowledge`,
+  `resources`, `reading`, `courses`, `skills`, `career_events`, `people`, `accounts`,
+  `transactions`, `budgets`, `health_metrics`, `workouts`, `agent_runs`.
+- Five shared taxonomies in `core/taxonomy/`: `life-areas` (7 values), `statuses` (6 lifecycle
+  sets), `priorities`, `horizons`, `energy` — every value carrying a definition.
+- `identity` block on every schema: `primary` field plus `slug_from`, with per-entity
+  uniqueness keys documented for automation idempotency.
+- `schema` check in the validator, wired into CI and `make schema`: abstract types only, enum
+  values resolving to a taxonomy or a local option list, defaults within allowed values,
+  `identity` fields existing, `relation`/`rollup` rejected, and every entity catalogued and
+  owned by exactly one page.
+- `load_yaml` helper so downstream checks report a parse error rather than crashing.
+- Two new page blueprints: `habits` (now composed, owning `habits` and `habit_logs`) and
+  `prompt_library` (a repository projection).
+- ADR-0007 (entity catalogue and normalisation), ADR-0008 (stable identity and slugs).
+
+### Changed
+- **Merged three proposed entities into `resources`** with a `resource_type` discriminator.
+  Bookmarks, Documents, and Resources had identical field sets. The Bookmarks and Documents
+  pages are removed; Resources presents them as views.
+- **Merged `achievements` and `career_milestones` into `career_events`** with an `event_type`
+  discriminator, and added a `setback` type.
+- **Merged `commitments` into `tasks`** via an `is_promise` flag. A promise is a task with a
+  person attached; the separate attention it deserves is a view concern.
+- **Removed `prompt_library` as an entity.** Prompts live in `prompts/`, so the Prompt Library
+  page is a read-only repository projection — consistent with ADR-0003.
+- Renamed the decision entity to `decisions` (from the proposed `decision_journal`) to match
+  its page id. Illustrative examples across the live docs updated to match; accepted ADRs left
+  unchanged as append-only history.
+- `capture-routing.yaml`: two rules merged into `reference_material`, three added
+  (`training_session`, `career_evidence`, and promise extraction to `tasks`), destinations
+  corrected to real entity ids, and gate fields aligned with the schemas.
+- `workspace/views/README.md` corrected to say views land in Phase 5, matching the roadmap;
+  it previously claimed Phase 3.
+- `core/taxonomy/README.md` vocabulary table corrected to the values actually defined.
+
+### Decisions
+- **Normalisation rule: merge when field sets are the same, separate when they diverge.**
+  Applied to every merge above, and to the cases deliberately kept separate — `reading` versus
+  `courses`, `journal` versus `reviews`, `health_metrics` versus `workouts`, `habits` versus
+  `habit_logs`. See ADR-0007.
+- **`contexts` and `sources` are local enums, not taxonomies.** Each has exactly one consumer,
+  and a shared taxonomy with one consumer is indirection with no benefit.
+- **Status sets are per-entity-class, not universal.** A single lifecycle would force `at_risk`
+  onto tasks and `blocked` onto goals; a status that does not apply is used inconsistently.
+- **Every status set has an explicit abandonment state.** A lifecycle whose only exit is
+  success is one where nothing gets closed, and stale records corrupt every rollup above them.
+- **Health metrics are long-and-narrow**, one row per metric per day, so adding a tracked
+  metric is a data change rather than a migration.
+- **Three identity layers** — permanent type id, derived readable slug, provider id as
+  deployment state. External ids win where the source system supplies one. See ADR-0008.
+- **Derived values are never stored.** Progress, completion, and streaks are computed from
+  their sources; the few exceptions are automation-maintained and documented as such.
+
+### Notes
+- Schemas deliberately carry no `relation` or `rollup` fields — the validator rejects them.
+  Relations are declared in `core/relations/` in Phase 4, so the entities exist but are not yet
+  connected.
+- Page blueprints still contain ~60 forward references to views, which arrive in Phase 5.
 
 ---
 
@@ -102,6 +173,7 @@ Versioning is applied to the **specification**, not to any single tool:
   `core/schema/` and `workspace/templates/` respectively, to keep one concept in one place.
   See ADR-0001.
 
-[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/mittalok-creator/2nd-Brain/releases/tag/v0.1.0
