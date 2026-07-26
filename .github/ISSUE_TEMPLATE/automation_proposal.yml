@@ -1,0 +1,83 @@
+name: ⚙️ Automation proposal
+description: Propose a new automated workflow or ritual.
+title: "feat(automation): "
+labels: ["type: automation", "layer: automation", "status: triage"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Automation name
+      placeholder: Evening Review
+    validations:
+      required: true
+
+  - type: dropdown
+    id: trigger
+    attributes:
+      label: Trigger type
+      options:
+        - Schedule (cron)
+        - Webhook
+        - Data change (Notion / GitHub)
+        - Manual invocation
+        - Chained from another automation
+    validations:
+      required: true
+
+  - type: input
+    id: schedule
+    attributes:
+      label: Schedule
+      description: Cron expression and timezone, if scheduled.
+      placeholder: "0 21 * * * — Asia/Kolkata"
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - n8n
+        - GitHub Actions
+        - Axiom
+        - Notion automation
+        - Undecided
+    validations:
+      required: true
+
+  - type: textarea
+    id: flow
+    attributes:
+      label: Flow
+      description: Trigger → steps → outcome.
+      value: |
+        1. Trigger:
+        2. Read:
+        3. Process:
+        4. Write:
+        5. Notify:
+    validations:
+      required: true
+
+  - type: textarea
+    id: idempotency
+    attributes:
+      label: Idempotency
+      description: What happens if this runs twice for the same period? It must converge, not duplicate.
+    validations:
+      required: true
+
+  - type: textarea
+    id: failure
+    attributes:
+      label: Failure handling
+      description: What happens when a step fails? Retries, alerts, manual fallback.
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Value
+      description: How much time or cognitive load does this save, and how often does it run?
+    validations:
+      required: true

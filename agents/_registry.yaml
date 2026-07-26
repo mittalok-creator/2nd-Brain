@@ -1,0 +1,50 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent registry — capability routing
+#
+# The single index of which agent handles what. Used to route a request to the
+# right agent and to detect overlap before a new agent is added.
+#
+# Every directory under agents/ (except _template/) must appear here.
+# ─────────────────────────────────────────────────────────────────────────────
+
+registry_version: 0.1.0
+updated: 2026-07-26
+
+# Model tiers resolve to concrete models per provider in config/providers/.
+tiers:
+  reasoning: Multi-step analysis, reviews, strategy, decisions
+  balanced: Drafting, summarising, structured extraction
+  fast: Classification, routing, tagging, short transforms
+
+groups:
+  direction: Cross-domain prioritisation and self-direction
+  domains: Single-life-area expertise
+  knowledge: Capturing, connecting, and retrieving what is known
+  meta: Agents that maintain the system itself
+
+# ── Registered agents ────────────────────────────────────────────────────────
+# Populated in Phase 6. Format:
+#
+# agents:
+#   - id: personal_ceo
+#     slug: personal-ceo
+#     name: Personal CEO
+#     group: direction
+#     tier: reasoning
+#     status: active
+#     owns:
+#       - Cross-domain prioritisation
+#       - Weekly and monthly review analysis
+#     entities: [goals, projects, tasks, habits, reviews]
+#     routes_from: ["what should I focus on", "weekly review", "am I on track"]
+
+agents: []
+
+# ── Routing rules ────────────────────────────────────────────────────────────
+routing:
+  strategy: explicit_first        # explicit agent choice wins; otherwise match on `routes_from`
+  on_ambiguous: ask              # ask which agent rather than guessing
+  on_no_match: personal_ceo      # the default entry point once it exists
+  overlap_policy: >
+    Two agents must not own the same capability. When a proposal overlaps an existing agent,
+    extend that agent instead of adding a new one.

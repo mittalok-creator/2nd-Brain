@@ -1,0 +1,41 @@
+name: Sync labels
+
+on:
+  push:
+    branches: ["main"]
+    paths: [".github/labels.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    name: Apply label taxonomy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install tooling
+        run: pip install --disable-pip-version-check -r scripts/requirements.txt
+
+      - name: Create or update labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python - <<'PY' > /tmp/labels.tsv
+          import yaml
+          for label in yaml.safe_load(open(".github/labels.yml")):
+              print(f"{label['name']}\t{label['color']}\t{label.get('description', '')}")
+          PY
+          while IFS=$'\t' read -r name color description; do
+            gh label create "$name" --color "$color" --description "$description" --force
+          done < /tmp/labels.tsv

@@ -1,0 +1,5 @@
+# Tooling dependencies for scripts/ and CI.
+# The validator degrades gracefully without PyYAML, but CI installs it so the
+# specification header contract is always enforced.
+
+PyYAML>=6.0.1

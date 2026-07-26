@@ -1,0 +1,17 @@
+# 2nd Brain — code ownership
+#
+# The maintainer owns everything. Explicit paths are listed so that ownership
+# survives any future delegation of individual layers.
+
+*                       @mittalok-creator
+
+/core/                  @mittalok-creator
+/workspace/             @mittalok-creator
+/agents/                @mittalok-creator
+/prompts/               @mittalok-creator
+/automation/            @mittalok-creator
+/scripts/               @mittalok-creator
+/config/                @mittalok-creator
+/docs/                  @mittalok-creator
+/docs/adr/              @mittalok-creator
+/.github/               @mittalok-creator

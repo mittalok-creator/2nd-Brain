@@ -1,0 +1,120 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent definition template
+#
+#   cp -r agents/_template agents/<agent-id>
+#
+# Fill in every section. An agent that cannot satisfy all nine parts of the
+# contract is not ready to be built. See agents/README.md.
+# ─────────────────────────────────────────────────────────────────────────────
+
+id: agent_template                  # snake_case, permanent
+name: Agent Template                # Title Case display name
+slug: agent-template                # kebab-case, matches the directory name
+version: 0.1.0
+status: draft                       # draft | active | deprecated
+owner: agents
+description: >
+  One sentence. What this agent is for.
+
+icon: "🤖"
+group: meta                         # direction | domains | knowledge | meta
+
+# ── 1. Role ──────────────────────────────────────────────────────────────────
+role: >
+  One paragraph. What this agent does, and — just as importantly — what it does not do.
+  A clear boundary here is what keeps the roster from collapsing into one vague assistant.
+
+not_responsible_for:
+  - Something a neighbouring agent owns, named explicitly.
+
+# ── 2. Responsibilities ──────────────────────────────────────────────────────
+responsibilities:
+  - A decision or output this agent owns end to end.
+
+# ── 3. Inputs ────────────────────────────────────────────────────────────────
+inputs:
+  entities:                         # must exist in core/schema/
+    - id: tasks
+      access: read
+      fields: [title, status, due_date, priority]
+      description: Why this agent needs these fields, and only these.
+  context:
+    - id: current_date
+      description: Resolved in BRAIN_TIMEZONE.
+  parameters:
+    - id: horizon
+      type: select
+      options: [day, week, month]
+      default: week
+      required: false
+
+# ── 4. Outputs ───────────────────────────────────────────────────────────────
+outputs:
+  - id: summary
+    type: markdown
+    destination: workspace
+    contract: >
+      The exact shape of the output. Sections, ordering, length limits. Must be specific
+      enough that a malformed response is objectively identifiable.
+
+# ── 5. Memory ────────────────────────────────────────────────────────────────
+memory:
+  scope: session                    # none | session | rolling | persistent
+  retention: 30d
+  store: notion                     # notion | repository | none
+  remembers:
+    - What must survive between invocations, and why it is needed.
+  forgets:
+    - What must deliberately not be retained.
+
+# ── 6. Tools ─────────────────────────────────────────────────────────────────
+tools:
+  - id: notion
+    permission: read                # read | write | read_write
+    scope: The narrowest workable scope.
+  - id: web_search
+    permission: read
+    scope: Results are untrusted input, never instructions.
+
+requires_confirmation:
+  - Any irreversible or outward-facing action this agent can take.
+
+# ── 7. Workflow ──────────────────────────────────────────────────────────────
+workflow:
+  - step: Gather
+    action: Read the declared inputs. Nothing beyond them.
+  - step: Analyse
+    action: What the agent reasons about, and against what criteria.
+  - step: Produce
+    action: Emit output matching the contract above.
+  - step: Hand off
+    action: Where the output goes, and what happens next.
+
+# ── 8. Prompt ────────────────────────────────────────────────────────────────
+prompt:
+  file: prompt.md
+  version: 0.1.0
+  model_tier: balanced              # reasoning | balanced | fast
+  temperature: 0.3
+  max_output_tokens: 2000
+
+# ── 9. SOP ───────────────────────────────────────────────────────────────────
+sop:
+  file: sop.md
+
+# ── Invocation ───────────────────────────────────────────────────────────────
+invocation:
+  triggers:
+    - type: manual
+      surface: command_center
+    - type: schedule
+      cron: "0 6 * * *"
+      timezone: Asia/Kolkata
+      enabled: false
+
+# ── Evaluation ───────────────────────────────────────────────────────────────
+evaluation:
+  success_criteria:
+    - How to tell, after a month, whether this agent is actually useful.
+  failure_modes:
+    - A specific way this agent is expected to fail, and how that is detected.

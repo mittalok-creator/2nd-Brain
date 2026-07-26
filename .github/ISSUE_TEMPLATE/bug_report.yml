@@ -1,0 +1,71 @@
+name: 🐛 Bug report
+description: Something in the system does not behave as specified.
+title: "fix: "
+labels: ["type: bug", "status: triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do not paste secrets or personal data.
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Layer
+      description: Where does the problem live?
+      options:
+        - core (schema / relations / taxonomy / design)
+        - workspace (pages / dashboards / views / templates)
+        - agents / prompts
+        - automation (n8n / Actions / Axiom)
+        - scripts / tooling
+        - documentation
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should have happened, according to the specification?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened instead? Include error output if any.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Relevant versions, providers, models, and OS.
+      value: |
+        - 2nd Brain version:
+        - Provider(s):
+        - Model(s):
+        - OS:
+
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Confirmation
+      options:
+        - label: This report contains no secrets or personal data.
+          required: true

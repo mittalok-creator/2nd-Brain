@@ -1,0 +1,40 @@
+name: 📖 Documentation
+description: Something is missing, unclear, or wrong in the docs.
+title: "docs: "
+labels: ["type: docs", "layer: docs", "status: triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Path or link to the page.
+      placeholder: docs/01-architecture/README.md
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Problem
+      options:
+        - Missing — this isn't documented anywhere
+        - Unclear — documented but hard to follow
+        - Wrong — documented behaviour doesn't match reality
+        - Outdated — was correct, no longer is
+        - Broken link or formatting
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: Detail
+      description: What did you expect to find, and what did you find instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested wording
+      description: Optional, but the fastest path to a fix.

@@ -1,0 +1,73 @@
+name: ✨ Feature request
+description: Propose a new capability for the system.
+title: "feat: "
+labels: ["type: feature", "status: triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What does the current system fail to do? Describe the friction, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should exist instead?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Layer
+      options:
+        - core (schema / relations / taxonomy / design)
+        - workspace (pages / dashboards / views / templates)
+        - agents / prompts
+        - automation (n8n / Actions / Axiom)
+        - scripts / tooling
+        - documentation
+      multiple: true
+    validations:
+      required: true
+
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Roadmap phase
+      options:
+        - "Phase 2 — Workspace Architecture"
+        - "Phase 3 — Databases"
+        - "Phase 4 — Relations"
+        - "Phase 5 — Dashboards"
+        - "Phase 6 — AI Agents"
+        - "Phase 7 — Automations"
+        - "Phase 8 — Documentation"
+        - "Phase 9 — Testing & Refinement"
+        - "Beyond 1.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else could solve this, and why is the proposal better?
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Architectural impact
+      description: Does this change existing schemas, relations, or page hierarchy? Does it need an ADR?
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: How will we know this is finished?
+      value: |
+        - [ ]
+        - [ ]

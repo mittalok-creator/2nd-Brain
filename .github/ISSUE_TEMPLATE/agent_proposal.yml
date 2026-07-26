@@ -1,0 +1,98 @@
+name: 🤖 Agent proposal
+description: Propose a new AI agent, or a change to an existing one.
+title: "feat(agents): "
+labels: ["type: agent", "layer: agents", "status: triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every agent must satisfy the full agent contract before it is accepted.
+        See `agents/README.md`.
+
+  - type: input
+    id: name
+    attributes:
+      label: Agent name
+      placeholder: Decision Assistant
+    validations:
+      required: true
+
+  - type: input
+    id: id
+    attributes:
+      label: Agent id
+      description: kebab-case, stable, used as the directory name
+      placeholder: decision-assistant
+    validations:
+      required: true
+
+  - type: textarea
+    id: role
+    attributes:
+      label: Role
+      description: One sentence. What is this agent for, and what is it explicitly not for?
+    validations:
+      required: true
+
+  - type: textarea
+    id: responsibilities
+    attributes:
+      label: Responsibilities
+      value: |
+        -
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: io
+    attributes:
+      label: Inputs and outputs
+      description: What data does it read, and what artefacts does it produce?
+      value: |
+        **Inputs:**
+
+        **Outputs:**
+    validations:
+      required: true
+
+  - type: textarea
+    id: memory
+    attributes:
+      label: Memory
+      description: What must it remember between invocations, and where does that live?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tools
+    attributes:
+      label: Tools
+      description: Which integrations does it need, and at what permission level?
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow
+      description: Step-by-step operating procedure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: overlap
+    attributes:
+      label: Overlap with existing agents
+      description: >
+        Why can no current agent do this? Overlapping agents are merged, not added.
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: How do we judge whether this agent is actually useful after a month?
+    validations:
+      required: true

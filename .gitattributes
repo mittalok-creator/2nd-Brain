@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+*.md       text diff=markdown
+*.yaml     text
+*.yml      text
+*.json     text
+*.py       text diff=python
+*.sh       text eol=lf
+Makefile   text
+
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.ico      binary
+*.pdf      binary
+*.woff     binary
+*.woff2    binary

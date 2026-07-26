@@ -1,0 +1,129 @@
+# 2nd Brain — label taxonomy
+#
+# Labels are namespaced `namespace: value` so they group visually and filter cleanly.
+# Colours come from the design system palette (core/design/tokens.yaml).
+#
+# Sync with:  gh label create --file .github/labels.yml   (or the label-sync workflow)
+
+# ── type: what kind of work is this? ─────────────────────────────────────────
+- name: "type: feature"
+  color: "0A84FF"
+  description: New capability
+- name: "type: bug"
+  color: "FF453A"
+  description: Something does not behave as specified
+- name: "type: docs"
+  color: "40C8E0"
+  description: Documentation only
+- name: "type: refactor"
+  color: "5E5CE6"
+  description: Restructuring with no behaviour change
+- name: "type: chore"
+  color: "8E8E93"
+  description: Tooling, CI, dependencies
+- name: "type: agent"
+  color: "BF5AF2"
+  description: AI agent definition or behaviour
+- name: "type: automation"
+  color: "FF9F0A"
+  description: Automated workflow or ritual
+- name: "type: design"
+  color: "FF375F"
+  description: Visual or interaction design
+
+# ── layer: where in the architecture? ────────────────────────────────────────
+- name: "layer: core"
+  color: "1C1C1E"
+  description: Schema, relations, taxonomy, design tokens
+- name: "layer: workspace"
+  color: "2C2C2E"
+  description: Pages, dashboards, views, templates
+- name: "layer: agents"
+  color: "3A3A3C"
+  description: Agent definitions and prompts
+- name: "layer: automation"
+  color: "48484A"
+  description: n8n, GitHub Actions, Axiom
+- name: "layer: scripts"
+  color: "636366"
+  description: Sync, validation, migration tooling
+- name: "layer: docs"
+  color: "8E8E93"
+  description: Documentation tree
+- name: "layer: ci"
+  color: "AEAEB2"
+  description: Continuous integration
+
+# ── phase: which roadmap phase? ──────────────────────────────────────────────
+- name: "phase: 1 repository"
+  color: "D1D1D6"
+  description: Phase 1 — Repository Architecture
+- name: "phase: 2 workspace"
+  color: "D1D1D6"
+  description: Phase 2 — Workspace Architecture
+- name: "phase: 3 databases"
+  color: "D1D1D6"
+  description: Phase 3 — Databases
+- name: "phase: 4 relations"
+  color: "D1D1D6"
+  description: Phase 4 — Relations
+- name: "phase: 5 dashboards"
+  color: "D1D1D6"
+  description: Phase 5 — Dashboards
+- name: "phase: 6 agents"
+  color: "D1D1D6"
+  description: Phase 6 — AI Agents
+- name: "phase: 7 automations"
+  color: "D1D1D6"
+  description: Phase 7 — Automations
+- name: "phase: 8 documentation"
+  color: "D1D1D6"
+  description: Phase 8 — Documentation
+- name: "phase: 9 testing"
+  color: "D1D1D6"
+  description: Phase 9 — Testing & Refinement
+
+# ── priority ─────────────────────────────────────────────────────────────────
+- name: "priority: critical"
+  color: "FF453A"
+  description: Blocks daily use of the system
+- name: "priority: high"
+  color: "FF9F0A"
+  description: Next up
+- name: "priority: medium"
+  color: "FFD60A"
+  description: Scheduled
+- name: "priority: low"
+  color: "30D158"
+  description: Whenever
+
+# ── status ───────────────────────────────────────────────────────────────────
+- name: "status: triage"
+  color: "FFD60A"
+  description: Not yet assessed
+- name: "status: ready"
+  color: "30D158"
+  description: Specified and ready to build
+- name: "status: in progress"
+  color: "0A84FF"
+  description: Being worked on
+- name: "status: blocked"
+  color: "FF453A"
+  description: Waiting on something else
+- name: "status: needs adr"
+  color: "BF5AF2"
+  description: Requires an architecture decision record first
+- name: "status: parked"
+  color: "8E8E93"
+  description: Deliberately deferred
+
+# ── meta ─────────────────────────────────────────────────────────────────────
+- name: "breaking change"
+  color: "FF375F"
+  description: Requires migration of existing state
+- name: "good first task"
+  color: "30D158"
+  description: Small, self-contained, well-specified
+- name: "discussion"
+  color: "5E5CE6"
+  description: Needs a decision before work can start
