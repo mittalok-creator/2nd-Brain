@@ -1,0 +1,56 @@
+id: agent_directory
+name: Agents
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Reference documentation for every agent: its role, scope boundary, inputs, outputs, and
+  standard operating procedure. Projected from the repository, so it cannot drift from the
+  agents that actually exist.
+
+icon: "🛠"
+class: system
+parent: command_center
+order: 2
+question: What does this agent do, and how do I use it properly?
+
+owns_entities: []
+
+source:
+  from: repository
+  paths:
+    - agents/_registry.yaml
+    - agents/*/agent.yaml
+    - agents/*/sop.md
+  description: >
+    Generated at sync time from the agent definitions. Read-only in Notion: editing an agent
+    here would create a definition that no longer matches the one being executed.
+
+blocks:
+  - type: callout
+    content: static
+    text: >
+      This page is generated from the repository and is read-only. To change an agent, edit
+      its definition in agents/ and re-sync.
+
+  - type: view
+    view: agents_by_group
+    title: By group
+    layout_hint: board
+    description: Direction, Domains, Knowledge, Meta.
+
+  - type: view
+    view: agents_detail
+    title: Reference
+    description: >
+      Full contract per agent: role, what it explicitly does not do, inputs, outputs, memory,
+      tools, and the confirmations it requires.
+
+  - type: divider
+
+  - type: view
+    view: agents_draft
+    title: Draft agents
+    description: >
+      Not yet active. Output from a draft agent is never auto-applied.
+    empty_state: No agents in draft.

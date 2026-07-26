@@ -74,6 +74,33 @@ file, a missing `../`, or a link written against the GitHub URL structure rather
 filesystem. Only relative links are checked — external URLs are deliberately not, to keep CI
 deterministic.
 
+### `hierarchy: composed page '<id>' has no blueprint file`
+
+`_hierarchy.yaml` marks the page `kind: composed`, but no blueprint in `workspace/pages/`
+declares that `id`. Either write the blueprint, or change the page to `kind: generated` and
+give it an `entity`.
+
+The reverse error — `generated page must not have a blueprint` — means a blueprint exists for a
+page whose content is entirely one entity's views. Delete the blueprint; generated pages are
+built from the entity's view set. See
+[ADR-0005](adr/0005-workspace-information-architecture.md).
+
+### `hierarchy: <file> order='N' contradicts _hierarchy.yaml 'M'`
+
+A blueprint's `class`, `parent`, or `order` disagrees with the tree. `_hierarchy.yaml` is
+authoritative — fix the blueprint, unless the tree itself is what changed.
+
+### `hierarchy: '<id>' is at depth N, exceeding max 3`
+
+A page is nested too deeply, meaning it is more than two clicks from Home. Flatten it: either
+promote it a level, or fold its content into its parent. Depth is a hard constraint, not a
+guideline — see [ADR-0005](adr/0005-workspace-information-architecture.md).
+
+### `hierarchy: '<a>' and '<b>' share order N under '<parent>'`
+
+Sibling order must be explicit and unique, because relying on file or alphabetical order means
+the sidebar silently reorders whenever a page is added.
+
 ### `warn yaml: PyYAML not installed`
 
 The YAML check was skipped. Install the tooling:

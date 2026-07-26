@@ -39,6 +39,9 @@ jobs:
       - name: Internal documentation links
         run: python scripts/validate_repository.py --only links
 
+      - name: Workspace page hierarchy
+        run: python scripts/validate_repository.py --only hierarchy
+
   hygiene:
     name: Repository hygiene
     runs-on: ubuntu-latest

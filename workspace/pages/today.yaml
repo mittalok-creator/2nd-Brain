@@ -1,0 +1,73 @@
+id: today
+name: Today
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The execution surface, opened twice a day. Morning: accept or adjust the plan drafted
+  overnight. Evening: log what happened and why anything slipped.
+
+icon: "☀️"
+class: rhythm
+parent: home
+order: 3
+question: What matters right now?
+
+owns_entities: []
+
+blocks:
+  # ── Morning ────────────────────────────────────────────────────────────────
+  - type: callout
+    content: agent_output
+    agent: personal-ceo
+    prompt: draft-daily-plan
+    title: The plan
+    description: >
+      Drafted by the Morning Planning automation before the day starts. The morning is for
+      accepting or adjusting it — not for building it from nothing. A blank page at 7am is
+      how daily planning stops happening.
+
+  - type: view
+    view: calendar_today
+    title: Committed
+    description: Fixed obligations first, so the day's actual free capacity is visible.
+
+  - type: view
+    view: tasks_due_today
+    title: Doing
+    description: >
+      Open tasks due today or overdue, hardest work first. Capped at a length that can
+      actually be finished — a list of thirty items is a list of none.
+
+  - type: view
+    view: habits_today
+    title: Habits
+    description: Today's recurring commitments, checked off in place.
+
+  - type: divider
+
+  # ── Evening ────────────────────────────────────────────────────────────────
+  - type: heading
+    text: Close the day
+
+  - type: template_button
+    template: daily-log
+    title: Log today
+
+  - type: view
+    view: tasks_slipped_today
+    title: Slipped
+    description: >
+      Anything due today and still open. The slip reason is the point: it is the raw
+      material the weekly review reads. A slip with no reason recorded teaches nothing.
+
+  - type: view
+    view: inbox_unrouted
+    title: Route the inbox
+    description: Routing is a five-minute evening task, batched deliberately.
+
+design:
+  duration_minutes: 10
+  notes: >
+    Ten minutes total — five morning, five evening. If this page takes longer, it is showing
+    too much. Nothing on it may require scrolling past the fold in the morning.

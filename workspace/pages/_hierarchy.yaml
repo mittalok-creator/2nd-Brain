@@ -1,0 +1,284 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Workspace page hierarchy
+#
+# The authoritative page tree. Every page in the workspace appears here exactly
+# once, whether or not it has its own blueprint file.
+#
+# Two kinds of page:
+#
+#   composed   Has a blueprint file (<id>.yaml). Arranges views, agent output,
+#              and navigation into a purpose-built surface.
+#
+#   generated  Has no blueprint. Its entire content is the views of a single
+#              entity, so it is generated from that entity's view set. A
+#              blueprint would add nothing but a place to drift.
+#
+# Constraints enforced by `make hierarchy`:
+#   - exactly one root page
+#   - maximum depth 3 (root -> section -> detail), i.e. <= 2 clicks from home
+#   - order is explicit and unique among siblings
+#   - composed pages have a blueprint; generated pages have none and declare an entity
+#   - each blueprint's class, parent, and order agree with this file
+#
+# See ADR-0005 for the reasoning behind this structure.
+# ─────────────────────────────────────────────────────────────────────────────
+
+hierarchy_version: 1.0.0
+updated: 2026-07-26
+
+constraints:
+  max_depth: 3
+  max_clicks_from_root: 2
+  single_root: true
+
+# Page classes group surfaces by the role they play, not by life area.
+# See ADR-0005.
+classes:
+  root: Orientation and capture
+  rhythm: Time-based operation — what now, what next, what happened
+  direction: What is being pursued and delivered
+  domain: A single area of life
+  system: The system operating on itself
+
+pages:
+  # ── Root ───────────────────────────────────────────────────────────────────
+  - id: home
+    name: Home
+    icon: "🏠"
+    class: root
+    parent: null
+    order: 1
+    kind: composed
+
+  # ── Capture ────────────────────────────────────────────────────────────────
+  - id: inbox
+    name: Inbox
+    icon: "📥"
+    class: rhythm
+    parent: home
+    order: 2
+    kind: composed
+    note: >
+      The single capture destination. Deliberately placed second — directly under
+      Home — because capture speed determines whether the system gets used.
+
+  # ── Rhythm ─────────────────────────────────────────────────────────────────
+  - id: today
+    name: Today
+    icon: "☀️"
+    class: rhythm
+    parent: home
+    order: 3
+    kind: composed
+
+  - id: planner
+    name: Planner
+    icon: "🗓"
+    class: rhythm
+    parent: home
+    order: 4
+    kind: composed
+
+  - id: meetings
+    name: Meetings
+    icon: "🗣"
+    class: rhythm
+    parent: planner
+    order: 1
+    kind: generated
+    entity: meetings
+
+  - id: reviews
+    name: Reviews
+    icon: "📊"
+    class: rhythm
+    parent: home
+    order: 5
+    kind: composed
+
+  - id: journal
+    name: Journal
+    icon: "✍️"
+    class: rhythm
+    parent: reviews
+    order: 1
+    kind: generated
+    entity: journal
+
+  - id: decisions
+    name: Decisions
+    icon: "⚖️"
+    class: rhythm
+    parent: reviews
+    order: 2
+    kind: generated
+    entity: decision_journal
+
+  # ── Direction ──────────────────────────────────────────────────────────────
+  - id: goals
+    name: Goals
+    icon: "🎯"
+    class: direction
+    parent: home
+    order: 6
+    kind: composed
+
+  - id: habits
+    name: Habits
+    icon: "🔁"
+    class: direction
+    parent: goals
+    order: 1
+    kind: generated
+    entity: habits
+    note: >
+      Habits sit under Goals because a habit is a recurring commitment to a goal.
+      A habit serving no goal is a preference, not a commitment.
+
+  - id: projects
+    name: Projects
+    icon: "🚀"
+    class: direction
+    parent: home
+    order: 7
+    kind: composed
+
+  # ── Domains ────────────────────────────────────────────────────────────────
+  - id: knowledge
+    name: Knowledge
+    icon: "🧠"
+    class: domain
+    parent: home
+    order: 8
+    kind: composed
+
+  - id: resources
+    name: Resources
+    icon: "🗂"
+    class: domain
+    parent: knowledge
+    order: 1
+    kind: generated
+    entity: resources
+
+  - id: bookmarks
+    name: Bookmarks
+    icon: "🔗"
+    class: domain
+    parent: knowledge
+    order: 2
+    kind: generated
+    entity: bookmarks
+
+  - id: documents
+    name: Documents
+    icon: "📄"
+    class: domain
+    parent: knowledge
+    order: 3
+    kind: generated
+    entity: documents
+
+  - id: learning
+    name: Learning
+    icon: "📚"
+    class: domain
+    parent: home
+    order: 9
+    kind: composed
+
+  - id: reading
+    name: Reading
+    icon: "📖"
+    class: domain
+    parent: learning
+    order: 1
+    kind: generated
+    entity: reading
+
+  - id: courses
+    name: Courses
+    icon: "🎓"
+    class: domain
+    parent: learning
+    order: 2
+    kind: generated
+    entity: courses
+
+  - id: career
+    name: Career
+    icon: "💼"
+    class: domain
+    parent: home
+    order: 10
+    kind: composed
+
+  - id: finance
+    name: Finance
+    icon: "💰"
+    class: domain
+    parent: home
+    order: 11
+    kind: composed
+
+  - id: health
+    name: Health
+    icon: "🏋"
+    class: domain
+    parent: home
+    order: 12
+    kind: composed
+
+  - id: relationships
+    name: Relationships
+    icon: "🤝"
+    class: domain
+    parent: home
+    order: 13
+    kind: composed
+    note: >
+      Named Relationships rather than Family so that friends, mentors, and
+      professional contacts have a home. Family remains a life-area tag within
+      it. See ADR-0005.
+
+  # ── System ─────────────────────────────────────────────────────────────────
+  - id: command_center
+    name: Command Center
+    icon: "🤖"
+    class: system
+    parent: home
+    order: 14
+    kind: composed
+
+  - id: prompt_library
+    name: Prompt Library
+    icon: "💬"
+    class: system
+    parent: command_center
+    order: 1
+    kind: generated
+    entity: prompt_library
+
+  - id: agent_directory
+    name: Agents
+    icon: "🛠"
+    class: system
+    parent: command_center
+    order: 2
+    kind: composed
+
+  - id: system
+    name: System
+    icon: "⚙️"
+    class: system
+    parent: home
+    order: 15
+    kind: composed
+
+  - id: taxonomy_reference
+    name: Taxonomy
+    icon: "🏷"
+    class: system
+    parent: system
+    order: 1
+    kind: composed

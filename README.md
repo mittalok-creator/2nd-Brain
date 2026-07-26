@@ -7,7 +7,7 @@
 *Think. Organize. Remember. Plan. Automate. Improve.*
 
 [![Status](https://img.shields.io/badge/status-active%20development-0A84FF?style=flat-square)](ROADMAP.md)
-[![Version](https://img.shields.io/badge/version-0.1.0-5E5CE6?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-5E5CE6?style=flat-square)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-30D158?style=flat-square)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-read-FF9F0A?style=flat-square)](docs/README.md)
 
@@ -93,7 +93,8 @@ New providers are added by dropping a definition into `config/providers/` — se
 │   ├── pages/       #   Page hierarchy and content blueprints
 │   ├── dashboards/  #   Dashboard compositions
 │   ├── views/       #   Reusable database views (filters, sorts, groupings)
-│   └── templates/   #   Page/entry templates
+│   ├── templates/   #   Page/entry templates
+│   └── capture-routing.yaml  # One inbox → many destinations
 ├── agents/          # AI agent definitions (role, IO, memory, tools, SOP, prompt)
 ├── prompts/         # Versioned prompt library and reusable prompt patterns
 ├── automation/      # n8n workflows, GitHub Actions, Axiom jobs, ritual recipes
@@ -129,7 +130,7 @@ independently useful.
 | # | Phase | Status |
 |---|---|---|
 | 1 | Repository Architecture | ✅ Complete |
-| 2 | Notion Workspace | ⬜ Planned |
+| 2 | Workspace Architecture | ✅ Complete |
 | 3 | Databases | ⬜ Planned |
 | 4 | Relations | ⬜ Planned |
 | 5 | Dashboards | ⬜ Planned |
@@ -148,6 +149,7 @@ Details and target dates in the [Roadmap](ROADMAP.md).
 |---|---|
 | [Overview](docs/README.md) | Start here |
 | [Architecture](docs/01-architecture/README.md) | How the system is put together |
+| [Information architecture](docs/01-architecture/information-architecture.md) | The page hierarchy and capture model |
 | [Installation](docs/02-installation/README.md) | Getting it running |
 | [User Guide](docs/03-user-guide/README.md) | Daily, weekly, monthly operation |
 | [AI Guide](docs/04-ai-guide/README.md) | Working with the agents |

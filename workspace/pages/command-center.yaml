@@ -1,0 +1,84 @@
+id: command_center
+name: Command Center
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Where the AI layer is operated: invoking agents, reviewing what they produced, and seeing
+  what the automations did. The system's control room.
+
+icon: "🤖"
+class: system
+parent: home
+order: 14
+question: What can the agents do for me, and what have they already done?
+
+owns_entities: [agent_runs]
+
+blocks:
+  - type: text
+    text: >
+      Named Command Center rather than AI Command Center: everything here is AI-driven, so
+      the qualifier adds length without information. See ADR-0005.
+
+  - type: heading
+    text: Invoke
+
+  - type: view
+    view: agents_available
+    title: Agents
+    layout_hint: gallery
+    source: agents/_registry.yaml
+    description: >
+      Projected from the agent registry in the repository rather than maintained as a Notion
+      database — the repository is the source of truth for what agents exist. One card per
+      agent showing role, scope, and how to invoke it.
+
+  - type: divider
+
+  - type: heading
+    text: Review
+
+  - type: view
+    view: agent_output_pending
+    title: Awaiting review
+    description: >
+      Agent output not yet accepted or rejected. Agents propose; a human decides. This queue
+      is what makes that rule real rather than aspirational.
+
+  - type: view
+    view: agent_output_recent
+    title: Recent output
+    description: Accepted and rejected, with the reason. Rejections are how prompts improve.
+
+  - type: divider
+
+  - type: heading
+    text: Operations
+
+  - type: view
+    view: automation_runs_recent
+    title: Automation runs
+    description: >
+      Last run, outcome, and duration per automation. The important column is the one showing
+      an automation that has not run at all — a loud failure gets fixed, a silent stop does not.
+
+  - type: view
+    view: automation_failures
+    title: Failures
+    empty_state: Everything ran.
+
+  - type: view
+    view: agent_cost_this_month
+    title: Cost
+    description: Token spend by agent and tier against the trailing average.
+
+  - type: divider
+
+  - type: link
+    page: prompt_library
+    title: Prompt Library
+
+  - type: link
+    page: agent_directory
+    title: Agent reference

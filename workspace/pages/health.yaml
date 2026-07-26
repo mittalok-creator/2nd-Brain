@@ -1,0 +1,67 @@
+id: health
+name: Health
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Physical and mental condition, tracked as trends against targets. Deliberately few
+  metrics: health tracking fails by measuring everything and changing nothing.
+
+icon: "🏋"
+class: domain
+parent: home
+order: 12
+question: Am I looking after the machine?
+
+owns_entities: [health_metrics, workouts]
+
+blocks:
+  - type: view
+    view: health_today
+    title: Today
+    description: >
+      The day's logged inputs — movement, sleep, and anything being actively tracked. Logged
+      in one place, in under a minute.
+
+  - type: view
+    view: habits_health
+    title: Health habits
+    description: >
+      Sourced from Habits, filtered to this area. Consistency matters more here than any
+      single measurement.
+
+  - type: divider
+
+  - type: view
+    view: health_trends
+    title: Trends
+    description: >
+      Rolling 30- and 90-day trends against target. Trends only: a single day's figure
+      carries almost no information and invites reacting to noise.
+
+  - type: view
+    view: health_streaks
+    title: Consistency
+    description: >
+      Streaks and completion rate. Includes recovery after a break, because breaks are normal
+      and a streak counter that only punishes is one people stop looking at.
+
+  - type: divider
+
+  - type: view
+    view: workouts_recent
+    title: Training
+    layout_hint: calendar
+
+  - type: agent_action
+    agent: health-coach
+    action: review_health
+    title: Review health
+    description: >
+      Reads trends and consistency, not raw daily records. Operates on aggregates by
+      default — see SECURITY.md on sensitive domains.
+
+design:
+  notes: >
+    Four to six tracked metrics maximum. Anything not acted on within a month is removed.
+    An unused metric is not neutral: it dilutes attention on the ones that matter.

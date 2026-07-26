@@ -20,15 +20,16 @@ Establish the foundation everything else is built on.
 
 ---
 
-## Phase 2 — Workspace Architecture ⬜ `v0.2.0`
+## Phase 2 — Workspace Architecture ✅ `v0.2.0`
 
 Design the human-facing surface before designing the data.
 
-- [ ] Page hierarchy for the Notion workspace (Home, Command Center, life domains)
-- [ ] Navigation model: how any surface is reachable in ≤ 2 clicks
-- [ ] Capture model: one inbox, many destinations
-- [ ] Page blueprints in `workspace/pages/`
-- [ ] Information architecture ADR
+- [x] Page hierarchy: 15 top-level pages in 5 classes, declared in `workspace/pages/_hierarchy.yaml`
+- [x] Navigation model: one root, depth ≤ 3, every surface ≤ 2 clicks from Home
+- [x] Capture model: one inbox, 7 entry points, 16 routing rules, boundary-enforced gate
+- [x] Sixteen composed page blueprints in `workspace/pages/`
+- [x] Composed versus generated pages — roughly half the workspace needs no blueprint
+- [x] ADR-0005 (information architecture) and ADR-0006 (single-inbox capture)
 
 ---
 

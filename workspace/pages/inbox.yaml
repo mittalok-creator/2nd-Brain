@@ -1,0 +1,62 @@
+id: inbox
+name: Inbox
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The single capture destination for everything entering the system, and the surface where
+  captured items are routed to their owning entity. Capture is instant and unstructured;
+  routing is deferred and batched.
+
+icon: "📥"
+class: rhythm
+parent: home
+order: 2
+question: What came in, and where does it belong?
+
+owns_entities: [inbox]
+
+blocks:
+  - type: text
+    text: >
+      Capture without deciding. Routing happens once a day, during the evening review —
+      not at the moment of capture.
+
+  - type: template_button
+    template: inbox-item
+    title: Capture
+
+  - type: view
+    view: inbox_unrouted
+    title: To route
+    description: >
+      Everything not yet assigned an owning entity, oldest first. Oldest first because a
+      stale inbox item loses its context, and an item whose context is gone is worthless.
+
+  - type: agent_action
+    agent: knowledge-curator
+    action: suggest_routing
+    title: Suggest routing
+    description: >
+      Proposes a destination and metadata for each unrouted item. Proposals are reviewed,
+      not auto-applied — see the routing table in workspace/capture-routing.yaml.
+
+  - type: divider
+
+  - type: view
+    view: inbox_routed_recent
+    title: Routed in the last 7 days
+    description: >
+      Kept visible briefly so a mis-route is caught while it is still cheap to fix.
+
+  - type: view
+    view: inbox_stale
+    title: Stale
+    description: >
+      Unrouted for more than 14 days. These are not a backlog to clear — they are evidence
+      that something was captured which did not matter. Delete them.
+
+design:
+  notes: >
+    The Inbox is the only page in the workspace where an empty state is the goal. Its empty
+    state should read as success, not as absence.

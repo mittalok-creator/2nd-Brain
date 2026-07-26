@@ -1,0 +1,71 @@
+id: finance
+name: Finance
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Money, connected to what it is for. Tracks direction and rate rather than acting as an
+  accounting ledger — the bank already knows the balance; the useful question is whether the
+  trend supports the goals.
+
+icon: "💰"
+class: domain
+parent: home
+order: 11
+question: Is the money going where I said it should?
+
+owns_entities: [transactions, accounts, budgets]
+
+blocks:
+  - type: view
+    view: finance_position
+    title: Position
+    description: >
+      Net position and month-over-month change. One number and one direction — the rest of
+      the page explains it.
+
+  - type: view
+    view: finance_rate
+    title: Rate
+    description: >
+      Income, spend, and savings rate for the current month against the trailing average.
+      Rate predicts outcomes; balance only reports history.
+
+  - type: divider
+
+  - type: view
+    view: finance_by_category
+    title: Where it went
+    layout_hint: board
+    description: Current month by category, against budget.
+
+  - type: view
+    view: finance_toward_goals
+    title: Toward goals
+    description: >
+      Spending and saving linked to a financial goal. The relation is what turns a
+      transaction log into a system: it answers whether money moved the plan forward.
+
+  - type: view
+    view: finance_uncategorised
+    title: Needs categorising
+    description: Classified by automation; this list is the exceptions it was unsure about.
+
+  - type: divider
+
+  - type: view
+    view: finance_recurring
+    title: Recurring
+    description: >
+      Subscriptions and standing commitments, with an annualised figure. Shown annualised
+      because monthly amounts are how recurring spend escapes notice.
+
+  - type: agent_action
+    agent: finance-advisor
+    action: review_finances
+    title: Review finances
+
+design:
+  notes: >
+    This page shows aggregates. Raw transaction detail lives one level down and is not
+    surfaced by default — see SECURITY.md on sensitive domains.

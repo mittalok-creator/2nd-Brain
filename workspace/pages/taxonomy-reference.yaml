@@ -1,0 +1,60 @@
+id: taxonomy_reference
+name: Taxonomy
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The definition of every controlled value used across the workspace — life areas, statuses,
+  priorities, horizons, energy levels. The page consulted when deciding what a field value
+  actually means.
+
+icon: "🏷"
+class: system
+parent: system
+order: 1
+question: What does this value mean, exactly?
+
+owns_entities: []
+
+source:
+  from: repository
+  paths: ["core/taxonomy/*.yaml"]
+  description: >
+    Generated from the taxonomy specifications. Read-only: adding a value here would create
+    one that no schema recognises.
+
+blocks:
+  - type: callout
+    content: static
+    text: >
+      Generated from core/taxonomy/ and read-only. To add or change a value, edit the
+      specification and re-sync.
+
+  - type: view
+    view: taxonomy_life_areas
+    title: Life areas
+    description: The top-level domains, and which pages and entities belong to each.
+
+  - type: view
+    view: taxonomy_statuses
+    title: Statuses
+    description: Lifecycle states per entity class, in order, with entry and exit criteria.
+
+  - type: view
+    view: taxonomy_priorities
+    title: Priorities
+    description: >
+      Four levels, each with a definition. The definitions are the point: an undefined
+      priority scale is applied by mood and becomes meaningless within a week.
+
+  - type: view
+    view: taxonomy_horizons
+    title: Horizons
+    description: Today, week, month, quarter, year, decade.
+
+  - type: view
+    view: taxonomy_energy
+    title: Energy
+    description: >
+      Deep, shallow, admin, recovery. Used to match work to actual available capacity rather
+      than to available hours.

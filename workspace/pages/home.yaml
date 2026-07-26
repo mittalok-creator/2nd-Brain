@@ -1,0 +1,84 @@
+id: home
+name: Home
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The root of the workspace and its only entry point. Answers "where am I, and where do I
+  go next" — it is an orientation surface, not a dashboard.
+
+icon: "🏠"
+class: root
+parent: null
+order: 1
+question: Where do I go next?
+
+# Home owns no entity. It captures, orients, and routes. Every list it shows is a
+# pointer to the page that owns it.
+owns_entities: []
+
+blocks:
+  # ── Capture first ──────────────────────────────────────────────────────────
+  # Above everything else, including state. Capture friction is what kills
+  # personal systems, so the capture affordance is the first thing on the page.
+  - type: template_button
+    template: inbox-item
+    title: Capture
+    description: One button, no fields to choose. Routing happens later.
+
+  - type: view
+    view: inbox_count
+    title: Inbox
+    description: >
+      A count, not a list. A visible backlog on Home creates guilt; a number creates
+      a decision.
+
+  - type: divider
+
+  # ── State of things ────────────────────────────────────────────────────────
+  - type: dashboard
+    dashboard: executive
+    title: Where things stand
+    description: >
+      Five metrics, no lists. Home answers whether anything needs attention; the domain
+      pages answer what to do about it.
+
+  - type: divider
+
+  # ── Navigation ─────────────────────────────────────────────────────────────
+  # Grouped by page class rather than alphabetically or by importance, so the
+  # structure of the system is legible from its front door.
+  - type: columns
+    columns:
+      - title: Rhythm
+        blocks:
+          - { type: link, page: today }
+          - { type: link, page: planner }
+          - { type: link, page: reviews }
+
+      - title: Direction
+        blocks:
+          - { type: link, page: goals }
+          - { type: link, page: projects }
+
+      - title: Life
+        blocks:
+          - { type: link, page: knowledge }
+          - { type: link, page: learning }
+          - { type: link, page: career }
+          - { type: link, page: finance }
+          - { type: link, page: health }
+          - { type: link, page: relationships }
+
+      - title: System
+        blocks:
+          - { type: link, page: command_center }
+          - { type: link, page: system }
+
+design:
+  cover: cover-home
+  full_width: true
+  notes: >
+    Home is seen more often than any other page. It must be calm: no more than five
+    metrics, no lists longer than a count, and no red unless something genuinely needs
+    action today.

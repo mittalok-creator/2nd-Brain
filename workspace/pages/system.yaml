@@ -1,0 +1,87 @@
+id: system
+name: System
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The system's documentation of itself: the taxonomy reference, the architecture, the change
+  history, and its own operating health. Exists so that meta-content has a home and stops
+  leaking into life-area pages.
+
+icon: "⚙️"
+class: system
+parent: home
+order: 15
+question: How does this system work, and is it still healthy?
+
+owns_entities: []
+
+blocks:
+  - type: text
+    text: >
+      Without this page, the taxonomy reference ends up in Knowledge, the prompt library ends
+      up in Learning, and configuration notes end up wherever they were first needed. Meta
+      content needs a home of its own. See ADR-0005.
+
+  - type: heading
+    text: Reference
+
+  - type: link
+    page: taxonomy_reference
+    title: Taxonomy
+    description: Life areas, statuses, priorities, and horizons, with the definition of each value.
+
+  - type: view
+    view: system_architecture
+    title: Architecture
+    source: docs/01-architecture/README.md
+    description: The four layers and the invariants, projected from the repository.
+
+  - type: view
+    view: system_decisions
+    title: Decisions
+    source: docs/adr/
+    description: >
+      The ADR log. Available in the workspace because the most common question when returning
+      to the system after a break is "why is it like this".
+
+  - type: divider
+
+  - type: heading
+    text: Health
+
+  - type: view
+    view: system_drift
+    title: Drift
+    description: >
+      Where live Notion structure diverges from the specification. Should be empty; anything
+      here means a structural change was made in the UI instead of in the repository.
+    empty_state: Workspace matches the specification.
+
+  - type: view
+    view: system_usage
+    title: Usage
+    description: >
+      Ritual adherence — are the daily and weekly reviews actually happening? The one metric
+      that indicates whether the system is working, as distinct from whether it is running.
+
+  - type: view
+    view: system_unused
+    title: Unused
+    description: >
+      Databases, views, and automations untouched in 30 days. This is a deletion queue.
+      Anything unused for a month is a candidate for removal, and removing it is a
+      contribution.
+
+  - type: divider
+
+  - type: view
+    view: system_changelog
+    title: Change history
+    source: CHANGELOG.md
+    description: What changed in the system, and when.
+
+design:
+  notes: >
+    System is the least-visited page in the workspace and should stay that way. Its value is
+    being complete when needed, not being seen often.

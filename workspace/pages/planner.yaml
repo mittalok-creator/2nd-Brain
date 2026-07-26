@@ -1,0 +1,55 @@
+id: planner
+name: Planner
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The time surface. Where work is scheduled against real available capacity, at week and
+  month scale. Today answers "what now"; Planner answers "when".
+
+icon: "🗓"
+class: rhythm
+parent: home
+order: 4
+question: When is this actually going to happen?
+
+owns_entities: []
+
+blocks:
+  - type: view
+    view: calendar_this_week
+    title: This week
+    description: >
+      Calendar and scheduled tasks in one timeline. Keeping them separate is how people
+      commit to eight hours of work on a day with six hours of meetings.
+
+  - type: view
+    view: tasks_unscheduled_committed
+    title: Committed but unscheduled
+    description: >
+      Tasks accepted for this week with no date. This is the most useful list on the page:
+      it is the gap between intention and capacity.
+
+  - type: divider
+
+  - type: view
+    view: calendar_this_month
+    title: This month
+    layout_hint: calendar
+
+  - type: view
+    view: deadlines_upcoming
+    title: Deadlines ahead
+    description: Anything with a hard external date in the next 60 days.
+
+  - type: divider
+
+  - type: link
+    page: meetings
+    title: Meetings
+    description: Meeting notes, linked to their calendar event and the tasks they produced.
+
+design:
+  notes: >
+    Planner is the only page that shows time as a grid. Everywhere else, time appears as a
+    filter on a list — grids are expensive to read and only earn their space here.

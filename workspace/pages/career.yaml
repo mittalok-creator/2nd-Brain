@@ -1,0 +1,65 @@
+id: career
+name: Career
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Professional trajectory: where the next step is, what it requires, and what evidence has
+  been accumulated toward it. Learning covers acquiring skills; Career covers where they
+  are being aimed.
+
+icon: "💼"
+class: domain
+parent: home
+order: 10
+question: Am I building toward the next step, or just doing the current job?
+
+owns_entities: [career_milestones, achievements]
+
+blocks:
+  - type: callout
+    content: static
+    text: >
+      The next step, stated explicitly. If this is blank, everything below is activity
+      without direction.
+
+  - type: view
+    view: career_target
+    title: Target
+    description: The next role or position, its requirements, and the current gap.
+
+  - type: view
+    view: career_gap_analysis
+    title: Gaps
+    description: >
+      Requirements of the target not yet met, each linked to the goal or skill addressing it.
+      A gap with nothing linked to it is not being worked on, whatever the intention.
+
+  - type: divider
+
+  - type: view
+    view: achievements_recent
+    title: Evidence
+    description: >
+      Shipped work, outcomes, and numbers, captured as they happen. Written contemporaneously
+      because reconstructing a year of accomplishments at review time reliably loses the
+      best material.
+
+  - type: view
+    view: career_milestones
+    title: Trajectory
+    layout_hint: timeline
+
+  - type: divider
+
+  - type: view
+    view: relationships_professional
+    title: Professional network
+    description: >
+      Mentors, peers, and contacts, with last-contact dates. Sourced from Relationships;
+      surfaced here because a network maintained only when needed is not a network.
+
+  - type: agent_action
+    agent: career-advisor
+    action: review_trajectory
+    title: Review trajectory

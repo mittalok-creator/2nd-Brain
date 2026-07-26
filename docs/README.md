@@ -9,6 +9,7 @@ Everything you need to understand, run, operate, and extend **2nd Brain**.
 | If you want to… | Read |
 |---|---|
 | Understand how the system is built | [Architecture](01-architecture/README.md) |
+| See the page hierarchy and capture model | [Information architecture](01-architecture/information-architecture.md) |
 | Get it running | [Installation](02-installation/README.md) |
 | Operate it day to day | [User Guide](03-user-guide/README.md) |
 | Work with the AI agents | [AI Guide](04-ai-guide/README.md) |

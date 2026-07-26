@@ -17,6 +17,8 @@ rewrite an accepted ADR.
 | [0002](0002-naming-and-versioning.md) | Naming and versioning conventions | Accepted | 1 |
 | [0003](0003-notion-as-projection.md) | Notion as a projection, not the source of truth | Accepted | 1 |
 | [0004](0004-yaml-specification-format.md) | YAML as the specification format | Accepted | 1 |
+| [0005](0005-workspace-information-architecture.md) | Workspace information architecture | Accepted | 2 |
+| [0006](0006-single-inbox-capture.md) | Single-inbox capture with deferred routing | Accepted | 2 |
 
 ---
 
@@ -34,7 +36,7 @@ Do **not** write one for routine implementation choices with a conventional answ
 ## How to write one
 
 ```bash
-cp docs/adr/_template.md docs/adr/0005-short-title.md
+cp docs/adr/_template.md docs/adr/0007-short-title.md
 ```
 
 - Number sequentially, zero-padded to four digits. Numbers are never reused.

@@ -16,7 +16,61 @@ Versioning is applied to the **specification**, not to any single tool:
 ## [Unreleased]
 
 ### Planned
-- Phase 2 — Notion workspace blueprint (page hierarchy, navigation model)
+- Phase 3 — Databases (entity catalogue, field schemas, taxonomies)
+
+---
+
+## [0.2.0] — 2026-07-26
+
+**Phase 2 — Workspace Architecture**
+
+### Added
+- `workspace/pages/_hierarchy.yaml` — the authoritative page tree: 15 top-level pages,
+  one root, maximum depth 3, every surface within 2 clicks of Home.
+- Page classes (`root`, `rhythm`, `direction`, `domain`, `system`) grouping surfaces by the
+  role they play rather than by life area.
+- Sixteen composed page blueprints: Home, Inbox, Today, Planner, Reviews, Goals, Projects,
+  Knowledge, Learning, Career, Finance, Health, Relationships, Command Center, Agents,
+  System, Taxonomy.
+- `workspace/capture-routing.yaml` — the capture model: 7 entry points, one inbox,
+  16 ordered routing rules, and a boundary-enforced completeness gate.
+- `docs/01-architecture/information-architecture.md` — page tree, navigation constraints,
+  ownership model, and capture flow.
+- ADR-0005 (workspace information architecture), ADR-0006 (single-inbox capture with
+  deferred routing).
+- Page contract keys: `class`, `question`, and `owns_entities` on every blueprint.
+- `hierarchy` check in `scripts/validate_repository.py`, wired into CI and `make hierarchy`:
+  enforces one root, depth ≤ 3, unique sibling order, composed-versus-generated correctness,
+  and agreement between each blueprint and `_hierarchy.yaml`.
+
+### Changed
+- `workspace/pages/README.md` and `workspace/README.md` document the composed/generated
+  distinction and the required blueprint keys.
+- Architecture guide links the information architecture and notes that capture is deferred
+  and agent-assisted.
+
+### Decisions
+- **Added three pages absent from the original plan.** `Inbox` (capture needs a destination
+  requiring no decision), `Today` (execution is distinct from planning and review), and
+  `System` (meta-content otherwise leaks into life-area pages). See ADR-0005.
+- **Renamed `Family` to `Relationships`.** Family is a subset of the people who matter;
+  friends, mentors, and professional contacts otherwise have no home. Family is retained as
+  the most heavily weighted tag within the page.
+- **Renamed `AI Command Center` to `Command Center`.** Everything on the page is AI-driven,
+  so the qualifier adds length without information.
+- **No `Tasks` page.** Tasks are always seen in the context that makes them meaningful —
+  today's list, or the project they deliver. A global task list is a backlog.
+- **Introduced composed versus generated pages.** A page whose content is entirely one
+  entity's views is generated, not hand-maintained. Roughly half the workspace needs no
+  blueprint, removing the main surface for drift.
+- **Capture is separated from routing.** Classifying at capture time is what stops capture
+  happening, and is often impossible at that moment. Required fields are enforced at the
+  boundary out of the inbox instead — the only boundary-enforced constraint in the system.
+  See ADR-0006.
+
+### Notes
+- Page blueprints contain forward references to views, dashboards, and templates that land
+  in Phases 3 and 5. These are expected and are validated once the targets exist.
 
 ---
 
@@ -48,5 +102,6 @@ Versioning is applied to the **specification**, not to any single tool:
   `core/schema/` and `workspace/templates/` respectively, to keep one concept in one place.
   See ADR-0001.
 
-[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/mittalok-creator/2nd-Brain/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/mittalok-creator/2nd-Brain/releases/tag/v0.1.0

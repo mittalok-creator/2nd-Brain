@@ -1,0 +1,74 @@
+id: relationships
+name: Relationships
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The people who matter — family, friends, mentors, and professional contacts — with the
+  dates, context, and commitments that keep those relationships maintained rather than
+  merely remembered.
+
+icon: "🤝"
+class: domain
+parent: home
+order: 13
+question: Who have I not shown up for?
+
+owns_entities: [people]
+
+blocks:
+  - type: text
+    text: >
+      Named Relationships rather than Family so that friends, mentors, and professional
+      contacts have a home. Family is a tag within this page, and the tag most heavily
+      weighted. See ADR-0005.
+
+  - type: view
+    view: people_dates_upcoming
+    title: Coming up
+    description: >
+      Birthdays, anniversaries, and commitments in the next 30 days. Placed first because
+      this is the one thing a system genuinely does better than memory.
+
+  - type: view
+    view: people_family
+    title: Family
+    description: Highest-weighted group. Contact intervals here are measured in days.
+
+  - type: divider
+
+  - type: view
+    view: people_overdue_contact
+    title: Overdue
+    description: >
+      People whose intended contact interval has lapsed. An interval is set deliberately per
+      person — weekly for some, yearly for others — because a single reminder cadence applied
+      to everyone is noise, and noise gets muted.
+
+  - type: view
+    view: people_mentors
+    title: Mentors and advisors
+    description: >
+      The relationships most easily neglected: valuable, low-frequency, and with no natural
+      prompt to reach out.
+
+  - type: divider
+
+  - type: view
+    view: people_commitments_open
+    title: Promises made
+    description: >
+      Things committed to someone and not yet done. Tracked here rather than in Tasks
+      because a broken promise to a person costs more than a missed task, and should not
+      compete for attention in the same list.
+
+  - type: view
+    view: people_recent_interactions
+    title: Recent
+    description: Last interaction and its context, so a conversation can resume where it stopped.
+
+design:
+  notes: >
+    This page holds notes about real people. It is the most sensitive surface in the
+    workspace: keep it factual and kind, record what helps you show up well, and nothing you
+    would not want the person to read.

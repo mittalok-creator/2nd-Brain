@@ -3,7 +3,9 @@
 How 2nd Brain is put together, and the constraints that keep it coherent.
 
 > **Status** — the layer model, data flow, and boundaries below are settled as of Phase 1.
-> Concrete schemas, relations, and dashboards are filled in by Phases 3–5.
+> The page hierarchy and capture model are settled as of Phase 2 — see
+> [Information architecture](information-architecture.md). Concrete schemas, relations, and
+> dashboards are filled in by Phases 3–5.
 
 ---
 
@@ -125,6 +127,9 @@ This is what makes any single surface replaceable without touching the others.
 
 Every item entering the system passes through one inbox and is routed to exactly one
 owning entity. Nothing is stored in two places; relations connect, they do not duplicate.
+Capture is instant and unstructured; routing is deferred, batched, and agent-assisted — see
+[Information architecture](information-architecture.md) and
+[ADR-0006](../adr/0006-single-inbox-capture.md).
 
 ### Specification → surface
 
@@ -178,4 +183,7 @@ architecture is wrong — record the finding in an ADR and fix the architecture.
 - [ADR-0002 — Naming and versioning conventions](../adr/0002-naming-and-versioning.md)
 - [ADR-0003 — Notion as a projection, not the source of truth](../adr/0003-notion-as-projection.md)
 - [ADR-0004 — YAML as the specification format](../adr/0004-yaml-specification-format.md)
+- [ADR-0005 — Workspace information architecture](../adr/0005-workspace-information-architecture.md)
+- [ADR-0006 — Single-inbox capture with deferred routing](../adr/0006-single-inbox-capture.md)
+- [Information architecture](information-architecture.md) — page hierarchy and capture model
 - [Developer Guide](../05-developer-guide/README.md)

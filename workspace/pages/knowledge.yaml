@@ -1,0 +1,74 @@
+id: knowledge
+name: Knowledge
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  What is known, in a form that can be retrieved and reused. Optimised for getting
+  knowledge back out — the failure mode of every personal knowledge base is write-only
+  accumulation.
+
+icon: "🧠"
+class: domain
+parent: home
+order: 8
+question: What do I know about this, and where did I put it?
+
+owns_entities: [knowledge]
+
+blocks:
+  - type: view
+    view: knowledge_search
+    title: Find
+    description: >
+      Search is placed first because retrieval is the point. A knowledge base whose front
+      door is "recently added" is a feed, not a reference.
+
+  - type: divider
+
+  - type: view
+    view: knowledge_by_topic
+    title: By topic
+    layout_hint: board
+
+  - type: view
+    view: knowledge_linked_to_active_work
+    title: Relevant to current work
+    description: >
+      Notes connected to an active project or goal. The most valuable slice of the base, and
+      invisible without the relation graph.
+
+  - type: divider
+
+  - type: view
+    view: knowledge_orphaned
+    title: Unconnected
+    description: >
+      Notes with no relation to anything. Not necessarily wrong, but unconnected notes are
+      never found again — so this list is a queue for linking, not a badge of shame.
+
+  - type: agent_action
+    agent: knowledge-curator
+    action: suggest_connections
+    title: Suggest connections
+    description: Proposes links between unconnected notes and existing work.
+
+  - type: view
+    view: knowledge_stale
+    title: Possibly out of date
+    description: >
+      Notes on fast-moving topics untouched for a year. Reviewed, then updated or archived.
+
+  - type: divider
+
+  - type: columns
+    columns:
+      - blocks: [{ type: link, page: resources }]
+      - blocks: [{ type: link, page: bookmarks }]
+      - blocks: [{ type: link, page: documents }]
+
+design:
+  notes: >
+    Knowledge, Learning, and Reading are deliberately distinct. Knowledge is what has been
+    understood and written down; Learning is deliberate skill acquisition in progress;
+    Reading is the intake pipeline that feeds both.

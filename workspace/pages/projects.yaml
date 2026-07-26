@@ -1,0 +1,72 @@
+id: projects
+name: Projects
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Delivery. A project is a bounded piece of work with a definition of done that serves
+  exactly one goal. Work with no goal is surfaced here as an exception, not hidden.
+
+icon: "🚀"
+class: direction
+parent: home
+order: 7
+question: What is moving, and what is stuck?
+
+owns_entities: [projects, tasks]
+
+blocks:
+  - type: view
+    view: projects_active
+    title: Active
+    layout_hint: board
+    description: Grouped by status. Completion is a rollup from tasks.
+
+  - type: view
+    view: projects_stalled
+    title: Stalled
+    description: >
+      No task completed in 14 days. A stalled project is not a failure — it is a decision
+      that has not been made yet. Surfacing it forces the decision.
+
+  - type: view
+    view: projects_unowned
+    title: No goal
+    description: >
+      Projects serving no goal. Either the project should not exist, or a real goal is
+      missing from the system. Both are worth knowing.
+    empty_state: Every project serves a goal.
+
+  - type: divider
+
+  - type: heading
+    text: Tasks
+
+  - type: text
+    text: >
+      Tasks have no page of their own. They are always seen in the context that makes them
+      meaningful — today's list, or the project they deliver. A global task list is a
+      backlog, and backlogs are read once and then avoided.
+
+  - type: view
+    view: tasks_by_project
+    title: Open work by project
+    layout_hint: board
+
+  - type: view
+    view: tasks_orphaned
+    title: Tasks with no project
+    description: >
+      Acceptable for genuine one-offs, a warning sign in volume. More than a handful means
+      work is happening outside any project.
+
+  - type: divider
+
+  - type: template_button
+    template: project-brief
+    title: New project
+
+  - type: agent_action
+    agent: personal-ceo
+    action: review_projects
+    title: Weekly project review

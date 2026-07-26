@@ -1,0 +1,80 @@
+id: goals
+name: Goals
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  What is being pursued, at every time horizon, and whether each goal is still worth
+  pursuing. The top of the direction chain: goals are delivered by projects, projects by
+  tasks, and reinforced by habits.
+
+icon: "🎯"
+class: direction
+parent: home
+order: 6
+question: Am I pursuing the right things, and are they moving?
+
+owns_entities: [goals]
+
+blocks:
+  - type: view
+    view: goals_active
+    title: Active
+    description: >
+      Progress is a rollup from projects, never entered by hand. A hand-maintained progress
+      figure is a fiction within two weeks.
+
+  - type: view
+    view: goals_at_risk
+    title: At risk
+    description: >
+      Goals with no project movement in 14 days, or a target date that arithmetic no longer
+      supports. Surfaced before the deadline rather than at it.
+
+  - type: divider
+
+  - type: view
+    view: goals_by_horizon
+    title: By horizon
+    layout_hint: board
+    description: >
+      Grouped year, quarter, month. A quarter with eleven goals is not a plan, and seeing
+      them grouped is what makes that obvious.
+
+  - type: view
+    view: goals_by_area
+    title: By life area
+    layout_hint: board
+    description: >
+      Balance check. An empty column is a deliberate choice or a blind spot, and it is worth
+      knowing which.
+
+  - type: divider
+
+  - type: agent_action
+    agent: personal-ceo
+    action: review_goal_portfolio
+    title: Review the portfolio
+    description: >
+      Assesses whether the current set is coherent, over-committed, or drifting from stated
+      priorities. Proposes goals to cut — the hardest and most valuable output.
+
+  - type: view
+    view: goals_dormant
+    title: Dormant
+    description: >
+      No activity in 60 days. These need a decision: revive, rescope, or kill. Left
+      untouched, they quietly make every other number wrong.
+
+  - type: divider
+
+  - type: link
+    page: habits
+    title: Habits
+    description: Recurring commitments, each serving a goal.
+
+design:
+  notes: >
+    Killing goals is the function this page must make easy. Every personal system accretes
+    goals; almost none help remove them. Dormant and At risk are placed prominently for
+    exactly that reason.

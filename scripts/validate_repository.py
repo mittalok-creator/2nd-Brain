@@ -8,9 +8,11 @@ Three independent checks, all offline and deterministic:
   yaml       every .yaml/.yml file parses, and every spec file under core/,
              workspace/, agents/ and automation/ carries the header contract
   links      every relative Markdown link resolves to a real path
+  hierarchy  the workspace page tree satisfies its navigation constraints, and
+             composed pages have blueprints while generated pages do not
 
 Usage:
-    python3 scripts/validate_repository.py [--only structure|yaml|links] [--quiet]
+    python3 scripts/validate_repository.py [--only structure|yaml|links|hierarchy] [--quiet]
 
 Exit code 0 when clean, 1 when any check fails.
 """
@@ -27,6 +29,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # ── Contract ─────────────────────────────────────────────────────────────────
 
 REQUIRED_FILES = [
+    "workspace/pages/_hierarchy.yaml",
+    "workspace/capture-routing.yaml",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",
@@ -239,10 +243,142 @@ def check_links(report: Report) -> None:
                 report.error(f"links: {rel(path)}:{line} broken link → '{match.group(1)}'")
 
 
+def check_hierarchy(report: Report) -> None:
+    """Validate the workspace page tree against the constraints in ADR-0005."""
+    report.info("→ hierarchy")
+
+    try:
+        import yaml  # type: ignore
+    except ImportError:
+        report.warn("hierarchy: PyYAML not installed — check skipped")
+        return
+
+    hierarchy_path = REPO_ROOT / "workspace/pages/_hierarchy.yaml"
+    if not hierarchy_path.is_file():
+        report.error("hierarchy: workspace/pages/_hierarchy.yaml is missing")
+        return
+
+    document = yaml.safe_load(hierarchy_path.read_text(encoding="utf-8")) or {}
+    pages = document.get("pages") or []
+    constraints = document.get("constraints") or {}
+    max_depth = constraints.get("max_depth", 3)
+
+    if not pages:
+        report.error("hierarchy: no pages declared")
+        return
+
+    by_id: dict[str, dict] = {}
+    for page in pages:
+        page_id = page.get("id")
+        if not page_id:
+            report.error("hierarchy: a page entry has no id")
+            continue
+        if page_id in by_id:
+            report.error(f"hierarchy: duplicate page id '{page_id}'")
+        by_id[page_id] = page
+
+    # Exactly one root.
+    roots = [p for p in by_id.values() if p.get("parent") in (None, "null")]
+    if len(roots) != 1:
+        names = sorted(p["id"] for p in roots)
+        report.error(f"hierarchy: expected exactly one root page, found {len(roots)} {names}")
+
+    # Parents resolve, and depth is bounded.
+    for page in by_id.values():
+        parent = page.get("parent")
+        if parent and parent not in by_id:
+            report.error(f"hierarchy: '{page['id']}' has unknown parent '{parent}'")
+
+        depth, cursor, seen = 1, page, {page["id"]}
+        while cursor.get("parent"):
+            parent_id = cursor["parent"]
+            if parent_id in seen or parent_id not in by_id:
+                report.error(f"hierarchy: cycle or broken chain above '{page['id']}'")
+                break
+            seen.add(parent_id)
+            cursor = by_id[parent_id]
+            depth += 1
+        else:
+            if depth > max_depth:
+                report.error(
+                    f"hierarchy: '{page['id']}' is at depth {depth}, exceeding max {max_depth} "
+                    f"({depth - 1} clicks from root)"
+                )
+
+    # Sibling order is explicit and unique.
+    siblings: dict[str, dict[int, str]] = {}
+    for page in by_id.values():
+        parent = page.get("parent") or "__root__"
+        order = page.get("order")
+        if order is None:
+            report.error(f"hierarchy: '{page['id']}' has no explicit order")
+            continue
+        taken = siblings.setdefault(parent, {})
+        if order in taken:
+            report.error(
+                f"hierarchy: '{page['id']}' and '{taken[order]}' share order {order} "
+                f"under '{parent}'"
+            )
+        else:
+            taken[order] = page["id"]
+
+    # Blueprints: composed pages have one, generated pages do not.
+    blueprints: dict[str, str] = {}
+    for path in sorted((REPO_ROOT / "workspace/pages").glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        blueprint = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        blueprint_id = blueprint.get("id")
+        if not blueprint_id:
+            report.error(f"hierarchy: {rel(path)} has no id")
+            continue
+        if blueprint_id in blueprints:
+            report.error(f"hierarchy: page id '{blueprint_id}' declared by two blueprints")
+        blueprints[blueprint_id] = path.name
+
+        if blueprint_id not in by_id:
+            report.error(
+                f"hierarchy: {rel(path)} declares '{blueprint_id}', which is absent from "
+                f"_hierarchy.yaml"
+            )
+            continue
+
+        page = by_id[blueprint_id]
+        for key in ("class", "question", "owns_entities"):
+            if key not in blueprint:
+                report.error(f"hierarchy: {rel(path)} is missing required key '{key}'")
+        for key in ("class", "parent", "order"):
+            if key in blueprint and blueprint.get(key) != page.get(key):
+                report.error(
+                    f"hierarchy: {rel(path)} {key}='{blueprint.get(key)}' contradicts "
+                    f"_hierarchy.yaml '{page.get(key)}'"
+                )
+
+    for page in by_id.values():
+        kind = page.get("kind")
+        if kind == "composed" and page["id"] not in blueprints:
+            report.error(f"hierarchy: composed page '{page['id']}' has no blueprint file")
+        if kind == "generated":
+            if page["id"] in blueprints:
+                report.error(
+                    f"hierarchy: generated page '{page['id']}' must not have a blueprint "
+                    f"({blueprints[page['id']]})"
+                )
+            if not page.get("entity"):
+                report.error(f"hierarchy: generated page '{page['id']}' declares no entity")
+        if kind not in ("composed", "generated"):
+            report.error(f"hierarchy: '{page['id']}' has invalid kind '{kind}'")
+
+
 # ── Entrypoint ───────────────────────────────────────────────────────────────
 
 
-CHECKS = {"structure": check_structure, "yaml": check_yaml, "links": check_links}
+CHECKS = {
+    "structure": check_structure,
+    "yaml": check_yaml,
+    "links": check_links,
+    "hierarchy": check_hierarchy,
+}
 
 
 def main() -> int:
@@ -252,7 +388,7 @@ def main() -> int:
     args = parser.parse_args()
 
     report = Report(quiet=args.quiet)
-    selected = [args.only] if args.only else ["structure", "yaml", "links"]
+    selected = [args.only] if args.only else ["structure", "yaml", "links", "hierarchy"]
 
     report.info("2nd Brain — specification validation")
     for name in selected:

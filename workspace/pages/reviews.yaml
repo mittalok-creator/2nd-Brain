@@ -1,0 +1,69 @@
+id: reviews
+name: Reviews
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The reflection hub. Holds the daily journal, the weekly and monthly review surfaces, and
+  the decision log — the four places where the system is checked against reality rather
+  than simply operated.
+
+icon: "📊"
+class: rhythm
+parent: home
+order: 5
+question: Is this working?
+
+owns_entities: [reviews]
+
+blocks:
+  - type: text
+    text: >
+      Reviews are where the system earns its keep. Capture and planning organise activity;
+      only review changes direction.
+
+  - type: columns
+    columns:
+      - title: Weekly
+        blocks:
+          - type: dashboard
+            dashboard: weekly_review
+          - type: template_button
+            template: weekly-review-entry
+
+      - title: Monthly
+        blocks:
+          - type: dashboard
+            dashboard: monthly_review
+          - type: template_button
+            template: monthly-review-entry
+
+  - type: divider
+
+  - type: view
+    view: reviews_recent
+    title: Past reviews
+    description: >
+      Newest first. Read the previous review before writing the next one — a review written
+      without reference to the last is a diary entry, not a review.
+
+  - type: view
+    view: reviews_open_actions
+    title: Actions from past reviews
+    description: >
+      Commitments made in a review and not yet closed. Tracked here because a review whose
+      conclusions are never revisited is theatre.
+
+  - type: divider
+
+  - type: columns
+    columns:
+      - blocks:
+          - { type: link, page: journal }
+      - blocks:
+          - { type: link, page: decisions }
+
+design:
+  notes: >
+    Reviews is a hub, not a dashboard. It links to the two review dashboards rather than
+    inlining them, so that a review is a deliberate act on a dedicated surface.

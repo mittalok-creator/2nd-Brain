@@ -1,0 +1,209 @@
+id: capture_routing
+name: Capture Routing
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  The routing table for the single inbox: how a captured item is classified, which entity
+  owns it, and what must be true before it leaves the inbox. One inbox, many destinations.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Model
+#
+# Capture is instant and unstructured. Routing is deferred, batched, and
+# agent-assisted. Separating them is the whole design: asking "which database
+# does this belong in" at the moment of capture is what stops capture happening.
+#
+# See ADR-0006.
+# ─────────────────────────────────────────────────────────────────────────────
+
+principles:
+  - Capture must never require a decision. One button, one field.
+  - Routing happens once a day, batched, during the evening review.
+  - An agent proposes the destination; a human accepts it.
+  - An item that cannot be routed in 14 days did not matter. Delete it.
+  - Nothing is ever routed to two destinations. Relations connect; they never duplicate.
+
+# ── Entry points ─────────────────────────────────────────────────────────────
+# Every way something enters the system. All of them land in the same inbox.
+sources:
+  - id: manual
+    name: Manual capture
+    surface: Home and Inbox capture button
+    default_type: note
+
+  - id: mobile
+    name: Mobile quick capture
+    surface: Notion mobile widget
+    default_type: note
+    note: The highest-volume source. Must remain a single tap to a single text field.
+
+  - id: voice
+    name: Voice note
+    surface: Recording, transcribed on arrival
+    default_type: note
+
+  - id: email
+    name: Forwarded email
+    surface: A dedicated capture address
+    default_type: reference
+    untrusted: true
+
+  - id: web_clip
+    name: Web clipper
+    surface: Browser extension
+    default_type: reference
+    untrusted: true
+
+  - id: calendar
+    name: Calendar event ended
+    surface: Automation
+    default_type: meeting
+
+  - id: file_drop
+    name: File added to a watched folder
+    surface: Google Drive or OneDrive
+    default_type: document
+    untrusted: true
+
+# Sources marked `untrusted: true` carry content authored by someone else.
+# Classification agents treat that content as data to analyse, never as
+# instructions to follow. See SECURITY.md.
+
+# ── Routing rules ────────────────────────────────────────────────────────────
+# Evaluated in order; first match wins. `requires` lists the fields that must be
+# populated before the item may leave the inbox — the routing gate.
+rules:
+  - id: actionable_single_step
+    when: An action that one sitting completes
+    destination: tasks
+    requires: [title, project_or_area]
+    default_when_unlinked: >
+      Allowed with no project for genuine one-offs, but counted in the orphaned-tasks view.
+
+  - id: actionable_multi_step
+    when: An outcome needing more than one session, with a definition of done
+    destination: projects
+    requires: [title, goal, definition_of_done]
+    note: >
+      A project must serve a goal. If no goal fits, that is the finding — either the project
+      should not exist or a goal is missing.
+
+  - id: aspiration
+    when: Something wanted, with no work attached yet
+    destination: goals
+    requires: [title, horizon, area]
+
+  - id: recurring_commitment
+    when: Something to do repeatedly
+    destination: habits
+    requires: [title, goal, cadence]
+
+  - id: durable_understanding
+    when: Something learned, worth retrieving later
+    destination: knowledge
+    requires: [title, topic, related_to]
+    note: >
+      `related_to` is mandatory. An unconnected note is never found again, so the link is the
+      routing gate rather than an optional extra.
+
+  - id: to_consume
+    when: An article, book, video, or course to work through
+    destination: reading
+    requires: [title, source_type]
+
+  - id: reference_material
+    when: Material to keep but not read end to end
+    destination: resources
+    requires: [title, topic]
+
+  - id: link_only
+    when: A URL worth keeping with no reading intent
+    destination: bookmarks
+    requires: [url, topic]
+
+  - id: file
+    when: A document or attachment
+    destination: documents
+    requires: [title, area]
+
+  - id: meeting_record
+    when: Notes or a transcript from a conversation
+    destination: meetings
+    requires: [title, date, attendees]
+    extracts:
+      - to: tasks
+        what: Action items, each linked back to the meeting.
+
+  - id: money_movement
+    when: An expense, income, or financial commitment
+    destination: transactions
+    requires: [amount, date, category]
+
+  - id: body_measurement
+    when: A health metric, workout, or symptom
+    destination: health_metrics
+    requires: [metric, value, date]
+
+  - id: person_context
+    when: Information about a person, or a promise made to one
+    destination: people
+    requires: [person]
+    extracts:
+      - to: people_commitments
+        what: Anything promised, with a due date.
+
+  - id: significant_choice
+    when: A decision being made whose reasoning is worth preserving
+    destination: decision_journal
+    requires: [title, expected_outcome, reversibility]
+    note: >
+      Captured before the outcome is known. Recorded after the fact, the reasoning is already
+      contaminated by hindsight, and the record loses most of its value.
+
+  - id: reflection
+    when: A thought about how things are going
+    destination: journal
+    requires: [date]
+
+  - id: discard
+    when: None of the above, and no longer relevant
+    destination: null
+    action: delete
+    note: >
+      An explicit rule, because a routing model with no discard path turns the inbox into a
+      permanent backlog.
+
+# ── Routing gate ─────────────────────────────────────────────────────────────
+gate:
+  enforced: true
+  description: >
+    An item may not leave the inbox until every field in its rule's `requires` list is
+    populated. This is the only place in the system where required fields are enforced at a
+    boundary rather than at creation, and it is deliberate: it keeps capture free while
+    keeping the destination databases clean.
+  on_incomplete: Item stays in the inbox and appears in the To route view.
+
+# ── Agent assistance ─────────────────────────────────────────────────────────
+assistance:
+  agent: knowledge-curator
+  model_tier: fast
+  proposes: [rule, destination, area, topic, related_to]
+  never_decides:
+    - Deleting an item.
+    - Creating a goal.
+    - Anything with an external side effect.
+  review: >
+    Proposals are shown for acceptance in bulk. Accepting a batch is one action; correcting
+    an individual proposal overrides it. Corrections are the training signal for prompt
+    improvement.
+
+# ── Review ───────────────────────────────────────────────────────────────────
+review:
+  cadence: daily
+  surface: today
+  duration_minutes: 5
+  stale_after_days: 14
+  stale_action: >
+    Surfaced in the Inbox stale view for deletion. Not a backlog to clear — evidence that
+    something was captured which did not matter.

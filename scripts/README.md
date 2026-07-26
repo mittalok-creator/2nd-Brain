@@ -24,15 +24,16 @@ python3 scripts/validate_repository.py --only yaml
 python3 scripts/validate_repository.py --quiet
 ```
 
-Or via `make`: `make validate`, `make structure`, `make yaml`, `make links`.
+Or via `make`: `make validate`, `make structure`, `make yaml`, `make links`, `make hierarchy`.
 
-Three checks:
+Four checks:
 
 | Check | Enforces |
 |---|---|
 | `structure` | Required files and directories exist; every top-level directory has a README; ADR numbers are unique |
 | `yaml` | Every YAML file parses; spec files carry the header contract with semantic `version` and valid `status` |
 | `links` | Every relative Markdown link resolves |
+| `hierarchy` | One root page; depth ≤ 3; unique sibling order; composed pages have blueprints and generated pages do not; blueprints agree with `_hierarchy.yaml` |
 
 Exits `0` when clean, `1` on any error. Warnings do not fail the build.
 

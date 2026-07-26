@@ -32,10 +32,11 @@ make validate
 | Command | Does |
 |---|---|
 | `make help` | List available targets |
-| `make validate` | Structure, YAML, and internal links — the full CI check |
+| `make validate` | Structure, YAML, links, and hierarchy — the full CI check |
 | `make structure` | Repository layout only |
 | `make yaml` | YAML syntax and spec headers only |
 | `make links` | Internal documentation links only |
+| `make hierarchy` | Workspace page tree and navigation constraints only |
 | `make tree` | Print the repository map |
 
 Run `make validate` before every push. CI runs exactly the same script, so a green local
@@ -48,7 +49,7 @@ run means a green pipeline.
 `scripts/validate_repository.py` is deliberately dependency-light — standard library plus
 PyYAML — so it runs anywhere without a build step.
 
-It enforces three things:
+It enforces four things:
 
 1. **Structure.** Required files and directories exist; every top-level directory has a
    `README.md`; ADR numbers are unique and sequential.
@@ -57,6 +58,10 @@ It enforces three things:
    valid `status`.
 3. **Links.** Every relative Markdown link resolves to a real path. External links are not
    checked — network checks make CI flaky.
+4. **Hierarchy.** The workspace page tree satisfies the constraints in
+   [ADR-0005](../adr/0005-workspace-information-architecture.md): exactly one root, depth ≤ 3,
+   explicit and unique sibling order, composed pages have blueprints while generated pages do
+   not, and each blueprint's `class`, `parent`, and `order` agree with `_hierarchy.yaml`.
 
 Adding a check: add a function, register it in `CHECKS`, add a `make` target, and add a CI
 step. Keep checks offline and deterministic.

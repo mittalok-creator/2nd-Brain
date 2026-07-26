@@ -11,12 +11,13 @@ see [ADR-0003](../docs/adr/0003-notion-as-projection.md).
 
 ## Contents
 
-| Directory | Declares |
+| Path | Declares |
 |---|---|
 | [`pages/`](pages/README.md) | The page hierarchy and each page's content blueprint |
 | [`dashboards/`](dashboards/README.md) | Dashboard compositions — what appears, in what order, why |
 | [`views/`](views/README.md) | Reusable view definitions — filters, sorts, groupings |
 | [`templates/`](templates/README.md) | Page and entry templates |
+| `capture-routing.yaml` | The routing table: how a captured item reaches its owning entity |
 
 ---
 
@@ -63,5 +64,10 @@ Full language in the [Design System guide](../docs/07-design-system/README.md).
 
 ## Status
 
-⬜ Page hierarchy in **Phase 2**, views in **Phase 3**, dashboards in **Phase 5**.
-Conventions above are live from Phase 1.
+✅ **Phase 2** — page hierarchy, navigation model, and capture routing are settled. Sixteen
+page blueprints are written; see
+[Information architecture](../docs/01-architecture/information-architecture.md).
+
+⬜ Views land in **Phase 3**, dashboards and templates in **Phase 5**. Page blueprints
+therefore contain forward references to views and dashboards that do not exist yet — expected,
+and validated when those land.

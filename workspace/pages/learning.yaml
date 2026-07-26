@@ -1,0 +1,71 @@
+id: learning
+name: Learning
+version: 1.0.0
+status: active
+owner: workspace
+description: >
+  Deliberate skill acquisition in progress. Tracks what is being learned, whether it is
+  actually being practised, and whether it connects to a goal — not how many books were
+  finished.
+
+icon: "📚"
+class: domain
+parent: home
+order: 9
+question: Am I getting measurably better at something specific?
+
+owns_entities: [skills]
+
+blocks:
+  - type: view
+    view: skills_active
+    title: Learning now
+    description: >
+      Deliberately capped. Three concurrent skills is the practical limit; more means none of
+      them progresses.
+
+  - type: view
+    view: learning_practice_recent
+    title: Practice this week
+    description: >
+      Time spent applying, not consuming. This is the metric that predicts whether a skill
+      is actually acquired.
+
+  - type: divider
+
+  - type: view
+    view: reading_in_progress
+    title: Reading now
+    description: >
+      Position and pace. A book unopened for 30 days is abandoned — recording that honestly
+      is more useful than an aspirational list.
+
+  - type: view
+    view: courses_in_progress
+    title: Courses
+    description: Percentage complete and last activity.
+
+  - type: divider
+
+  - type: view
+    view: learning_consumed_not_applied
+    title: Consumed but not applied
+    description: >
+      Books and courses finished that produced no knowledge note, no project, and no
+      practice. The single most honest view in the system: it measures the gap between
+      feeling productive and being changed.
+
+  - type: agent_action
+    agent: learning-mentor
+    action: review_learning
+    title: Review learning
+    description: >
+      Assesses whether current learning serves current goals, and where consumption is
+      substituting for practice.
+
+  - type: divider
+
+  - type: columns
+    columns:
+      - blocks: [{ type: link, page: reading }]
+      - blocks: [{ type: link, page: courses }]
