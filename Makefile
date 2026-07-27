@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 PYTHON ?= python3
 
-.PHONY: help validate structure yaml links hierarchy schema tree phase
+.PHONY: help validate structure yaml links hierarchy schema guide tree phase
 
 help: ## Show available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -24,6 +24,14 @@ hierarchy: ## Verify the workspace page tree and navigation constraints
 
 schema: ## Verify entity field contracts, taxonomy references, and ownership
 	@$(PYTHON) scripts/validate_repository.py --only schema
+
+guide: ## Re-render the Notion user guide PDF from its HTML source
+	@CHROME=$$(ls -d /opt/pw-browsers/chromium-*/chrome-linux/chrome 2>/dev/null | head -1); \
+	 [ -z "$$CHROME" ] && CHROME=$$(command -v chromium || command -v google-chrome); \
+	 "$$CHROME" --headless --disable-gpu --no-sandbox --no-pdf-header-footer \
+	   --print-to-pdf=docs/03-user-guide/2nd-Brain-Notion-Guide.pdf \
+	   docs/03-user-guide/notion-guide.html 2>/dev/null; \
+	 echo "rendered docs/03-user-guide/2nd-Brain-Notion-Guide.pdf"
 
 tree: ## Print the repository map
 	@git ls-files \

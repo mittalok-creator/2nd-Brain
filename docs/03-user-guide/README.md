@@ -2,9 +2,13 @@
 
 How to actually operate 2nd Brain day to day.
 
-> **Status** — ⬜ Written in Phase 8, once the workspace, dashboards, and automations it
-> describes exist. The operating model below is the settled intent; the detailed procedures
-> follow.
+> **Status** — 🚧 A complete illustrated guide for the deployed workspace already exists:
+> **[2nd-Brain-Notion-Guide.pdf](2nd-Brain-Notion-Guide.pdf)** — 10 pages, written in Hinglish,
+> covering Notion basics, the eight live databases, first-time setup, and the daily, weekly and
+> monthly loops. Source: [`notion-guide.html`](notion-guide.html); regenerate with `make guide`.
+>
+> The reference sections below are written in Phase 8, once dashboards and automations exist.
+> The operating model is the settled intent; the detailed procedures follow.
 
 ---
 

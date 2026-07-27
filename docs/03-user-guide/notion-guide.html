@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="hi-Latn">
+<head>
+<meta charset="utf-8">
+<title>2nd Brain — Notion Guide</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm 16mm 13mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --ink:#1C1C1E; --ink2:#48484A; --ink3:#8E8E93;
+    --line:#E3E3E8; --bg:#F7F7F9;
+    --blue:#0A64D6; --green:#248A3D; --orange:#B25000;
+    --red:#D70015; --purple:#8944AB; --pink:#C2185B; --teal:#00707F;
+  }
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink); font-size:10.2pt; line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  .page{ page-break-after:always; }
+  .page:last-child{ page-break-after:auto; }
+  h1{ font-size:23pt; line-height:1.15; letter-spacing:-.7px; font-weight:700; }
+  h2{ font-size:15pt; letter-spacing:-.35px; font-weight:700; margin:0 0 3mm; padding-bottom:2mm;
+      border-bottom:2.5px solid var(--ink); }
+  h3{ font-size:11.2pt; font-weight:700; margin:5mm 0 2mm; }
+  p{ margin:0 0 2.6mm; }
+  ul,ol{ margin:0 0 3mm 5mm; } li{ margin-bottom:1.4mm; }
+  strong{ font-weight:650; }
+  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:8.8pt;
+        background:var(--bg); padding:1px 4px; border-radius:3px; border:1px solid var(--line); }
+  .muted{ color:var(--ink3); }
+  .lede{ font-size:11pt; color:var(--ink2); }
+
+  /* cover */
+  .cover{ height:250mm; display:flex; flex-direction:column; justify-content:center; }
+  .brainmark{ font-size:58pt; line-height:1; margin-bottom:6mm; }
+  .cover h1{ font-size:40pt; letter-spacing:-1.6px; }
+  .tag{ font-size:13pt; color:var(--ink2); margin-top:3mm; }
+  .rule{ width:34mm; height:5px; background:var(--blue); margin:8mm 0; border-radius:3px; }
+  .coverbox{ background:var(--bg); border:1px solid var(--line); border-radius:9px;
+             padding:6mm 7mm; margin-top:10mm; }
+
+  /* helpers */
+  .kicker{ font-size:8pt; font-weight:700; letter-spacing:1.3px; text-transform:uppercase;
+           color:var(--blue); margin-bottom:2mm; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5mm; }
+  .card{ border:1px solid var(--line); border-radius:8px; padding:4mm 4.5mm; background:#fff; }
+  .card.fill{ background:var(--bg); }
+  .card h4{ font-size:9.8pt; margin-bottom:1.5mm; font-weight:700; }
+  .card p{ font-size:9pt; color:var(--ink2); margin:0; }
+
+  table{ width:100%; border-collapse:collapse; margin:2mm 0 3mm; font-size:9.2pt; }
+  th{ text-align:left; background:var(--bg); font-weight:700; font-size:8.4pt;
+      text-transform:uppercase; letter-spacing:.5px; color:var(--ink2);
+      padding:2.2mm 3mm; border-bottom:1.5px solid var(--line); }
+  td{ padding:2.2mm 3mm; border-bottom:1px solid var(--line); vertical-align:top; }
+  tr:last-child td{ border-bottom:none; }
+
+  .note{ border-left:4px solid var(--blue); background:#F2F7FE; padding:3.5mm 4.5mm;
+         border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+  .warn{ border-left:4px solid var(--orange); background:#FEF6EF; padding:3.5mm 4.5mm;
+         border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+  .key{ border-left:4px solid var(--green); background:#F1F9F3; padding:3.5mm 4.5mm;
+        border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+
+  .steps{ counter-reset:s; list-style:none; margin-left:0; }
+  .steps li{ counter-increment:s; position:relative; padding-left:10mm; margin-bottom:3.4mm; }
+  .steps li::before{ content:counter(s); position:absolute; left:0; top:0;
+    width:6.6mm; height:6.6mm; background:var(--ink); color:#fff; border-radius:50%;
+    font-size:8.6pt; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+  .pill{ display:inline-block; font-size:7.8pt; font-weight:700; padding:1px 7px;
+         border-radius:20px; letter-spacing:.3px; }
+  .p-blue{ background:#E4EFFC; color:var(--blue); }
+  .p-green{ background:#E4F3E8; color:var(--green); }
+  .p-red{ background:#FCE8E8; color:var(--red); }
+  .p-orange{ background:#FCEFE2; color:var(--orange); }
+  .p-gray{ background:#EDEDF0; color:var(--ink2); }
+  .p-purple{ background:#F3E9F7; color:var(--purple); }
+
+  svg{ display:block; margin:3mm auto; max-width:100%; }
+  .cap{ text-align:center; font-size:8.2pt; color:var(--ink3); margin-top:-1mm; margin-bottom:4mm; }
+  .foot{ position:fixed; bottom:6mm; left:0; right:0; text-align:center;
+         font-size:7.6pt; color:var(--ink3); }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COVER ══════════ -->
+<section class="page cover">
+  <div class="brainmark">🧠</div>
+  <h1>2nd Brain</h1>
+  <div class="tag">Aapka Personal Operating System — Notion Guide</div>
+  <div class="rule"></div>
+  <p class="lede">Notion pehli baar use kar rahe ho? Koi baat nahi.<br>
+  Yeh guide zero se shuru karti hai — Notion kya hai, aapka system kaise bana hai,
+  aur roz kaise chalana hai.</p>
+
+  <div class="coverbox">
+    <table style="margin:0">
+      <tr><td style="width:34mm"><strong>Kiske liye</strong></td><td>Alok Mittal</td></tr>
+      <tr><td><strong>Workspace</strong></td><td>🧠 2nd Brain (Notion)</td></tr>
+      <tr><td><strong>Version</strong></td><td>v0.3.0 — 8 databases live</td></tr>
+      <tr><td><strong>Roz lagega</strong></td><td>7 minute · Hafte mein 20 minute</td></tr>
+      <tr><td style="border:none"><strong>Padhne mein</strong></td><td style="border:none">~15 minute</td></tr>
+    </table>
+  </div>
+
+  <p class="muted" style="margin-top:12mm; font-size:9pt">
+    Ek line mein poora system: <strong>Capture bina soche → Route ek baar roz → Review hafte mein ek baar.</strong>
+  </p>
+</section>
+
+<!-- ══════════ 1. NOTION BASICS ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 1</div>
+  <h2>Notion kya hai — 2 minute mein</h2>
+
+  <p>Notion ek aisi jagah hai jahan <strong>pages</strong> aur <strong>databases</strong> hote hain.
+  Bas do hi cheezein samajhni hain:</p>
+
+  <div class="grid2" style="margin:4mm 0">
+    <div class="card">
+      <h4>📄 Page</h4>
+      <p>Ek khaali kaagaz. Isme likh sakte ho, dusre pages rakh sakte ho.
+      Aapka <strong>🧠 2nd Brain</strong> ek page hai.</p>
+    </div>
+    <div class="card">
+      <h4>🗄️ Database</h4>
+      <p>Excel sheet jaisa — par har <em>row</em> khud ek page hai jise khol sakte ho.
+      <strong>Tasks</strong>, <strong>Goals</strong> — sab databases hain.</p>
+    </div>
+  </div>
+
+  <h3>Screen par kya kahan hai</h3>
+
+  <svg viewBox="0 0 520 240" width="520" height="240">
+    <rect x="1" y="1" width="518" height="238" rx="8" fill="#fff" stroke="#D8D8DE" stroke-width="1.5"/>
+    <!-- sidebar -->
+    <rect x="1" y="1" width="140" height="238" rx="8" fill="#F7F7F9"/>
+    <rect x="131" y="1" width="10" height="238" fill="#F7F7F9"/>
+    <line x1="141" y1="1" x2="141" y2="239" stroke="#E3E3E8" stroke-width="1.5"/>
+    <text x="14" y="24" font-size="10" font-weight="700" fill="#1C1C1E">🧠 2nd Brain</text>
+    <text x="24" y="46" font-size="9" fill="#48484A">📥 Inbox</text>
+    <text x="24" y="65" font-size="9" fill="#48484A">🎯 Goals</text>
+    <text x="24" y="84" font-size="9" fill="#48484A">🚀 Projects</text>
+    <text x="24" y="103" font-size="9" fill="#48484A">✅ Tasks</text>
+    <text x="24" y="122" font-size="9" fill="#48484A">🔁 Habits</text>
+    <text x="24" y="141" font-size="9" fill="#48484A">☑️ Habit Log</text>
+    <text x="24" y="160" font-size="9" fill="#48484A">✍️ Journal</text>
+    <text x="24" y="179" font-size="9" fill="#48484A">📊 Reviews</text>
+    <!-- main -->
+    <text x="162" y="30" font-size="13" font-weight="700" fill="#1C1C1E">✅ Tasks</text>
+    <!-- view tabs -->
+    <rect x="162" y="42" width="62" height="18" rx="5" fill="#1C1C1E"/>
+    <text x="171" y="55" font-size="8" font-weight="700" fill="#fff">☀️ Due today</text>
+    <text x="234" y="55" font-size="8" fill="#8E8E93">⚠️ Slipped</text>
+    <text x="292" y="55" font-size="8" fill="#8E8E93">All</text>
+    <text x="322" y="55" font-size="8" fill="#0A64D6">+ New view</text>
+    <!-- table head -->
+    <line x1="162" y1="70" x2="505" y2="70" stroke="#E3E3E8" stroke-width="1.5"/>
+    <text x="166" y="84" font-size="7.5" font-weight="700" fill="#8E8E93">TASK</text>
+    <text x="290" y="84" font-size="7.5" font-weight="700" fill="#8E8E93">PRIORITY</text>
+    <text x="358" y="84" font-size="7.5" font-weight="700" fill="#8E8E93">ENERGY</text>
+    <text x="428" y="84" font-size="7.5" font-weight="700" fill="#8E8E93">DUE</text>
+    <line x1="162" y1="90" x2="505" y2="90" stroke="#E3E3E8"/>
+    <!-- rows -->
+    <text x="166" y="106" font-size="8.5" fill="#1C1C1E">Draft the Q3 proposal</text>
+    <rect x="290" y="98" width="34" height="11" rx="6" fill="#FCEFE2"/><text x="295" y="106" font-size="7" font-weight="700" fill="#B25000">high</text>
+    <rect x="358" y="98" width="28" height="11" rx="6" fill="#E4EFFC"/><text x="363" y="106" font-size="7" font-weight="700" fill="#0A64D6">deep</text>
+    <text x="428" y="106" font-size="8" fill="#48484A">Today</text>
+    <line x1="162" y1="114" x2="505" y2="114" stroke="#F0F0F3"/>
+    <text x="166" y="130" font-size="8.5" fill="#1C1C1E">Reply to Sharma ji</text>
+    <rect x="290" y="122" width="44" height="11" rx="6" fill="#E4EFFC"/><text x="295" y="130" font-size="7" font-weight="700" fill="#0A64D6">medium</text>
+    <rect x="358" y="122" width="30" height="11" rx="6" fill="#EDEDF0"/><text x="363" y="130" font-size="7" font-weight="700" fill="#48484A">admin</text>
+    <text x="428" y="130" font-size="8" fill="#48484A">Today</text>
+    <line x1="162" y1="138" x2="505" y2="138" stroke="#F0F0F3"/>
+    <text x="166" y="154" font-size="8.5" fill="#8E8E93">+ New</text>
+
+    <!-- annotations -->
+    <path d="M70 195 L70 210 L150 210" stroke="#0A64D6" stroke-width="1.3" fill="none"/>
+    <circle cx="150" cy="210" r="2.5" fill="#0A64D6"/>
+    <text x="14" y="192" font-size="7.8" font-weight="700" fill="#0A64D6">1 · SIDEBAR</text>
+    <text x="14" y="224" font-size="7.5" fill="#48484A">Saare databases</text>
+    <text x="14" y="234" font-size="7.5" fill="#48484A">yahin milenge</text>
+
+    <path d="M250 176 L250 190" stroke="#248A3D" stroke-width="1.3" fill="none"/>
+    <circle cx="250" cy="62" r="0" fill="none"/>
+    <path d="M193 62 L193 176" stroke="#248A3D" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+    <text x="200" y="200" font-size="7.8" font-weight="700" fill="#248A3D">2 · VIEWS</text>
+    <text x="200" y="212" font-size="7.5" fill="#48484A">Same data, alag filter.</text>
+    <text x="200" y="222" font-size="7.5" fill="#48484A">"Due today" sirf aaj ka</text>
+    <text x="200" y="232" font-size="7.5" fill="#48484A">kaam dikhata hai.</text>
+
+    <path d="M400 160 L400 190" stroke="#8944AB" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+    <text x="370" y="200" font-size="7.8" font-weight="700" fill="#8944AB">3 · ROW = PAGE</text>
+    <text x="370" y="212" font-size="7.5" fill="#48484A">Kisi bhi row pe click</text>
+    <text x="370" y="222" font-size="7.5" fill="#48484A">karo — poora page</text>
+    <text x="370" y="232" font-size="7.5" fill="#48484A">khul jaata hai.</text>
+  </svg>
+  <div class="cap">Notion ka layout — sidebar, view tabs, aur database rows</div>
+
+  <div class="note">
+    <strong>Sabse zaroori concept: VIEWS.</strong> Ek hi database ko alag-alag tareeke se dekh sakte ho.
+    <code>☀️ Due today</code> aur <code>⚠️ Slipped</code> — dono <em>same</em> Tasks database hain,
+    bas filter alag hai. Kuch delete nahi hota, sirf chhupta hai.
+  </div>
+
+  <h3>Char cheezein jo roz kaam aayengi</h3>
+  <table>
+    <tr><th style="width:38mm">Kya karna hai</th><th>Kaise</th></tr>
+    <tr><td><strong>Nayi row banana</strong></td><td>Table ke neeche <code>+ New</code> pe click</td></tr>
+    <tr><td><strong>Row kholna</strong></td><td>Row pe hover karo → <code>OPEN</code> button aayega</td></tr>
+    <tr><td><strong>Field bharna</strong></td><td>Cell pe click karo, type karo. Select fields mein list se chuno</td></tr>
+    <tr><td><strong>View badalna</strong></td><td>Upar tabs pe click — <code>☀️ Due today</code>, <code>⚠️ Slipped</code></td></tr>
+  </table>
+</section>
+
+<!-- ══════════ 2. AAPKA SYSTEM ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 2</div>
+  <h2>Aapka system — 8 databases</h2>
+
+  <p>Yeh koi random tables ka collection nahi hai. Har database ka ek kaam hai, aur woh
+  aapas mein <strong>jude hue</strong> hain.</p>
+
+  <svg viewBox="0 0 520 300" width="520" height="300">
+    <defs>
+      <marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L7,3 L0,6" fill="none" stroke="#8E8E93" stroke-width="1.2"/>
+      </marker>
+    </defs>
+
+    <!-- CAPTURE -->
+    <text x="14" y="18" font-size="8" font-weight="700" fill="#8E8E93" letter-spacing="1">CAPTURE</text>
+    <rect x="14" y="26" width="104" height="42" rx="8" fill="#F2F7FE" stroke="#0A64D6" stroke-width="1.6"/>
+    <text x="24" y="45" font-size="10.5" font-weight="700" fill="#0A64D6">📥 Inbox</text>
+    <text x="24" y="59" font-size="7.6" fill="#48484A">Sab kuch yahan aata hai</text>
+
+    <!-- DIRECTION chain -->
+    <text x="150" y="18" font-size="8" font-weight="700" fill="#8E8E93" letter-spacing="1">DIRECTION → DELIVERY</text>
+    <rect x="150" y="26" width="102" height="42" rx="8" fill="#F3E9F7" stroke="#8944AB" stroke-width="1.6"/>
+    <text x="159" y="45" font-size="10.5" font-weight="700" fill="#8944AB">🎯 Goals</text>
+    <text x="159" y="59" font-size="7.6" fill="#48484A">Kya paana hai</text>
+
+    <rect x="272" y="26" width="102" height="42" rx="8" fill="#F2F7FE" stroke="#0A64D6" stroke-width="1.6"/>
+    <text x="281" y="45" font-size="10.5" font-weight="700" fill="#0A64D6">🚀 Projects</text>
+    <text x="281" y="59" font-size="7.6" fill="#48484A">Kya banana hai</text>
+
+    <rect x="394" y="26" width="102" height="42" rx="8" fill="#F1F9F3" stroke="#248A3D" stroke-width="1.6"/>
+    <text x="403" y="45" font-size="10.5" font-weight="700" fill="#248A3D">✅ Tasks</text>
+    <text x="403" y="59" font-size="7.6" fill="#48484A">Kya karna hai</text>
+
+    <line x1="252" y1="47" x2="270" y2="47" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="374" y1="47" x2="392" y2="47" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="118" y1="47" x2="148" y2="47" stroke="#8E8E93" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+
+    <!-- HABITS -->
+    <text x="150" y="105" font-size="8" font-weight="700" fill="#8E8E93" letter-spacing="1">CONSISTENCY</text>
+    <rect x="150" y="113" width="102" height="42" rx="8" fill="#FCEFE2" stroke="#B25000" stroke-width="1.6"/>
+    <text x="159" y="132" font-size="10.5" font-weight="700" fill="#B25000">🔁 Habits</text>
+    <text x="159" y="146" font-size="7.6" fill="#48484A">Roz kya karna hai</text>
+
+    <rect x="272" y="113" width="102" height="42" rx="8" fill="#FCEFE2" stroke="#B25000" stroke-width="1.6"/>
+    <text x="281" y="132" font-size="10.5" font-weight="700" fill="#B25000">☑️ Habit Log</text>
+    <text x="281" y="146" font-size="7.6" fill="#48484A">Aaj hua ya nahi</text>
+
+    <line x1="252" y1="134" x2="270" y2="134" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#ar)"/>
+    <line x1="201" y1="68" x2="201" y2="111" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#ar)"/>
+
+    <!-- REFLECTION -->
+    <text x="14" y="195" font-size="8" font-weight="700" fill="#8E8E93" letter-spacing="1">REFLECTION</text>
+    <rect x="14" y="203" width="104" height="42" rx="8" fill="#F7F7F9" stroke="#8E8E93" stroke-width="1.6"/>
+    <text x="24" y="222" font-size="10.5" font-weight="700" fill="#1C1C1E">✍️ Journal</text>
+    <text x="24" y="236" font-size="7.6" fill="#48484A">Roz raat ko</text>
+
+    <rect x="150" y="203" width="102" height="42" rx="8" fill="#F7F7F9" stroke="#8E8E93" stroke-width="1.6"/>
+    <text x="159" y="222" font-size="10.5" font-weight="700" fill="#1C1C1E">📊 Reviews</text>
+    <text x="159" y="236" font-size="7.6" fill="#48484A">Hafte / mahine mein</text>
+
+    <!-- legend -->
+    <line x1="290" y1="212" x2="316" y2="212" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="322" y="215" font-size="8" fill="#48484A">= jude hue hain (relation)</text>
+    <line x1="290" y1="232" x2="316" y2="232" stroke="#8E8E93" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+    <text x="322" y="235" font-size="8" fill="#48484A">= routing (roz raat ko)</text>
+
+    <rect x="14" y="262" width="482" height="30" rx="7" fill="#F1F9F3" stroke="#248A3D" stroke-width="1.2"/>
+    <text x="24" y="281" font-size="8.6" fill="#1C1C1E">
+      <tspan font-weight="700">Rule:</tspan> Har Project kisi ek Goal ka hota hai. Har Habit kisi ek Goal ki hoti hai.
+      Bina Goal ka kaam = bina matlab ka kaam.
+    </text>
+  </svg>
+  <div class="cap">Aapka poora system — ek nazar mein</div>
+
+  <div class="key">
+    <strong>Relations ka matlab kya hai?</strong> Jab aap ek Task ko Project se jodte ho,
+    toh Project ke andar apne aap woh Task dikhne lagta hai. Dono jagah likhna nahi padta —
+    ek baar jodo, dono taraf dikh jaayega. <strong>Yahi is system ki asli taakat hai.</strong>
+  </div>
+</section>
+
+<!-- ══════════ 3. SETUP ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 3</div>
+  <h2>Pehla setup — 10 minute, ek baar</h2>
+
+  <p>Test data mat daalo. <strong>Ek asli cheez</strong> daalo jo aapko sach mein karni hai.
+  System tabhi samajh aayega.</p>
+
+  <ol class="steps">
+    <li>
+      <strong>🎯 Goals kholo → ek goal likho</strong><br>
+      <span class="muted">Jo is quarter mein sach mein chahiye. Jaise: <em>"Half marathon complete karna"</em></span>
+      <div class="warn" style="margin:2mm 0">
+        <strong>Success criteria</strong> field zaroor bharo — woh condition jisse pata chale ki goal
+        pura ho gaya. Isko chhoda toh goal kabhi <em>khatam</em> hi nahi hoga.
+        <br><span class="muted">Sahi: "21 km, 2:15 se kam" · Galat: "Fit ho jana"</span>
+      </div>
+    </li>
+    <li>
+      <strong>🚀 Projects kholo → ek project banao</strong><br>
+      <span class="muted"><code>Goal</code> field pe click karke upar wala goal chuno.</span><br>
+      <span class="muted"><code>Definition of done</code> — kaam <em>shuru karne se pehle</em> likho ki khatam kab
+      maanenge. Ye na ho toh project kabhi khatam nahi hota, phailta rehta hai.</span>
+    </li>
+    <li>
+      <strong>✅ Tasks kholo → 3-5 tasks daalo</strong><br>
+      <span class="muted">Har task ko <code>Project</code> se jodo. Har task <strong>verb se shuru</strong> karo —
+      "Plan banana" nahi, "Running plan likhna".</span><br>
+      <span class="muted"><code>Energy</code> zaroor set karo: <span class="pill p-blue">deep</span>
+      <span class="pill p-blue">shallow</span> <span class="pill p-gray">admin</span>
+      <span class="pill p-green">recovery</span></span>
+    </li>
+    <li>
+      <strong>🔁 Habits kholo → ek habit banao</strong><br>
+      <span class="muted">Goal se jodo. <code>Cadence</code> chuno (daily/weekly).</span>
+      <div class="key" style="margin:2mm 0">
+        <strong>Minimum version</strong> — sabse zaroori field. Woh chhoti si cheez jo
+        <em>bure din mein bhi</em> ho jaaye aur count ho.
+        <br><span class="muted">Habit: "5 km daudna" → Minimum version: "Joote pehen ke 5 minute chalna"</span>
+        <br>Yahi ek field aapki habit ko bure hafte mein bachati hai.
+      </div>
+    </li>
+    <li>
+      <strong>Aaj raat ✍️ Journal mein ek entry likho</strong><br>
+      <span class="muted">Ek field bhi kaafi hai. Bas shuruaat kar do.</span>
+    </li>
+  </ol>
+
+  <div class="note">
+    <strong>Shuruaat mein kitna?</strong> Ek goal. Ek project. Paanch tasks. Ek habit.
+    Bas. Pehle din 20 goals daalne se system nahi chalta — woh sabse aam galti hai.
+  </div>
+</section>
+
+<!-- ══════════ 4. DAILY LOOP ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 4</div>
+  <h2>Roz ka routine — 7 minute</h2>
+
+  <svg viewBox="0 0 520 210" width="520" height="210">
+    <!-- morning -->
+    <rect x="8" y="30" width="152" height="120" rx="10" fill="#FEF9EF" stroke="#B25000" stroke-width="1.6"/>
+    <text x="22" y="52" font-size="14">☀️</text>
+    <text x="44" y="52" font-size="11.5" font-weight="700" fill="#B25000">Subah</text>
+    <text x="118" y="52" font-size="8.5" font-weight="700" fill="#B25000">2 min</text>
+    <text x="22" y="74" font-size="8.6" fill="#1C1C1E">Tasks → ☀️ Due today</text>
+    <text x="22" y="90" font-size="8.6" fill="#1C1C1E">kholo</text>
+    <text x="22" y="112" font-size="8.2" fill="#48484A">Energy dekho. Aaj kitna</text>
+    <text x="22" y="125" font-size="8.2" fill="#48484A">dum hai, utna hi lo.</text>
+    <text x="22" y="141" font-size="8.2" font-weight="700" fill="#B25000">1 deep + 2 shallow</text>
+
+    <!-- day -->
+    <rect x="184" y="30" width="152" height="120" rx="10" fill="#F2F7FE" stroke="#0A64D6" stroke-width="1.6"/>
+    <text x="198" y="52" font-size="14">📥</text>
+    <text x="220" y="52" font-size="11.5" font-weight="700" fill="#0A64D6">Din bhar</text>
+    <text x="286" y="52" font-size="8.5" font-weight="700" fill="#0A64D6">seconds</text>
+    <text x="198" y="74" font-size="8.6" fill="#1C1C1E">Kuch bhi dimaag mein</text>
+    <text x="198" y="88" font-size="8.6" fill="#1C1C1E">aaye → Inbox mein daalo</text>
+    <text x="198" y="110" font-size="8.2" fill="#48484A">Sirf type karo. Categorize</text>
+    <text x="198" y="123" font-size="8.2" fill="#48484A">bilkul mat karo.</text>
+    <text x="198" y="141" font-size="8.2" font-weight="700" fill="#0A64D6">Sochna = capture rukna</text>
+
+    <!-- evening -->
+    <rect x="360" y="30" width="152" height="120" rx="10" fill="#F5F1F9" stroke="#8944AB" stroke-width="1.6"/>
+    <text x="374" y="52" font-size="14">🌙</text>
+    <text x="396" y="52" font-size="11.5" font-weight="700" fill="#8944AB">Raat</text>
+    <text x="470" y="52" font-size="8.5" font-weight="700" fill="#8944AB">5 min</text>
+    <text x="374" y="74" font-size="8.6" fill="#1C1C1E">1. Done wale close karo</text>
+    <text x="374" y="88" font-size="8.6" fill="#1C1C1E">2. Slip pe reason likho</text>
+    <text x="374" y="102" font-size="8.6" fill="#1C1C1E">3. Journal + Habit Log</text>
+    <text x="374" y="116" font-size="8.6" fill="#1C1C1E">4. Inbox khaali karo</text>
+    <text x="374" y="141" font-size="8.2" font-weight="700" fill="#8944AB">Yeh sabse important hai</text>
+
+    <path d="M160 90 L182 90" stroke="#8E8E93" stroke-width="1.5" marker-end="url(#ar2)"/>
+    <path d="M336 90 L358 90" stroke="#8E8E93" stroke-width="1.5" marker-end="url(#ar2)"/>
+    <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6" fill="none" stroke="#8E8E93" stroke-width="1.2"/></marker></defs>
+
+    <rect x="8" y="168" width="504" height="34" rx="8" fill="#F7F7F9" stroke="#E3E3E8"/>
+    <text x="22" y="184" font-size="8.8" font-weight="700" fill="#1C1C1E">Agar sirf ek cheez kar sako:</text>
+    <text x="22" y="196" font-size="8.6" fill="#48484A">Raat ko slip hue task pe "Why it slipped" likho. Yahi poore system ka sabse keemti data hai.</text>
+  </svg>
+
+  <h3>"Why it slipped" itna important kyun hai?</h3>
+  <p>Kyunki hafte ke ant mein aap yeh column padhoge. Aur agar <strong>ek hi wajah teen baar</strong>
+  dikhi — jaise "meeting mein time nikal gaya" — toh problem aapki discipline nahi hai.
+  <strong>Problem system mein hai.</strong> Aur system theek kiya ja sakta hai; khud ko kosne se kuch nahi hota.</p>
+
+  <table>
+    <tr><th style="width:52mm">Aisa likho</th><th>Aisa mat likho</th></tr>
+    <tr><td>"3 baje tak meetings thi, deep work ka time hi nahi bacha"</td><td class="muted">"Busy tha"</td></tr>
+    <tr><td>"Task bahut bada tha, shuru hi nahi kar paya"</td><td class="muted">"Aalas aa gaya"</td></tr>
+    <tr><td>"Sharma ji ka reply nahi aaya"</td><td class="muted">"Blocked"</td></tr>
+  </table>
+
+  <h3>Habit Log kaise bharein</h3>
+  <p><code>☑️ Habit Log</code> → <code>☑️ Today</code> view → <code>+ New</code> →
+  Habit chuno, Date aaj ki, aur <code>Outcome</code> set karo:</p>
+  <table>
+    <tr><th style="width:24mm">Outcome</th><th>Kab lagana hai</th></tr>
+    <tr><td><span class="pill p-green">met</span></td><td>Poora ho gaya</td></tr>
+    <tr><td><span class="pill p-blue">partial</span></td><td>Sirf minimum version hua — <strong>ye bhi safalta hai</strong>, streak nahi tootegi</td></tr>
+    <tr><td><span class="pill p-red">missed</span></td><td>Nahi hua. <code>Note</code> mein wajah likho</td></tr>
+    <tr><td><span class="pill p-gray">paused</span></td><td>Bimari, safar. Miss count nahi hoga</td></tr>
+  </table>
+</section>
+
+<!-- ══════════ 5. WEEKLY ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 5</div>
+  <h2>Hafte mein ek baar — 20 minute</h2>
+
+  <p>Roz ka kaam cheezein <em>organise</em> karta hai. Sirf review hi <strong>disha badalta hai</strong>.
+  Isliye yeh 20 minute sabse zyada value dete hain.</p>
+
+  <ol class="steps">
+    <li><strong>Tasks → <code>⚠️ Slipped</code> view kholo</strong><br>
+      <span class="muted">"Why it slipped" column padho. Koi pattern dikh raha hai?</span></li>
+    <li><strong>Goals → <code>🎯 Active</code> view kholo</strong><br>
+      <span class="muted">Har goal ke neeche kuch hila? Nahi hila toh honestly maano.</span></li>
+    <li><strong>Projects → <code>🚀 Board</code> kholo</strong><br>
+      <span class="muted">14 din se koi task complete nahi hua? Woh project <em>stalled</em> hai.
+      Uska matlab hai koi decision pending hai.</span></li>
+    <li><strong>📊 Reviews mein nayi entry banao</strong><br>
+      <span class="muted">Type = <span class="pill p-blue">weekly</span>, period ki dates daalo.</span></li>
+  </ol>
+
+  <h3>Review mein kya likhna hai</h3>
+  <table>
+    <tr><th style="width:40mm">Field</th><th>Kya likhna hai</th></tr>
+    <tr><td><strong>What moved</strong></td><td>Kya sach mein aage badha</td></tr>
+    <tr><td><strong>What slipped</strong></td><td>Slipped view se pattern uthao. <span class="muted">Yeh ekmatra section hai jo yaadash pe nahi, sabooton pe bana hai.</span></td></tr>
+    <tr><td><strong>Honest assessment</strong></td><td>Kya main <em>sahi cheez</em> pe kaam kar raha tha? <span class="muted">Isme koi data nahi hai — sirf sachai. Bina iske review sirf report hai.</span></td></tr>
+    <tr><td><strong>Actions</strong></td><td>Agle hafte kya badloge. 1-2 cheez, zyada nahi</td></tr>
+  </table>
+
+  <div class="key">
+    <strong>Goal chhodna failure nahi hai.</strong> Agar koi goal 60 din se hila nahi,
+    use <span class="pill p-gray">dormant</span> ya <span class="pill p-gray">abandoned</span> mark karo
+    aur <code>Why abandoned</code> bharo.
+    <br><br>Chhode hue goals ka record is system ka sabse keemti data ban jaayega — kyunki agle saal
+    aap wahi goal dobara set karne se pehle padh sakoge ki pichhli baar kyun chhoda tha.
+  </div>
+
+  <h3>Mahine mein ek baar (60 min)</h3>
+  <p>Wahi process, par <strong>events nahi — trends</strong> dekho. Char sawaal:</p>
+  <div class="grid2">
+    <div class="card fill"><h4>Kya goals abhi bhi sahi hain?</h4><p>3 mahine pehle jo zaroori laga tha, kya ab bhi hai?</p></div>
+    <div class="card fill"><h4>Kaunsa area chhoot raha hai?</h4><p>Goals ko Area se group karo. Koi column khaali hai?</p></div>
+    <div class="card fill"><h4>Energy ka pattern kya hai?</h4><p>Journal mein "depleted" kitni baar aaya? Load sustainable hai?</p></div>
+    <div class="card fill"><h4>Kya cheez use hi nahi ho rahi?</h4><p>Jo field ya database ek mahine se khaali hai — hata do.</p></div>
+  </div>
+</section>
+
+<!-- ══════════ 6. FIELDS + VIEWS ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 6</div>
+  <h2>Zaroori fields — aur woh kyun hain</h2>
+
+  <p>Har field ka ek karan hai. Notion mein kisi bhi field ke naam pe hover karoge toh
+  uska explanation dikh jayega. Yeh sabse important hain:</p>
+
+  <table>
+    <tr><th style="width:34mm">Field</th><th style="width:24mm">Kahan</th><th>Kyun</th></tr>
+    <tr><td><strong>Success criteria</strong></td><td>Goals</td><td>Bina iske goal kabhi "poora" nahi hota — kyunki poora hone ki definition hi nahi hai</td></tr>
+    <tr><td><strong>Definition of done</strong></td><td>Projects</td><td>Kaam shuru karne se pehle likho, warna project phailta rahega</td></tr>
+    <tr><td><strong>Energy</strong></td><td>Tasks</td><td>Calendar khaali ghante dikhata hai, par nahi batata ki un ghanton mein deep work ho paayega ya nahi</td></tr>
+    <tr><td><strong>Why it slipped</strong></td><td>Tasks</td><td>Weekly review ka poora kachcha maal. System ki galtiyan yahin dikhti hain</td></tr>
+    <tr><td><strong>Minimum version</strong></td><td>Habits</td><td>Bure din mein habit bachane wali ek cheez</td></tr>
+    <tr><td><strong>Why abandoned</strong></td><td>Goals</td><td>Kya cheez maayne rakhna band kar gayi, aur kyun</td></tr>
+    <tr><td><strong>Tomorrow's focus</strong></td><td>Journal</td><td>Aaj raat aaj ke context se likho — kal subah dimaag saaf nahi hota</td></tr>
+  </table>
+
+  <h2 style="margin-top:8mm">Khud ki view kaise banayein</h2>
+  <p>Views pehle se 6 bane hue hain. Nayi banani ho toh 20 second ka kaam hai:</p>
+
+  <svg viewBox="0 0 520 108" width="520" height="108">
+    <rect x="6" y="10" width="118" height="60" rx="8" fill="#fff" stroke="#D8D8DE" stroke-width="1.4"/>
+    <text x="18" y="32" font-size="8.6" font-weight="700" fill="#1C1C1E">1 · + New view</text>
+    <text x="18" y="48" font-size="7.8" fill="#48484A">Database ke upar</text>
+    <text x="18" y="60" font-size="7.8" fill="#48484A">tabs ke aage</text>
+
+    <rect x="140" y="10" width="118" height="60" rx="8" fill="#fff" stroke="#D8D8DE" stroke-width="1.4"/>
+    <text x="152" y="32" font-size="8.6" font-weight="700" fill="#1C1C1E">2 · Layout chuno</text>
+    <text x="152" y="48" font-size="7.8" fill="#48484A">Table, Board,</text>
+    <text x="152" y="60" font-size="7.8" fill="#48484A">Calendar...</text>
+
+    <rect x="274" y="10" width="118" height="60" rx="8" fill="#fff" stroke="#D8D8DE" stroke-width="1.4"/>
+    <text x="286" y="32" font-size="8.6" font-weight="700" fill="#1C1C1E">3 · Filter lagao</text>
+    <text x="286" y="48" font-size="7.8" fill="#48484A">"Status is not done"</text>
+    <text x="286" y="60" font-size="7.8" fill="#48484A">jaisa kuch</text>
+
+    <rect x="408" y="10" width="106" height="60" rx="8" fill="#F1F9F3" stroke="#248A3D" stroke-width="1.4"/>
+    <text x="420" y="32" font-size="8.6" font-weight="700" fill="#248A3D">4 · Naam do</text>
+    <text x="420" y="48" font-size="7.8" fill="#48484A">Sawaal ke naam pe,</text>
+    <text x="420" y="60" font-size="7.8" fill="#48484A">filter ke naam pe nahi</text>
+
+    <line x1="124" y1="40" x2="138" y2="40" stroke="#8E8E93" stroke-width="1.3" marker-end="url(#ar3)"/>
+    <line x1="258" y1="40" x2="272" y2="40" stroke="#8E8E93" stroke-width="1.3" marker-end="url(#ar3)"/>
+    <line x1="392" y1="40" x2="406" y2="40" stroke="#8E8E93" stroke-width="1.3" marker-end="url(#ar3)"/>
+    <defs><marker id="ar3" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6" fill="none" stroke="#8E8E93" stroke-width="1.2"/></marker></defs>
+
+    <text x="6" y="92" font-size="8.4" fill="#48484A">
+      <tspan font-weight="700">Naam ka niyam:</tspan> "This week ka deep work" — accha. "Tasks filter 3" — bekaar.
+    </text>
+  </svg>
+
+  <h3>📱 Mobile pe capture</h3>
+  <ol class="steps">
+    <li><strong>Notion app install karo</strong> — usi Google account se login (mittalok@gmail.com)</li>
+    <li><strong>📥 Inbox kholo</strong> → <code>•••</code> → <code>Add to home screen</code></li>
+    <li><strong>Ab ek tap</strong> mein capture. Yahi sabse zyada use hoga.</li>
+  </ol>
+  <div class="note">
+    Mobile pe sirf <strong>capture</strong> karo. Organise laptop pe raat ko.
+    Chhoti screen pe fields bharne ki koshish mat karo — wahin se system chhootna shuru hota hai.
+  </div>
+</section>
+
+<!-- ══════════ 7. CHEAT SHEET ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 7</div>
+  <h2>Cheat sheet</h2>
+
+  <div class="grid2">
+    <div class="card fill">
+      <h4>☀️ Subah — 2 min</h4>
+      <p>Tasks → ☀️ Due today<br>Energy dekho<br>1 deep + 2 shallow chuno</p>
+    </div>
+    <div class="card fill">
+      <h4>🌙 Raat — 5 min</h4>
+      <p>Done close karo<br>Slip pe reason likho<br>Journal + Habit Log<br>Inbox khaali karo</p>
+    </div>
+    <div class="card fill">
+      <h4>📅 Hafta — 20 min</h4>
+      <p>⚠️ Slipped padho<br>🎯 Active check karo<br>📊 Reviews entry banao</p>
+    </div>
+    <div class="card fill">
+      <h4>🗓 Mahina — 60 min</h4>
+      <p>Trends dekho<br>Goals kaato ya rakho<br>Unused cheezein hatao</p>
+    </div>
+  </div>
+
+  <h3>Paanch niyam</h3>
+  <table>
+    <tr><td style="width:8mm"><strong>1</strong></td><td><strong>Ek hi Inbox.</strong> Sab kuch wahin se aata hai.</td></tr>
+    <tr><td><strong>2</strong></td><td><strong>Capture ke waqt sochna nahi.</strong> Routing raat ko hoti hai.</td></tr>
+    <tr><td><strong>3</strong></td><td><strong>Har Project ka ek Goal.</strong> Bina Goal ka project — ya toh Goal missing hai, ya project bekaar.</td></tr>
+    <tr><td><strong>4</strong></td><td><strong>Progress khud mat likho.</strong> Woh neeche ke kaam se apne aap banta hai.</td></tr>
+    <tr><td><strong>5</strong></td><td><strong>Chhodna bhi ek jawab hai.</strong> Abandoned goal ka record rakhna faayde ka hai.</td></tr>
+  </table>
+
+  <h3>Jab system chhootne lage</h3>
+  <div class="warn">
+    <strong>3 din miss ho gaye?</strong> Backlog clear karne ki koshish <em>mat</em> karo.
+    Aaj se shuru karo. Yeh system aise hi bana hai — pichhla hafta pura kiye bina bhi
+    weekly review ho sakta hai.
+    <br><br>
+    <strong>Inbox mein 40 items?</strong> Sab delete kar do. 14 din se pada item
+    ek backlog nahi hai — woh saboot hai ki woh cheez maayne nahi rakhti thi.
+  </div>
+
+  <h3 style="margin-top:6mm">Abhi kya nahi hai — sach sach</h3>
+  <table>
+    <tr><th style="width:46mm">Nahi hai</th><th>Iska matlab</th></tr>
+    <tr><td>15 aur databases <span class="muted">(Finance, Health, Knowledge, People, Reading...)</span></td><td>Abhi sirf daily loop chal raha hai. Baaki maang pe ban jaayenge</td></tr>
+    <tr><td>AI agents</td><td>Koi plan draft nahi karega. Sab manual</td></tr>
+    <tr><td>Automations</td><td>Habit log roz khud bharna hoga</td></tr>
+    <tr><td>Dashboards</td><td>Har database alag se kholna padega</td></tr>
+  </table>
+
+  <p style="margin-top:5mm" class="muted">
+    Yeh sab aage aane wale phases mein hai. Par pehle 2 hafte <strong>isi ko chalao</strong> —
+    jo kami khud mehsoos hogi, woh guess se hamesha behtar hoti hai.
+  </p>
+
+  <div style="margin-top:10mm; padding-top:4mm; border-top:2px solid var(--ink)">
+    <p style="font-size:9pt" class="muted">
+      <strong>Workspace:</strong> Notion → 🧠 2nd Brain<br>
+      <strong>Specification:</strong> github.com/mittalok-creator/2nd-Brain<br>
+      <strong>Version:</strong> v0.3.0 · 8 databases · 4 relations · 6 views
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
