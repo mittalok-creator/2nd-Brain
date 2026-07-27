@@ -27,6 +27,11 @@ databases:
   journal:    { database_id: "", data_source_id: "" }
   habit_logs: { database_id: "", data_source_id: "" }
   reviews:    { database_id: "", data_source_id: "" }
+  people:       { database_id: "", data_source_id: "" }
+  accounts:     { database_id: "", data_source_id: "" }
+  transactions: { database_id: "", data_source_id: "" }
+  knowledge:    { database_id: "", data_source_id: "" }
+  decisions:    { database_id: "", data_source_id: "" }
 
 # Two-way relations, recorded so a rebuild reproduces the same graph.
 relations:
@@ -34,6 +39,13 @@ relations:
   - { from: projects, to: tasks,    property: Project, synced: Tasks }
   - { from: goals,    to: habits,   property: Goal,    synced: Habits }
   - { from: habits,   to: habit_logs, property: Habit,  synced: Log }
+  - { from: people,   to: accounts,     property: Counterparty, synced: Accounts }
+  - { from: people,   to: transactions, property: Person,       synced: Transactions }
+  - { from: people,   to: tasks,        property: Person,       synced: Tasks }
+  - { from: people,   to: knowledge,    property: Person,       synced: Knowledge }
+  - { from: accounts, to: transactions, property: Account,      synced: Transactions }
+  - { from: goals,    to: transactions, property: Goal,         synced: Transactions }
+  - { from: projects, to: knowledge,    property: Project,      synced: Knowledge }
 
 views:
   tasks:      ["☀️ Due today", "⚠️ Slipped"]
