@@ -11,6 +11,9 @@ secrets/
 **/token*.json
 .n8n/
 
+# Notion deployment ids point at private content (SECURITY.md)
+config/notion.yaml
+
 # ── Personal data (never commit — see SECURITY.md) ───────────────────────────
 data/
 exports/

@@ -1,0 +1,33 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Notion deployment manifest — TEMPLATE
+#
+#   cp config/notion.example.yaml config/notion.yaml
+#
+# config/notion.yaml holds the real ids and is git-ignored: Notion ids point at
+# private content, and SECURITY.md forbids committing them. This template records
+# the shape so a deployment can be rebuilt.
+#
+# Ids here are DEPLOYMENT STATE, not specification. They describe one installation
+# of the system, not the system itself. See ADR-0003 and ADR-0008.
+# ─────────────────────────────────────────────────────────────────────────────
+
+workspace:
+  root_page_id: ""            # the "🧠 2nd Brain" page
+  deployed_at: ""
+  spec_version: ""            # repository version this deployment was built from
+
+# One entry per entity. `database_id` addresses the database; `data_source_id` is
+# what relation and query calls need.
+databases:
+  goals:      { database_id: "", data_source_id: "" }
+  projects:   { database_id: "", data_source_id: "" }
+  tasks:      { database_id: "", data_source_id: "" }
+  habits:     { database_id: "", data_source_id: "" }
+  inbox:      { database_id: "", data_source_id: "" }
+  journal:    { database_id: "", data_source_id: "" }
+
+# Two-way relations, recorded so a rebuild reproduces the same graph.
+relations:
+  - { from: goals,    to: projects, property: Goal,    synced: Projects }
+  - { from: projects, to: tasks,    property: Project, synced: Tasks }
+  - { from: goals,    to: habits,   property: Goal,    synced: Habits }
