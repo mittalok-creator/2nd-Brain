@@ -37,6 +37,11 @@ databases:
   workouts:       { database_id: "", data_source_id: "" }
   reading:        { database_id: "", data_source_id: "" }
   skills:         { database_id: "", data_source_id: "" }
+  budgets:        { database_id: "", data_source_id: "" }
+  resources:      { database_id: "", data_source_id: "" }
+  courses:        { database_id: "", data_source_id: "" }
+  career_events:  { database_id: "", data_source_id: "" }
+  agent_runs:     { database_id: "", data_source_id: "" }
 
 # Two-way relations, recorded so a rebuild reproduces the same graph.
 relations:
@@ -53,9 +58,13 @@ relations:
   - { from: projects, to: knowledge,    property: Project,      synced: Knowledge }
   - { from: people,   to: meetings,     property: Attendees,    synced: Meetings }
   - { from: goals,    to: skills,       property: Goal,         synced: Skills }
+  - { from: skills,   to: courses,      property: Skill,        synced: Courses }
+  - { from: skills,   to: career_events, property: Skill,       synced: "Career events" }
 
-# Not yet deployed: budgets, resources, courses, career_events, agent_runs.
-not_deployed: [budgets, resources, courses, career_events, agent_runs]
+# All 23 entities deployed.
+not_deployed: []
+
+
 
 views:
   tasks:      ["☀️ Due today", "⚠️ Slipped"]

@@ -15,6 +15,14 @@ Versioning is applied to the **specification**, not to any single tool:
 
 ## [Unreleased]
 
+### Added
+- **The workspace is fully deployed.** All 23 entities from the Phase 3 catalogue now exist as
+  live Notion databases under the `🧠 2nd Brain` root page, with 15 two-way relations and 6
+  filtered views. Ids recorded in `config/notion.yaml` (git-ignored); shape in
+  `config/notion.example.yaml`.
+- Illustrated Notion user guide in Hinglish — `docs/03-user-guide/2nd-Brain-Notion-Guide.pdf`,
+  rendered from `notion-guide.html` by `make guide`.
+
 ### Changed
 - `actions/checkout` bumped to v7 and `actions/setup-python` to v7 across both workflows
   (Dependabot #1).
