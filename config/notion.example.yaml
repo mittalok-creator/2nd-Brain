@@ -25,9 +25,19 @@ databases:
   habits:     { database_id: "", data_source_id: "" }
   inbox:      { database_id: "", data_source_id: "" }
   journal:    { database_id: "", data_source_id: "" }
+  habit_logs: { database_id: "", data_source_id: "" }
+  reviews:    { database_id: "", data_source_id: "" }
 
 # Two-way relations, recorded so a rebuild reproduces the same graph.
 relations:
   - { from: goals,    to: projects, property: Goal,    synced: Projects }
   - { from: projects, to: tasks,    property: Project, synced: Tasks }
   - { from: goals,    to: habits,   property: Goal,    synced: Habits }
+  - { from: habits,   to: habit_logs, property: Habit,  synced: Log }
+
+views:
+  tasks:      ["☀️ Due today", "⚠️ Slipped"]
+  inbox:      ["📥 To route"]
+  goals:      ["🎯 Active"]
+  projects:   ["🚀 Board"]
+  habit_logs: ["☑️ Today"]
