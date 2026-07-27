@@ -47,6 +47,30 @@ moment something is logged against it.
 
 ---
 
+## Dashboard
+
+Three filtered tables sit at the top of the **📔 Diary** page, above the month list:
+**🔴 Overdue · 🟡 Today · 🟢 Future**.
+
+| View | Filter |
+|---|---|
+| 🔴 Overdue | `Date` is before today, and `Done` is not checked |
+| 🟡 Today | `Date` is today — shown regardless of `Done` |
+| 🟢 Future | `Date` is after today |
+
+These are three separate table views, not a single grouped board. Notion's API only
+supports grouping a board view by a `select`, `status`, `person`, or `checkbox`
+property — not by a computed `formula` — so a true three-column Kanban driven
+automatically by date logic is not achievable here. Three filtered tables give the same
+information, and update live as dates pass; nothing needs to be recomputed or reassigned
+by hand.
+
+A `When` formula field on the Diary Log computes a coloured marker per row —
+🔴 Overdue, 🟡 Today, or 🟢 Future — visible as a column in every view, including the
+month tables. Entries that are both past-dated and marked done return a blank value and
+are excluded from all three dashboard views, since they are neither outstanding nor
+current.
+
 ## Fields
 
 | Field | Type | For |
