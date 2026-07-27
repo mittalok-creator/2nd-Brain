@@ -10,6 +10,12 @@ How to actually operate 2nd Brain day to day.
 > **[Quick capture on Android](quick-capture-android.md)** — one tap from the home screen to a
 > logged transaction, the Android equivalent of the iOS Shortcuts flow.
 >
+> **[Excel-to-Notion-Guide.pdf](Excel-to-Notion-Guide.pdf)** — 8 pages, Hinglish, teaching Notion's
+> concepts by direct mapping to Excel (workbook/workspace, row/page, VLOOKUP/relation,
+> filter/view). Grounded entirely in the user's own live data — the two Diary entries
+> `BDWO REPORT` and `BDWO CLAIM` — rather than invented examples. Source:
+> [`excel-to-notion.html`](excel-to-notion.html).
+>
 > The reference sections below are written in Phase 8, once dashboards and automations exist.
 > The operating model is the settled intent; the detailed procedures follow.
 

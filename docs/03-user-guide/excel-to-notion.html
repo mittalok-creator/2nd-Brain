@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="hi-Latn">
+<head>
+<meta charset="utf-8">
+<title>Excel se Notion tak</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm 16mm 13mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --ink:#1C1C1E; --ink2:#48484A; --ink3:#8E8E93;
+    --line:#E3E3E8; --bg:#F7F7F9;
+    --blue:#0A64D6; --green:#248A3D; --orange:#B25000;
+    --red:#D70015; --purple:#8944AB; --pink:#C2185B; --teal:#00707F;
+  }
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink); font-size:10.2pt; line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  .page{ page-break-after:always; }
+  .page:last-child{ page-break-after:auto; }
+  h1{ font-size:23pt; line-height:1.15; letter-spacing:-.7px; font-weight:700; }
+  h2{ font-size:15pt; letter-spacing:-.35px; font-weight:700; margin:0 0 3mm; padding-bottom:2mm;
+      border-bottom:2.5px solid var(--ink); }
+  h3{ font-size:11.2pt; font-weight:700; margin:5mm 0 2mm; }
+  p{ margin:0 0 2.6mm; }
+  ul,ol{ margin:0 0 3mm 5mm; } li{ margin-bottom:1.4mm; }
+  strong{ font-weight:650; }
+  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:8.8pt;
+        background:var(--bg); padding:1px 4px; border-radius:3px; border:1px solid var(--line); }
+  .muted{ color:var(--ink3); }
+  .lede{ font-size:11pt; color:var(--ink2); }
+
+  .cover{ height:250mm; display:flex; flex-direction:column; justify-content:center; }
+  .brainmark{ font-size:52pt; line-height:1; margin-bottom:6mm; }
+  .cover h1{ font-size:36pt; letter-spacing:-1.6px; }
+  .tag{ font-size:13pt; color:var(--ink2); margin-top:3mm; }
+  .rule{ width:34mm; height:5px; background:var(--blue); margin:8mm 0; border-radius:3px; }
+  .coverbox{ background:var(--bg); border:1px solid var(--line); border-radius:9px;
+             padding:6mm 7mm; margin-top:10mm; }
+
+  .kicker{ font-size:8pt; font-weight:700; letter-spacing:1.3px; text-transform:uppercase;
+           color:var(--blue); margin-bottom:2mm; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5mm; }
+  .card{ border:1px solid var(--line); border-radius:8px; padding:4mm 4.5mm; background:#fff; }
+  .card.fill{ background:var(--bg); }
+  .card h4{ font-size:9.8pt; margin-bottom:1.5mm; font-weight:700; }
+  .card p{ font-size:9pt; color:var(--ink2); margin:0; }
+
+  table{ width:100%; border-collapse:collapse; margin:2mm 0 3mm; font-size:9.2pt; }
+  th{ text-align:left; background:var(--bg); font-weight:700; font-size:8.4pt;
+      text-transform:uppercase; letter-spacing:.5px; color:var(--ink2);
+      padding:2.2mm 3mm; border-bottom:1.5px solid var(--line); }
+  td{ padding:2.2mm 3mm; border-bottom:1px solid var(--line); vertical-align:top; }
+  tr:last-child td{ border-bottom:none; }
+
+  .note{ border-left:4px solid var(--blue); background:#F2F7FE; padding:3.5mm 4.5mm;
+         border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+  .warn{ border-left:4px solid var(--orange); background:#FEF6EF; padding:3.5mm 4.5mm;
+         border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+  .key{ border-left:4px solid var(--green); background:#F1F9F3; padding:3.5mm 4.5mm;
+        border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+  .fix{ border-left:4px solid var(--pink); background:#FDF1F6; padding:3.5mm 4.5mm;
+        border-radius:0 7px 7px 0; margin:3.5mm 0; font-size:9.4pt; }
+
+  .steps{ counter-reset:s; list-style:none; margin-left:0; }
+  .steps li{ counter-increment:s; position:relative; padding-left:10mm; margin-bottom:3.4mm; }
+  .steps li::before{ content:counter(s); position:absolute; left:0; top:0;
+    width:6.6mm; height:6.6mm; background:var(--ink); color:#fff; border-radius:50%;
+    font-size:8.6pt; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+  .pill{ display:inline-block; font-size:7.8pt; font-weight:700; padding:1px 7px;
+         border-radius:20px; letter-spacing:.3px; }
+  .p-blue{ background:#E4EFFC; color:var(--blue); }
+  .p-green{ background:#E4F3E8; color:var(--green); }
+  .p-red{ background:#FCE8E8; color:var(--red); }
+  .p-orange{ background:#FCEFE2; color:var(--orange); }
+  .p-gray{ background:#EDEDF0; color:var(--ink2); }
+  .p-purple{ background:#F3E9F7; color:var(--purple); }
+  .p-pink{ background:#FDE7EF; color:var(--pink); }
+
+  svg{ display:block; margin:3mm auto; max-width:100%; }
+  .cap{ text-align:center; font-size:8.2pt; color:var(--ink3); margin-top:-1mm; margin-bottom:4mm; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COVER ══════════ -->
+<section class="page cover">
+  <div class="brainmark">📊 → 🧠</div>
+  <h1>Excel se Notion tak</h1>
+  <div class="tag">Jo aap Excel mein jaante ho, wahi Notion mein bhi kaam aayega</div>
+  <div class="rule"></div>
+  <p class="lede">Ye guide kisi kaal-kalpit example se nahi banayi — <strong>aapki khud ki
+  do entries</strong> se banayi hai: <strong>BDWO REPORT</strong> aur
+  <strong>BDWO CLAIM</strong>, jo aapne khud Diary mein add ki thi.</p>
+
+  <div class="coverbox">
+    <table style="margin:0">
+      <tr><td style="width:34mm"><strong>Kiske liye</strong></td><td>Alok Mittal</td></tr>
+      <tr><td><strong>Base</strong></td><td>Excel — jo aap pehle se pro ho</td></tr>
+      <tr><td><strong>Example data</strong></td><td>BDWO REPORT · BDWO CLAIM (aapki asli entries)</td></tr>
+      <tr style="border:none"><td style="border:none"><strong>Padhne mein</strong></td><td style="border:none">~15 minute</td></tr>
+    </table>
+  </div>
+
+  <p class="muted" style="margin-top:12mm; font-size:9pt">
+    Ek line mein poori baat: <strong>Notion = Excel + har row apna page + real links + saved filters.</strong>
+  </p>
+</section>
+
+<!-- ══════════ 1. FOUR MAPPINGS ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 1</div>
+  <h2>Aap 70% Notion pehle se jaante ho</h2>
+
+  <p>Excel ke saath jitna time bitaya hai, utna hi Notion samajhna aasan hoga. Bas naam badalte hain,
+  concept nahi. Chaar buniyaadi mappings:</p>
+
+  <table>
+    <tr><th style="width:38mm">Excel mein</th><th style="width:38mm">Notion mein</th><th>Farak</th></tr>
+    <tr><td><strong>Workbook</strong> (.xlsx file)</td><td><strong>Workspace</strong></td>
+        <td>Poora universe — sab kuch iske andar</td></tr>
+    <tr><td><strong>Sheet</strong> (neeche tab)</td><td><strong>Page</strong></td>
+        <td>Pages ke andar aur pages ja sakte hain, sheets mein nahi</td></tr>
+    <tr><td><strong>Table</strong> (Ctrl+T)</td><td><strong>Database</strong></td>
+        <td>Aapki Diary Log, Tasks, Goals — sab databases hain</td></tr>
+    <tr><td><strong>Column header</strong></td><td><strong>Property</strong></td>
+        <td>Har column ka ek <em>fixed type</em> hota hai (neeche Chapter 3)</td></tr>
+  </table>
+
+  <div class="note">
+    <strong>Aapke paas already ek example hai.</strong> Aapki <strong>📓 Diary Log 2026</strong> database
+    Excel ke us table jaisi hai jismein columns hain: Task, Date, Time, Done, Remark. Aapne khud
+    <code>BDWO REPORT</code> aur <code>BDWO CLAIM</code> naam ki do rows daali — bilkul waise jaise
+    Excel mein do naye rows type karte ho.
+  </div>
+
+  <h3>Sabse bada farak — jo abhi samajhna hai</h3>
+  <p>Excel mein row sirf <em>data</em> hai. Notion mein har row khud ek <em>page</em> hai — poori
+  document, khulne wali. Agla chapter yahi dikhata hai, aapki apni <code>BDWO REPORT</code> entry se.</p>
+</section>
+
+<!-- ══════════ 2. ROW = PAGE ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 2</div>
+  <h2>Row = Page — aapki BDWO REPORT se dekho</h2>
+
+  <p>Excel mein <code>BDWO REPORT</code> jaisi row sirf ek line hoti — cells mein values, bas.
+  Notion mein wahi row <strong>khud ek page hai</strong> jo khul sakta hai.</p>
+
+  <svg viewBox="0 0 560 260" width="560" height="260">
+    <!-- left: excel row -->
+    <text x="10" y="18" font-size="9" font-weight="700" fill="#8E8E93" letter-spacing="1">EXCEL MEIN</text>
+    <rect x="10" y="26" width="220" height="34" fill="#F7F7F9" stroke="#D8D8DE"/>
+    <text x="16" y="47" font-size="8.5" fill="#48484A">A: BDWO REPORT</text>
+    <rect x="10" y="60" width="220" height="26" fill="#fff" stroke="#D8D8DE"/>
+    <text x="16" y="77" font-size="8" fill="#1C1C1E">B: 27-Jul  C: 4:00 PM  D: No</text>
+    <text x="16" y="100" font-size="8" fill="#8E8E93">Bas itna hi. Ek line, khatam.</text>
+
+    <!-- arrow -->
+    <path d="M245 60 L275 60" stroke="#8E8E93" stroke-width="1.6" marker-end="url(#a1)"/>
+    <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7" fill="#8E8E93"/></marker></defs>
+    <text x="248" y="50" font-size="7.5" fill="#8E8E93">click</text>
+
+    <!-- right: notion page -->
+    <text x="300" y="18" font-size="9" font-weight="700" fill="#8E8E93" letter-spacing="1">NOTION MEIN</text>
+    <rect x="300" y="26" width="250" height="215" rx="8" fill="#fff" stroke="#0A64D6" stroke-width="1.6"/>
+    <text x="316" y="48" font-size="12" font-weight="700" fill="#1C1C1E">BDWO REPORT</text>
+    <line x1="316" y1="56" x2="534" y2="56" stroke="#E3E3E8"/>
+
+    <text x="316" y="72" font-size="7.6" font-weight="700" fill="#8E8E93">DATE</text>
+    <text x="316" y="84" font-size="8.6" fill="#1C1C1E">27 July 2026</text>
+
+    <text x="420" y="72" font-size="7.6" font-weight="700" fill="#8E8E93">TIME</text>
+    <text x="420" y="84" font-size="8.6" fill="#1C1C1E">4:00 PM</text>
+
+    <text x="316" y="102" font-size="7.6" font-weight="700" fill="#8E8E93">DONE</text>
+    <rect x="316" y="107" width="11" height="11" rx="2" fill="#fff" stroke="#8E8E93"/>
+
+    <text x="420" y="102" font-size="7.6" font-weight="700" fill="#8E8E93">REMARK</text>
+    <text x="420" y="114" font-size="8.6" fill="#1C1C1E">FINACLE</text>
+
+    <line x1="316" y1="128" x2="534" y2="128" stroke="#E3E3E8" stroke-dasharray="2 2"/>
+    <text x="316" y="144" font-size="7.6" font-weight="700" fill="#248A3D">+ NAYA CONTENT YAHAN LIKH SAKTE HO</text>
+    <text x="316" y="160" font-size="8" fill="#48484A">Ek paragraph, notes,</text>
+    <text x="316" y="172" font-size="8" fill="#48484A">checklist, kuch bhi &mdash;</text>
+    <text x="316" y="184" font-size="8" fill="#48484A">is row ke andar, bilkul</text>
+    <text x="316" y="196" font-size="8" fill="#48484A">ek document ki tarah.</text>
+    <text x="316" y="216" font-size="8" fill="#8E8E93">Excel mein cell ke</text>
+    <text x="316" y="228" font-size="8" fill="#8E8E93">andar aisa kabhi nahi hota.</text>
+  </svg>
+  <div class="cap">Left: Excel ki soch. Right: wahi row, Notion mein khula hua page</div>
+
+  <div class="key">
+    <strong>Abhi try karo:</strong> Diary Log kholo, <code>BDWO REPORT</code> row pe hover karo,
+    <code>OPEN</code> button dabao. Wahi page khulega jo upar diagram mein hai.
+  </div>
+</section>
+
+<!-- ══════════ 3. TYPED PROPERTIES ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 3</div>
+  <h2>Column ka type fix hota hai</h2>
+
+  <p>Excel ki sabse aam problem: ek column mein kabhi "Yes", kabhi "Y", kabhi "TRUE" — sab
+  chal jaata hai, koi rok nahi. Notion mein har column ka ek <strong>fixed type</strong> hota hai,
+  aur wo type hamesha wahi values maanta hai.</p>
+
+  <h3>Aapki Diary Log ke 5 columns, aapki asli do rows ke saath</h3>
+  <table>
+    <tr><th>Task</th><th>Date</th><th>Time</th><th>Done</th><th>Remark</th></tr>
+    <tr><td>BDWO REPORT</td><td>27 Jul 2026</td><td>4:00 PM</td><td>☐</td><td>FINACLE</td></tr>
+    <tr><td>BDWO CLAIM</td><td>30 Jul 2026</td><td>5:00 PM</td><td>☐</td><td>FROM BRANCHES TO HO</td></tr>
+  </table>
+
+  <table>
+    <tr><th style="width:24mm">Column</th><th style="width:28mm">Type</th><th>Iska matlab</th></tr>
+    <tr><td>Task</td><td><span class="pill p-blue">Title</span></td>
+        <td>Har row ka naam. Ye hamesha text hota hai — jaise Excel ka column A.</td></tr>
+    <tr><td>Date</td><td><span class="pill p-purple">Date</span></td>
+        <td>Hamesha ek asli calendar date. "27/7" ya "next monday" nahi likh sakte — Notion
+        khud date-picker dikhata hai, ghalat format ho hi nahi sakta.</td></tr>
+    <tr><td>Time</td><td><span class="pill p-gray">Text</span></td>
+        <td>Jaan-bujh kar plain text rakha hai, taaki "4 baje" ya "4:00 PM" jaisa likhna aasan
+        rahe — par isiliye consistency haath se rakhni padti hai.</td></tr>
+    <tr><td>Done</td><td><span class="pill p-green">Checkbox</span></td>
+        <td>Sirf do value: tick ya khaali. "haan"/"done"/"ho gaya" possible hi nahi.</td></tr>
+    <tr><td>Remark</td><td><span class="pill p-gray">Text</span></td>
+        <td>Free text — jo bhi likhna hai.</td></tr>
+  </table>
+
+  <div class="fix">
+    <strong>Maine abhi ek cheez fix ki — aur ye is chapter ka sabse achha example hai.</strong><br>
+    Aapne <code>BDWO REPORT</code> mein Time <code>"4:00 pm"</code> likha, aur
+    <code>BDWO CLAIM</code> mein <code>"5:00 pM"</code>. Dono chalte the (koi error nahi aaya) kyunki
+    <code>Time</code> ek <strong>Text</strong> field hai — jo bhi likho, wo accept karta hai.
+    <br><br>
+    Yahi Excel wali purani problem hai: field free-text ho toh consistency sirf discipline se
+    aati hai, system se nahi. Maine dono ko <code>4:00 PM</code> aur <code>5:00 PM</code> kar diya —
+    ab ek jaisa dikhta hai. Agar <code>Date</code> field ki tarah Time bhi strict hota, ye galti
+    ho hi nahi sakti thi.
+  </div>
+
+  <h3>Excel ke aur types, Notion mein</h3>
+  <table>
+    <tr><th style="width:44mm">Excel mein</th><th>Notion mein</th></tr>
+    <tr><td>Data Validation dropdown</td><td><strong>Select</strong> — sirf defined values chal sakte hain</td></tr>
+    <tr><td>Multiple tags in one cell (comma se)</td><td><strong>Multi-select</strong> — proper tags, ek-ek karke</td></tr>
+    <tr><td><code>=SUM()</code>, <code>=IF()</code></td><td><strong>Formula</strong> property</td></tr>
+  </table>
+</section>
+
+<!-- ══════════ 4. RELATIONS ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 4</div>
+  <h2>Relation, VLOOKUP nahi</h2>
+
+  <p>Aapki Diary mein relations nahi hain — jaan-bujh kar, Diary simple rakhi gayi hai. Par
+  aapke <strong>2nd Brain</strong> ke Tasks database mein hain, aur wahi is concept ke liye
+  sabse achha example hai: <strong>Deepak</strong> wala case.</p>
+
+  <svg viewBox="0 0 560 200" width="560" height="200">
+    <text x="10" y="16" font-size="9" font-weight="700" fill="#8E8E93" letter-spacing="1">EXCEL MEIN &mdash; VLOOKUP</text>
+    <rect x="10" y="24" width="240" height="60" rx="7" fill="#F7F7F9" stroke="#D8D8DE"/>
+    <text x="20" y="42" font-size="8.2" fill="#1C1C1E">Sheet1: Tasks</text>
+    <text x="20" y="56" font-size="7.8" fill="#48484A">=VLOOKUP(B2, Sheet2!A:B, 2, 0)</text>
+    <text x="20" y="70" font-size="7.6" fill="#8E8E93">Ek-tarfa: sirf padhta hai, laake dikhata hai</text>
+
+    <text x="300" y="16" font-size="9" font-weight="700" fill="#8E8E93" letter-spacing="1">NOTION MEIN &mdash; RELATION</text>
+    <rect x="300" y="24" width="110" height="52" rx="7" fill="#F2F7FE" stroke="#0A64D6" stroke-width="1.5"/>
+    <text x="312" y="44" font-size="8.6" font-weight="700" fill="#0A64D6">Deepak</text>
+    <text x="312" y="58" font-size="7.5" fill="#48484A">(People)</text>
+
+    <path d="M410 40 L448 40" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#a2)"/>
+    <path d="M448 52 L410 52" stroke="#8E8E93" stroke-width="1.4" marker-end="url(#a2)"/>
+    <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="#8E8E93"/></marker></defs>
+
+    <rect x="450" y="24" width="100" height="52" rx="7" fill="#F1F9F3" stroke="#248A3D" stroke-width="1.5"/>
+    <text x="460" y="44" font-size="8.6" font-weight="700" fill="#248A3D">2 Tasks</text>
+    <text x="460" y="58" font-size="7.5" fill="#48484A">₹30k · ₹40k</text>
+
+    <text x="300" y="92" font-size="7.6" fill="#8E8E93">Do-tarfa: Deepak ke andar Tasks dikhte hain,</text>
+    <text x="300" y="103" font-size="7.6" fill="#8E8E93">Task ke andar Deepak dikhta hai. Dono jagah zinda.</text>
+
+    <rect x="10" y="120" width="540" height="66" rx="8" fill="#F7F7F9" stroke="#E3E3E8"/>
+    <text x="24" y="140" font-size="8.6" font-weight="700" fill="#1C1C1E">Aapke system mein asli chain:</text>
+    <text x="24" y="156" font-size="8.4" fill="#48484A">Deepak (People) &#8596; Receivable Account (₹70,000) &#8596; 2 Tasks (₹30k due Jul 30, ₹40k due Aug 30)</text>
+    <text x="24" y="172" font-size="8" fill="#8E8E93">Kisi bhi ek jagah se dusri jagah pahunch sakte ho &mdash; VLOOKUP mein aisa nahi hota.</text>
+  </svg>
+  <div class="cap">VLOOKUP dhoondh ke laata hai (ek-tarfa). Relation jodta hai (do-tarfa, hamesha zinda)</div>
+
+  <div class="note">
+    <strong>Rollup</strong> = jaise <code>SUMIF</code> doosri sheet se, par automatic. Aapki
+    Goals mein "Progress" isi tarah Projects se apne aap aata hai — kabhi haath se nahi bharna.
+  </div>
+</section>
+
+<!-- ══════════ 5. VIEWS ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 5</div>
+  <h2>View = Filter jo yaad rehta hai</h2>
+
+  <p>Excel mein: Filter lagate ho, dekhte ho, hata dete ho. Notion mein: filter ek baar banao,
+  naam do, <strong>hamesha ke liye tab ban jaata hai</strong>.</p>
+
+  <p>Aapki apni Diary ke Overdue/Today/Future dashboard mein aapki dono entries abhi kahan
+  khadi hain:</p>
+
+  <svg viewBox="0 0 560 190" width="560" height="190">
+    <rect x="10" y="10" width="170" height="150" rx="8" fill="#FCE8E8" stroke="#D70015" stroke-width="1.4"/>
+    <text x="22" y="32" font-size="10" font-weight="700" fill="#D70015">🔴 Overdue</text>
+    <text x="22" y="52" font-size="8" fill="#48484A">Date guzar gayi,</text>
+    <text x="22" y="64" font-size="8" fill="#48484A">Done nahi hai</text>
+    <rect x="22" y="90" width="146" height="50" rx="6" fill="#fff" stroke="#F0C0C0"/>
+    <text x="72" y="120" font-size="8.4" fill="#8E8E93" text-anchor="middle">Khaali hai</text>
+
+    <rect x="196" y="10" width="170" height="150" rx="8" fill="#FEF6E4" stroke="#B25000" stroke-width="1.6"/>
+    <text x="208" y="32" font-size="10" font-weight="700" fill="#B25000">🟡 Today</text>
+    <text x="208" y="52" font-size="8" fill="#48484A">Date = aaj</text>
+    <rect x="208" y="66" width="146" height="40" rx="6" fill="#fff" stroke="#F0DAB8"/>
+    <text x="216" y="82" font-size="8.4" font-weight="700" fill="#1C1C1E">BDWO REPORT</text>
+    <text x="216" y="96" font-size="7.6" fill="#8E8E93">27 Jul · 4:00 PM</text>
+
+    <rect x="382" y="10" width="170" height="150" rx="8" fill="#F1F9F3" stroke="#248A3D" stroke-width="1.6"/>
+    <text x="394" y="32" font-size="10" font-weight="700" fill="#248A3D">🟢 Future</text>
+    <text x="394" y="52" font-size="8" fill="#48484A">Date aane wali hai</text>
+    <rect x="394" y="66" width="146" height="40" rx="6" fill="#fff" stroke="#C8E6CE"/>
+    <text x="402" y="82" font-size="8.4" font-weight="700" fill="#1C1C1E">BDWO CLAIM</text>
+    <text x="402" y="96" font-size="7.6" fill="#8E8E93">30 Jul · 5:00 PM</text>
+  </svg>
+  <div class="cap">Aapki BDWO REPORT aur BDWO CLAIM — dashboard ne khud sahi column mein rakh diya</div>
+
+  <div class="key">
+    <strong>Kuch bharna nahi pada.</strong> Aapne bas Date daali; system ne khud tay kiya
+    ki kaunsi entry "Today" hai aur kaunsi "Future". Yehi ek achhi view ka fayda hai —
+    Excel mein har baar dobara filter lagana padta, yahan ek baar set hone ke baad hamesha
+    sahi rehta hai.
+  </div>
+</section>
+
+<!-- ══════════ 6. REVIEW ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 6</div>
+  <h2>Aapki dono entries ka review</h2>
+
+  <p>Aapne poocha tha "check karo sahi hai kya" — yahan poora review, ek jagah:</p>
+
+  <table>
+    <tr><th style="width:30mm"></th><th>BDWO REPORT</th><th>BDWO CLAIM</th></tr>
+    <tr><td><strong>Date</strong></td><td class="p-green">✓ 27 Jul 2026</td><td class="p-green">✓ 30 Jul 2026</td></tr>
+    <tr><td><strong>Time</strong></td>
+        <td><span class="pill p-orange">tha: 4:00 pm</span> → <span class="pill p-green">ab: 4:00 PM</span></td>
+        <td><span class="pill p-orange">tha: 5:00 pM</span> → <span class="pill p-green">ab: 5:00 PM</span></td></tr>
+    <tr><td><strong>Done</strong></td><td class="p-green">✓ No (sahi, abhi hua nahi)</td><td class="p-green">✓ No</td></tr>
+    <tr><td><strong>Remark</strong></td><td class="p-green">✓ FINACLE</td><td class="p-green">✓ FROM BRANCHES TO HO</td></tr>
+    <tr><td><strong>Dashboard</strong></td><td class="p-green">✓ Today mein sahi jagah</td><td class="p-green">✓ Future mein sahi jagah</td></tr>
+  </table>
+
+  <div class="key">
+    <strong>Overall: sab kuch sahi hai.</strong> Sirf Time formatting mein farak tha, wo fix
+    kar diya gaya. Data-wise koi galti nahi thi.
+  </div>
+
+  <h3>Ek chhota sujhaav, aage ke liye</h3>
+  <p>Jab bhi Time likho, hamesha ek hi format use karo — jaise <code>4:00 PM</code>. Ye
+  system rokta nahi (Text field hai), par khud ka niyam bana lena isi tarah ki cheezein
+  hamesha saaf rakhta hai.</p>
+</section>
+
+<!-- ══════════ 7. CHEAT SHEET ══════════ -->
+<section class="page">
+  <div class="kicker">Chapter 7</div>
+  <h2>Cheat sheet</h2>
+
+  <table>
+    <tr><th style="width:44mm">Excel</th><th>Notion</th></tr>
+    <tr><td>Workbook</td><td>Workspace</td></tr>
+    <tr><td>Sheet</td><td>Page</td></tr>
+    <tr><td>Table (Ctrl+T)</td><td>Database</td></tr>
+    <tr><td>Column header</td><td>Property (typed)</td></tr>
+    <tr><td>Row</td><td>Entry — jo khud ek page bhi hai</td></tr>
+    <tr><td>Cell</td><td>Property value</td></tr>
+    <tr><td>Filter + Sort</td><td>View (saved, tab ke roop mein)</td></tr>
+    <tr><td>VLOOKUP / XLOOKUP</td><td>Relation (do-tarfa, live link)</td></tr>
+    <tr><td>SUMIF doosri sheet se</td><td>Rollup (automatic)</td></tr>
+    <tr><td>Data Validation dropdown</td><td>Select property</td></tr>
+    <tr><td><code>=SUM()</code>, <code>=IF()</code></td><td>Formula property</td></tr>
+  </table>
+
+  <h3>Ek chhota practice — abhi try karo</h3>
+  <ol class="steps">
+    <li><strong>Diary Log</strong> kholo, <code>BDWO REPORT</code> row <code>OPEN</code> karo —
+      dekho poora page kaise khulta hai (Chapter 2)</li>
+    <li><strong>Tasks</strong> mein Deepak wala task kholo, uska <code>Project</code> ya
+      <code>Person</code> field dekho — wo link hai, text nahi (Chapter 4)</li>
+    <li>Diary ke <code>🟡 Today</code> aur <code>🟢 Future</code> tabs pe click karke dekho —
+      same data, alag nazariya (Chapter 5)</li>
+  </ol>
+
+  <p style="margin-top:6mm" class="muted">
+    Ye teen cheezein samajh aa gayi toh Excel ka experience seedha yahan chal jaayega.
+    Baaki jo bacha hai — formulas ki exact syntax, templates — details hain, concept nahi.
+  </p>
+
+  <div style="margin-top:10mm; padding-top:4mm; border-top:2px solid var(--ink)">
+    <p style="font-size:9pt" class="muted">
+      <strong>Workspace:</strong> Notion → 🧠 2nd Brain · 📔 Diary<br>
+      <strong>Is guide ka source:</strong> aapki apni BDWO REPORT aur BDWO CLAIM entries
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
