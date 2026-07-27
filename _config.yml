@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub Pages configuration
+#
+# Publishes the specification as a readable documentation site. README.md is the
+# index; everything under docs/ and each layer README becomes a page.
+#
+# This file exists because Jekyll and GitHub's own README renderer disagree in
+# two ways that both broke the published site:
+#
+#   1. Kramdown does not parse Markdown inside raw HTML blocks, so the centred
+#      header rendered as literal text. Fixed by `markdown="1"` on that div.
+#   2. Links written as `FILE.md` 404 once Jekyll builds them to `FILE.html`.
+#      Fixed by jekyll-relative-links, which rewrites them at build time.
+#
+# Both fixes are invisible on github.com — the README still renders correctly
+# there. See ADR-0004 on why documentation is Markdown in the first place.
+# ─────────────────────────────────────────────────────────────────────────────
+
+title: 2nd Brain
+description: A Complete AI-Powered Personal Operating System
+theme: jekyll-theme-primer
+
+# ── Plugins ──────────────────────────────────────────────────────────────────
+# All three are on the GitHub Pages allow-list. Declared explicitly rather than
+# relying on defaults, so the build does not change under us.
+plugins:
+  - jekyll-relative-links      # rewrite .md links to their built URLs
+  - jekyll-optional-front-matter  # treat .md files without front matter as pages
+  - jekyll-titles-from-headings   # derive page titles from the first heading
+  - jekyll-sitemap
+
+relative_links:
+  enabled: true
+  collections: true
+
+# ── Not part of the site ─────────────────────────────────────────────────────
+# Tooling and CI. The specification itself (core/, workspace/, agents/,
+# prompts/, automation/) is deliberately published — being readable is the point.
+exclude:
+  - Makefile
+  - scripts/
+  - tests/
+  - .github/
+  - .editorconfig
+  - .gitattributes
+  - .env.example
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
