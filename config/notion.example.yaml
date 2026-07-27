@@ -32,6 +32,11 @@ databases:
   transactions: { database_id: "", data_source_id: "" }
   knowledge:    { database_id: "", data_source_id: "" }
   decisions:    { database_id: "", data_source_id: "" }
+  meetings:       { database_id: "", data_source_id: "" }
+  health_metrics: { database_id: "", data_source_id: "" }
+  workouts:       { database_id: "", data_source_id: "" }
+  reading:        { database_id: "", data_source_id: "" }
+  skills:         { database_id: "", data_source_id: "" }
 
 # Two-way relations, recorded so a rebuild reproduces the same graph.
 relations:
@@ -46,6 +51,11 @@ relations:
   - { from: accounts, to: transactions, property: Account,      synced: Transactions }
   - { from: goals,    to: transactions, property: Goal,         synced: Transactions }
   - { from: projects, to: knowledge,    property: Project,      synced: Knowledge }
+  - { from: people,   to: meetings,     property: Attendees,    synced: Meetings }
+  - { from: goals,    to: skills,       property: Goal,         synced: Skills }
+
+# Not yet deployed: budgets, resources, courses, career_events, agent_runs.
+not_deployed: [budgets, resources, courses, career_events, agent_runs]
 
 views:
   tasks:      ["☀️ Due today", "⚠️ Slipped"]
