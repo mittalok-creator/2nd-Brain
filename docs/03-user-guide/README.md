@@ -7,6 +7,9 @@ How to actually operate 2nd Brain day to day.
 > covering Notion basics, the eight live databases, first-time setup, and the daily, weekly and
 > monthly loops. Source: [`notion-guide.html`](notion-guide.html); regenerate with `make guide`.
 >
+> **[Quick capture on Android](quick-capture-android.md)** — one tap from the home screen to a
+> logged transaction, the Android equivalent of the iOS Shortcuts flow.
+>
 > The reference sections below are written in Phase 8, once dashboards and automations exist.
 > The operating model is the settled intent; the detailed procedures follow.
 
